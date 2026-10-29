@@ -1,5 +1,11 @@
 # TCF-express-francais — Français Quest
 
+## Déploiement Netlify prêt
+
+Importer ce dépôt sur Netlify avec la branche `main`. La configuration est déjà dans `netlify.toml` : **build `npm run build`**, **publication `public`**, **Node 24**. L’API fonctionne via Netlify Functions et la progression est sauvegardée dans Netlify Blobs, séparément pour chaque apprenant. Le mode démonstration fonctionne sans clé à renseigner.
+
+Le [guide NETLIFY.md](NETLIFY.md) détaille le déploiement, la persistance, les variables facultatives et les vérifications après publication. L’interface et les fichiers audio sont déjà construits ; Windows et FFmpeg ne sont pas requis sur Netlify.
+
 ## Interface locale interactive
 
 ### Progression continue
@@ -34,7 +40,7 @@ Voir [ASSETS.md](ASSETS.md) pour l’avatar, le prompt ImageGen et la constructi
 
 `npm run preview` lance http://127.0.0.1:8081/ : tableau de bord, catalogue filtrable, leçons FR/EN, exercices corrigés, révisions et suivi. Cet aperçu utilise réellement l’API et un fichier distinct `data/preview.sqlite`. Un compte de démonstration est créé automatiquement ; son jeton individuel est conservé dans le navigateur. La route de création automatique appartient uniquement au serveur local `preview.js`, pas au serveur API de production. Garder cet aperçu sur la boucle locale. L’interface est inspirée de la marque TCF Express, sans modifier le site existant.
 
-Prototype fonctionnel destiné à une future intégration à TCF Express. Aucune modification du site en production. Node.js 24+, SQLite intégré, aucune dépendance npm. Contenu original : 12 leçons, 52 activités dont 16 défis de jeu, explications FR/EN.
+Prototype fonctionnel destiné à une future intégration à TCF Express. Aucune modification du site TCF Express en production. Node.js 24+, SQLite intégré ; adaptateur Netlify avec le SDK officiel Blobs et vérification du bundle avec esbuild. Contenu original : 12 leçons, 52 activités dont 16 défis de jeu, explications FR/EN.
 
 ### Version ludique avec Léo
 
