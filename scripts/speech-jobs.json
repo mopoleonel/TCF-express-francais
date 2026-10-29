@@ -1,0 +1,790 @@
+[
+  {
+    "text": "Bonjour, je m’appelle Marie.",
+    "file": "0948ef5a5aefb9f9.wav"
+  },
+  {
+    "text": "Bonjour ! Comment tu t’appelles ?",
+    "file": "274b1b74027ba1b1.wav"
+  },
+  {
+    "text": "Bonjour ! Je m’appelle Marie. Et toi ?",
+    "file": "5b4e0da371f275b1.wav"
+  },
+  {
+    "text": "Bonjour",
+    "file": "9172e8eec99f144f.wav"
+  },
+  {
+    "text": "je m’appelle",
+    "file": "fd360f0a02b1294f.wav"
+  },
+  {
+    "text": "Marie",
+    "file": "ba64eb8b058be189.wav"
+  },
+  {
+    "text": "je",
+    "file": "9e507a6dfbf98393.wav"
+  },
+  {
+    "text": "m’appelle",
+    "file": "e672347d35d88b2a.wav"
+  },
+  {
+    "text": "Je viens du Cameroun et j’habite à Douala.",
+    "file": "17b74a3b25af7a5d.wav"
+  },
+  {
+    "text": "D’où viens-tu et où habites-tu ?",
+    "file": "c0f5c8f1d9ada830.wav"
+  },
+  {
+    "text": "Je viens",
+    "file": "33da121fa62c5cf5.wav"
+  },
+  {
+    "text": "du Cameroun",
+    "file": "5c96f955d902614e.wav"
+  },
+  {
+    "text": "et j’habite",
+    "file": "8e48acc9d7a7dc68.wav"
+  },
+  {
+    "text": "à Douala",
+    "file": "1b9abfdc42d23996.wav"
+  },
+  {
+    "text": "Je",
+    "file": "3d3af356dbef1676.wav"
+  },
+  {
+    "text": "viens",
+    "file": "423b4c24acd7850d.wav"
+  },
+  {
+    "text": "du",
+    "file": "601b2c2473811afe.wav"
+  },
+  {
+    "text": "Cameroun",
+    "file": "1c3f6077d913b637.wav"
+  },
+  {
+    "text": "et",
+    "file": "f056b8cae37dc3ed.wav"
+  },
+  {
+    "text": "j’habite",
+    "file": "5761c0ba5f29b811.wav"
+  },
+  {
+    "text": "à",
+    "file": "b3fc9de526e253e7.wav"
+  },
+  {
+    "text": "Douala",
+    "file": "8fbf90c8c6870ca6.wav"
+  },
+  {
+    "text": "J’ai vingt ans et je suis étudiant.",
+    "file": "10cd1266922f7f20.wav"
+  },
+  {
+    "text": "Quel âge as-tu et que fais-tu dans la vie ?",
+    "file": "3db153724194dff9.wav"
+  },
+  {
+    "text": "J’ai vingt ans",
+    "file": "bcff87d78adfae94.wav"
+  },
+  {
+    "text": "et je suis",
+    "file": "4daea6bf93c24fe1.wav"
+  },
+  {
+    "text": "étudiant",
+    "file": "30e6a64d6415dbbd.wav"
+  },
+  {
+    "text": "J’ai",
+    "file": "28e16a508488dd8a.wav"
+  },
+  {
+    "text": "vingt",
+    "file": "d98bf86d96758db3.wav"
+  },
+  {
+    "text": "ans",
+    "file": "a2e0a4cc1f221c7f.wav"
+  },
+  {
+    "text": "suis",
+    "file": "1dad10cd8b139f25.wav"
+  },
+  {
+    "text": "Pouvez-vous parler plus lentement, s’il vous plaît ?",
+    "file": "123cb8aa63b05b0f.wav"
+  },
+  {
+    "text": "Tu ne comprends pas ce que je dis. Que peux-tu demander ?",
+    "file": "3f0375da1d28459b.wav"
+  },
+  {
+    "text": "Pouvez-vous parler",
+    "file": "3c4ff402d1c97f3b.wav"
+  },
+  {
+    "text": "plus lentement",
+    "file": "ef67f65567dde2a1.wav"
+  },
+  {
+    "text": "s’il vous plaît",
+    "file": "ba2766d53d776c93.wav"
+  },
+  {
+    "text": "Pouvez-vous",
+    "file": "de823ed64fb66142.wav"
+  },
+  {
+    "text": "parler",
+    "file": "ce73b45bf05276aa.wav"
+  },
+  {
+    "text": "plus",
+    "file": "383ef36928344f56.wav"
+  },
+  {
+    "text": "lentement",
+    "file": "35c8da5acf67042e.wav"
+  },
+  {
+    "text": "s’il",
+    "file": "536b1046afb12b04.wav"
+  },
+  {
+    "text": "vous",
+    "file": "aa2f27e353bb4f78.wav"
+  },
+  {
+    "text": "plaît",
+    "file": "ed20814d8ba0a0e2.wav"
+  },
+  {
+    "text": "Je voudrais une baguette, s’il vous plaît.",
+    "file": "af2e1a74595d6e99.wav"
+  },
+  {
+    "text": "Bonjour ! Qu’est-ce que vous désirez ?",
+    "file": "c2358633b60fdca2.wav"
+  },
+  {
+    "text": "Je voudrais",
+    "file": "1d1a2aa966406ee7.wav"
+  },
+  {
+    "text": "une baguette",
+    "file": "39d613f9f5a889ad.wav"
+  },
+  {
+    "text": "voudrais",
+    "file": "f887b58d53d32f0b.wav"
+  },
+  {
+    "text": "une",
+    "file": "52597892af72166c.wav"
+  },
+  {
+    "text": "baguette",
+    "file": "7824e0764d79dd52.wav"
+  },
+  {
+    "text": "Excusez-moi, où se trouve la gare ?",
+    "file": "053ae137c7caa52b.wav"
+  },
+  {
+    "text": "Tu cherches la gare. Comment demandes-tu ton chemin ?",
+    "file": "4479149d1bc2cf42.wav"
+  },
+  {
+    "text": "Excusez-moi",
+    "file": "3b1073b7e074af8e.wav"
+  },
+  {
+    "text": "où se trouve",
+    "file": "39d7789acfbee408.wav"
+  },
+  {
+    "text": "la gare",
+    "file": "2cfeacbb79b1c671.wav"
+  },
+  {
+    "text": "où",
+    "file": "e4e8fba406532123.wav"
+  },
+  {
+    "text": "se",
+    "file": "ad9a67fefa847de8.wav"
+  },
+  {
+    "text": "trouve",
+    "file": "d8631f57b4b1a5e3.wav"
+  },
+  {
+    "text": "la",
+    "file": "b737ca7ee563ae80.wav"
+  },
+  {
+    "text": "gare",
+    "file": "dc8e5e575bf8c0e5.wav"
+  },
+  {
+    "text": "Je souhaite prendre rendez-vous pour demain matin.",
+    "file": "fb90774396cd0086.wav"
+  },
+  {
+    "text": "À quel moment souhaitez-vous venir ?",
+    "file": "db5ac7c93e7518ae.wav"
+  },
+  {
+    "text": "Je souhaite",
+    "file": "cda55937ba486ee8.wav"
+  },
+  {
+    "text": "prendre rendez-vous",
+    "file": "b62cfa01b3584b9e.wav"
+  },
+  {
+    "text": "pour demain matin",
+    "file": "9da46a609fd8b5d0.wav"
+  },
+  {
+    "text": "souhaite",
+    "file": "b7e71d748f6cfad6.wav"
+  },
+  {
+    "text": "prendre",
+    "file": "319814994806e48b.wav"
+  },
+  {
+    "text": "rendez-vous",
+    "file": "9568e5de46b6bb47.wav"
+  },
+  {
+    "text": "pour",
+    "file": "ed29bcecc78d7ffb.wav"
+  },
+  {
+    "text": "demain",
+    "file": "8d87f74739c36a01.wav"
+  },
+  {
+    "text": "matin",
+    "file": "f3cce486ea320015.wav"
+  },
+  {
+    "text": "Hier, j’ai rencontré un ami et nous avons discuté.",
+    "file": "b44fe2d2b90e4f1a.wav"
+  },
+  {
+    "text": "Qu’est-ce que tu as fait hier ?",
+    "file": "fab2628e427f85a9.wav"
+  },
+  {
+    "text": "Hier",
+    "file": "477a18d2c0f6cf2b.wav"
+  },
+  {
+    "text": "j’ai rencontré un ami",
+    "file": "dc2e5488f0204b1c.wav"
+  },
+  {
+    "text": "et nous avons discuté",
+    "file": "a65170997751c65f.wav"
+  },
+  {
+    "text": "j’ai",
+    "file": "6ac67290e6d5a968.wav"
+  },
+  {
+    "text": "rencontré",
+    "file": "e1efa92e9ebd8860.wav"
+  },
+  {
+    "text": "un",
+    "file": "68bca10eea2ba33f.wav"
+  },
+  {
+    "text": "ami",
+    "file": "5152cc21067154b8.wav"
+  },
+  {
+    "text": "nous",
+    "file": "60dc2d5aede9c753.wav"
+  },
+  {
+    "text": "avons",
+    "file": "418248e0e9c264b6.wav"
+  },
+  {
+    "text": "discuté",
+    "file": "47c9faa32eea706b.wav"
+  },
+  {
+    "text": "J’apprends le français pour communiquer avec plus de personnes.",
+    "file": "33facc44a88d967a.wav"
+  },
+  {
+    "text": "Pourquoi apprends-tu le français ?",
+    "file": "f10fd0236f44f891.wav"
+  },
+  {
+    "text": "J’apprends le français",
+    "file": "59748c5cd43df470.wav"
+  },
+  {
+    "text": "pour communiquer",
+    "file": "e30557f3f4d9cb18.wav"
+  },
+  {
+    "text": "avec plus de personnes",
+    "file": "341cbda84478d09d.wav"
+  },
+  {
+    "text": "J’apprends",
+    "file": "4cf3c8cd25847c9e.wav"
+  },
+  {
+    "text": "le",
+    "file": "61098a4bf2a5e216.wav"
+  },
+  {
+    "text": "français",
+    "file": "fb62c0c2c296e462.wav"
+  },
+  {
+    "text": "communiquer",
+    "file": "12bc56490d664213.wav"
+  },
+  {
+    "text": "avec",
+    "file": "a96b5cac90bfd620.wav"
+  },
+  {
+    "text": "de",
+    "file": "959a45d44e6fcf58.wav"
+  },
+  {
+    "text": "personnes",
+    "file": "87c43321d2dfcccb.wav"
+  },
+  {
+    "text": "À mon avis, apprendre une langue demande de la pratique.",
+    "file": "575472ecf14666e7.wav"
+  },
+  {
+    "text": "Selon toi, comment peut-on progresser dans une langue ?",
+    "file": "936bd339bf8394ed.wav"
+  },
+  {
+    "text": "À mon avis, apprendre une langue demande de la pratique. Il faut parler un peu chaque jour.",
+    "file": "569653c58ff3203f.wav"
+  },
+  {
+    "text": "À mon avis",
+    "file": "3f524a9535394ffa.wav"
+  },
+  {
+    "text": "apprendre une langue",
+    "file": "d88d784ce7fe53f0.wav"
+  },
+  {
+    "text": "demande de la pratique",
+    "file": "3796b6669eada527.wav"
+  },
+  {
+    "text": "À",
+    "file": "3de5b2cd8e26c355.wav"
+  },
+  {
+    "text": "mon",
+    "file": "e6d3efc6abfd85ce.wav"
+  },
+  {
+    "text": "avis",
+    "file": "010a4e39b015b568.wav"
+  },
+  {
+    "text": "apprendre",
+    "file": "4b8532b23f82167b.wav"
+  },
+  {
+    "text": "langue",
+    "file": "6a68f5c0eda77663.wav"
+  },
+  {
+    "text": "demande",
+    "file": "d956eafa6f6ebebc.wav"
+  },
+  {
+    "text": "pratique",
+    "file": "233bc234041083f8.wav"
+  },
+  {
+    "text": "Est-ce que tu serais disponible samedi pour prendre un café ?",
+    "file": "2f61eea646c4fee6.wav"
+  },
+  {
+    "text": "Invite un ami à prendre un café samedi.",
+    "file": "2f1be0902bcc6f2c.wav"
+  },
+  {
+    "text": "Est-ce que tu serais disponible",
+    "file": "0607053e8136b6ec.wav"
+  },
+  {
+    "text": "samedi",
+    "file": "6e4f8414f1d7936e.wav"
+  },
+  {
+    "text": "pour prendre un café",
+    "file": "8355d6938be55308.wav"
+  },
+  {
+    "text": "Est-ce",
+    "file": "a47b8beb6c6d859f.wav"
+  },
+  {
+    "text": "que",
+    "file": "c57b7501cd843672.wav"
+  },
+  {
+    "text": "tu",
+    "file": "764c4c7b78d6fd3b.wav"
+  },
+  {
+    "text": "serais",
+    "file": "850dea9a4d55895d.wav"
+  },
+  {
+    "text": "disponible",
+    "file": "bef24115044ec129.wav"
+  },
+  {
+    "text": "café",
+    "file": "850f7dc43910ff89.wav"
+  },
+  {
+    "text": "Je comprends votre point de vue ; cependant, je ne suis pas tout à fait d’accord.",
+    "file": "3e9a943ecb7487fb.wav"
+  },
+  {
+    "text": "Je pense qu’on ne peut apprendre une langue qu’à l’école. Qu’en penses-tu ?",
+    "file": "df4bf11151de6277.wav"
+  },
+  {
+    "text": "Je comprends votre point de vue ; cependant, je ne suis pas tout à fait d’accord. On peut aussi apprendre en échangeant au quotidien.",
+    "file": "6ae464d7ef6cf38b.wav"
+  },
+  {
+    "text": "Je comprends votre point de vue",
+    "file": "04388d36f7de1d2e.wav"
+  },
+  {
+    "text": "cependant",
+    "file": "fb347ef39241f807.wav"
+  },
+  {
+    "text": "je ne suis pas tout à fait d’accord",
+    "file": "0ca23845dbdb54cc.wav"
+  },
+  {
+    "text": "comprends",
+    "file": "6ed9ade980290ef5.wav"
+  },
+  {
+    "text": "votre",
+    "file": "4127e7bd33f10997.wav"
+  },
+  {
+    "text": "point",
+    "file": "251fecd592e56e6c.wav"
+  },
+  {
+    "text": "vue",
+    "file": "564382267519ae7f.wav"
+  },
+  {
+    "text": "ne",
+    "file": "cb58e4600bf0142c.wav"
+  },
+  {
+    "text": "pas",
+    "file": "7f1f073d8bb9b2e3.wav"
+  },
+  {
+    "text": "tout",
+    "file": "f076b994bfc2fa6c.wav"
+  },
+  {
+    "text": "fait",
+    "file": "332fd19d904b6122.wav"
+  },
+  {
+    "text": "d’accord",
+    "file": "979e4818848adcc1.wav"
+  },
+  {
+    "text": "Tu rencontres un voisin le matin : Bonjour !",
+    "file": "e1b5a6e9e2766ac8.wav"
+  },
+  {
+    "text": "Merci",
+    "file": "26866b3c2036592c.wav"
+  },
+  {
+    "text": "Complète : Bonjour, je m’appelle Marie.",
+    "file": "c59c5b62fb8368e1.wav"
+  },
+  {
+    "text": "Je suis étudiant.",
+    "file": "62777b8d0777425d.wav"
+  },
+  {
+    "text": "Nous avons une voiture.",
+    "file": "93899f70bba3e162.wav"
+  },
+  {
+    "text": "a",
+    "file": "ca978112ca1bbdca.wav"
+  },
+  {
+    "text": "Elle a vingt ans.",
+    "file": "a25813b0a8608e6b.wav"
+  },
+  {
+    "text": "une maison",
+    "file": "9cd1448a47530d5b.wav"
+  },
+  {
+    "text": "des",
+    "file": "7b24c1ad239d4a6b.wav"
+  },
+  {
+    "text": "des livres",
+    "file": "1603968dc1a123f0.wav"
+  },
+  {
+    "text": "un jardin",
+    "file": "b8a61860c4088713.wav"
+  },
+  {
+    "text": "Une maison est près du parc.",
+    "file": "c98745dd46b68bb7.wav"
+  },
+  {
+    "text": "parles",
+    "file": "67e32bff35d74cfe.wav"
+  },
+  {
+    "text": "Tu parles français.",
+    "file": "8c148cf8a4df8028.wav"
+  },
+  {
+    "text": "habitons",
+    "file": "a34a936ff5710d95.wav"
+  },
+  {
+    "text": "Nous habitons à Douala.",
+    "file": "7700160929e6d273.wav"
+  },
+  {
+    "text": "aimez",
+    "file": "c38818bbfd410e3b.wav"
+  },
+  {
+    "text": "Vous aimez la musique.",
+    "file": "0b85e799b225f17f.wav"
+  },
+  {
+    "text": "Nous habitons à Douala",
+    "file": "38b05ffe1e643aa5.wav"
+  },
+  {
+    "text": "Nous parlons français.",
+    "file": "bab50c61a93cad9f.wav"
+  },
+  {
+    "text": "Je parle français",
+    "file": "41956a414d72c3a2.wav"
+  },
+  {
+    "text": "Complète : Je ne parle pas anglais.",
+    "file": "284eef4e0af26b50.wav"
+  },
+  {
+    "text": "n’",
+    "file": "a121386280d0d36a.wav"
+  },
+  {
+    "text": "Complète : Elle n’ aime pas le café.",
+    "file": "e53ac007e8b519ef.wav"
+  },
+  {
+    "text": "bleue",
+    "file": "513c88bf685b8408.wav"
+  },
+  {
+    "text": "Une robe bleue",
+    "file": "b7f0198b1e91f0e4.wav"
+  },
+  {
+    "text": "petites",
+    "file": "8f514f8db163cdee.wav"
+  },
+  {
+    "text": "Des maisons petites",
+    "file": "5e164baff89058be.wav"
+  },
+  {
+    "text": "heureux",
+    "file": "a42d3e322bcc68d7.wav"
+  },
+  {
+    "text": "Des garçons heureux",
+    "file": "e46fc12cd8f7baa3.wav"
+  },
+  {
+    "text": "Les petites maisons sont bleues.",
+    "file": "a732b1fb650c13a3.wav"
+  },
+  {
+    "text": "mangé",
+    "file": "e96a4279a50ec3ed.wav"
+  },
+  {
+    "text": "Hier, j’ai mangé une pomme.",
+    "file": "a79557e23310d0bd.wav"
+  },
+  {
+    "text": "parties",
+    "file": "e7dadf11dca8ea1b.wav"
+  },
+  {
+    "text": "Elles sont parties tôt.",
+    "file": "249f94977d276d7e.wav"
+  },
+  {
+    "text": "Nous avons fini le travail.",
+    "file": "f98f07e3d35a9653.wav"
+  },
+  {
+    "text": "Elles sont parties ce matin.",
+    "file": "e3119d070f4d9276.wav"
+  },
+  {
+    "text": "Elle va à Montréal.",
+    "file": "a9985e258a640ae2.wav"
+  },
+  {
+    "text": "sont",
+    "file": "a5779ea15dbaa787.wav"
+  },
+  {
+    "text": "Ils sont prêts.",
+    "file": "7c6d7437f07e2d24.wav"
+  },
+  {
+    "text": "Il a un billet.",
+    "file": "18d31e1749bde259.wav"
+  },
+  {
+    "text": "allions",
+    "file": "2a78986fb6c116fc.wav"
+  },
+  {
+    "text": "Chaque été, nous allions chez nos cousins.",
+    "file": "e24e8925b5231e7d.wav"
+  },
+  {
+    "text": "jouais",
+    "file": "bbd4fe1cce90b751.wav"
+  },
+  {
+    "text": "Quand j’étais enfant, je jouais dehors.",
+    "file": "c6073661312b5d90.wav"
+  },
+  {
+    "text": "habitaient",
+    "file": "0288cbc4fe1a55a9.wav"
+  },
+  {
+    "text": "Avant, elles habitaient à Yaoundé.",
+    "file": "abc527351d0b2df9.wav"
+  },
+  {
+    "text": "parce que",
+    "file": "1cd2d210c78aee5e.wav"
+  },
+  {
+    "text": "Je reste chez moi parce que je suis malade.",
+    "file": "dc4d75782119cb31.wav"
+  },
+  {
+    "text": "Il pleut ; cependant, nous sortons.",
+    "file": "3a787a3209e0135c.wav"
+  },
+  {
+    "text": "donc",
+    "file": "2c83ee9ff907ecb2.wav"
+  },
+  {
+    "text": "J’ai bien révisé ; je suis donc mieux préparé.",
+    "file": "3bc3404e928fb33b.wav"
+  },
+  {
+    "text": "J’apprends le français pour voyager",
+    "file": "90b01570a5f56fc2.wav"
+  },
+  {
+    "text": "qui",
+    "file": "760176194068f302.wav"
+  },
+  {
+    "text": "La personne qui parle est ma sœur.",
+    "file": "b15f1576dc182d47.wav"
+  },
+  {
+    "text": "Le livre que je lis est intéressant.",
+    "file": "7f1e247fb98a2df0.wav"
+  },
+  {
+    "text": "Les élèves qui travaillent progressent.",
+    "file": "cce07d6874c2b638.wav"
+  },
+  {
+    "text": "sois",
+    "file": "d081ef1b4a171106.wav"
+  },
+  {
+    "text": "Il faut que tu sois prêt.",
+    "file": "b44f5760f92a0074.wav"
+  },
+  {
+    "text": "fassions",
+    "file": "8efcf6e91a9508a4.wav"
+  },
+  {
+    "text": "Il faut que nous fassions attention.",
+    "file": "c50f5ee28c7992c3.wav"
+  },
+  {
+    "text": "vienne",
+    "file": "86af5bb9041be105.wav"
+  },
+  {
+    "text": "Il faut qu’elle vienne à l’heure.",
+    "file": "6cc161d96e438010.wav"
+  }
+]

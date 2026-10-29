@@ -1,0 +1,1 @@
+{"name":"francais-quest-api","version":"0.1.0","private":true,"type":"module","scripts":{"start":"node src/server.js","preview":"node preview.js","test":"node --test"},"engines":{"node":">=24"}}
