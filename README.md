@@ -1,5 +1,23 @@
 # TCF-express-francais — Français Quest
 
+## Version jeu (novembre 2026)
+
+L’apprentissage fonctionne maintenant comme une appli de langue :
+
+- **En-tête de jeu** : série de jours 🔥, XP ⚡ et cœurs ❤️ visibles en permanence.
+- **Questions** : barre de verdict en bas d’écran. Bonne réponse : « Excellent ! », son, +10 XP et série de bonnes réponses. Après la 2e erreur, la bonne réponse et l’explication s’affichent tout de suite.
+- **Erreurs** : le choix faux reste marqué en rouge ; dans les jeux, les mots bien placés et les duos justes sont conservés (`feedback` renvoyé par l’API, sans révéler la solution). Une erreur d’accent seule déclenche un avertissement qui ne consomme pas d’essai.
+- **Cœurs** : 5 par jour (stockés dans le navigateur). Une erreur en coûte un ; chaque bonne réponse en entraînement (`kind: "refill"`) en rend un.
+- **Fin de leçon** : écran de victoire (XP, précision, temps), série qui grandit, nouveaux badges, coffre de l’objectif du jour. Plus d’enchaînement automatique.
+- **Carte** : les leçons s’ouvrent une par une ; une leçon verrouillée peut être jouée comme test.
+- **Fin du parcours** : écran trophée et certificat téléchargeable ou partageable sur WhatsApp.
+- **Profil** : 17 badges à paliers, objectif du jour au choix (5, 10 ou 20), code de sauvegarde pour changer d’appareil, rappel quotidien (fichier agenda .ics).
+- **Oral** : +5 XP par phrase marquée « à l’aise », défi oral du jour (+10 XP).
+- **XP** : 10 par défi réussi, +20 par leçon terminée, +5 par leçon sans faute.
+- **Poids** : avatar en WebP (13 Ko au lieu de 1,4 Mo), voix en MP3 (3 Mo au lieu de 16 Mo), police Inter hébergée avec le site. Après une nouvelle génération des voix en WAV, lancer `node scripts/compress-audio.mjs`.
+
+Les fichiers concernés : `public/app.js`, `public/game.js`, `public/quest.css`, `src/app.js`, `src/content.js`.
+
 ## Déploiement Netlify prêt
 
 Importer ce dépôt sur Netlify avec la branche `main`. La configuration est déjà dans `netlify.toml` : **build `npm run build`**, **publication `public`**, **Node 24**. L’API fonctionne via Netlify Functions et la progression est sauvegardée dans Netlify Blobs, séparément pour chaque apprenant. Le mode démonstration fonctionne sans clé à renseigner.
@@ -10,7 +28,7 @@ Le [guide NETLIFY.md](NETLIFY.md) détaille le déploiement, la persistance, les
 
 ### Progression continue
 
-Les étapes s’enchaînent désormais automatiquement, dans l’ordre des 12 leçons (A1 → A2 → B1 → B2), après une transition de six secondes. L’apprenant peut continuer immédiatement, mettre en pause ou consulter son bilan. Consulter le bilan de l’étape met cette transition en pause ; le bouton Continuer mène directement à la prochaine leçon.
+Les étapes suivent l’ordre des 12 leçons (A1 → A2 → B1 → B2). À la fin de chaque leçon, un écran de victoire résume les XP, la précision et la série ; l’apprenant choisit de continuer ou de consulter ses corrections.
 
 Le repère grammatical et les bilans précédents de la séance restent accessibles depuis les exercices. Aucun changement de leçon n’envoie automatiquement à l’accueil ou au catalogue. Après la dernière leçon disponible, le bilan reste affiché avec des actions volontaires pour recommencer ou travailler l’oral.
 
@@ -20,7 +38,7 @@ Dans le studio oral, « Je suis à l’aise » passe automatiquement à la situa
 
 ### Parcours à deux essais et bilan
 
-Une bonne réponse déclenche la question suivante après un bref retour visuel (400 ms). Après une première erreur, la même question reste ouverte pour un dernier essai et un indice facultatif. La solution n’est pas renvoyée par l’API à ce stade. Après la deuxième erreur, passage automatique (650 ms) et correction conservée pour le bilan.
+Chaque réponse affiche un verdict en bas de l’écran (bouton Continuer ou touche Entrée). Après une première erreur, la même question reste ouverte pour un dernier essai et un indice propre à la question. Après la deuxième erreur, la bonne réponse et son explication s’affichent immédiatement.
 
 Le bilan présente chaque question, les deux réponses éventuelles, l’utilisation d’un indice, la réponse attendue et son explication FR/EN. Il distingue les réussites au premier essai, les réussites au second et les questions à reprendre. « Recommencer » crée une nouvelle session avec exactement les mêmes exercices dans le même ordre ; une activité déjà réussie ne redonne pas de XP.
 
