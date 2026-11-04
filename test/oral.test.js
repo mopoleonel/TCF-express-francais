@@ -44,5 +44,5 @@ test('each oral workshop contains a model, small chunks, a pronunciation cue and
 test('every oral model, question and chunk has a valid local French audio file',()=>{
  const root=new URL('../public/audio-young/',import.meta.url),manifest=JSON.parse(readFileSync(new URL('manifest.json',root),'utf8'));
  for(const p of oralPhrases)for(const text of [p.text,p.question,p.reply,...p.chunks])assert.ok(manifest[text],`Missing audio: ${text}`);
- for(const file of Object.values(manifest)){assert.match(file,/^[a-f0-9]{16}\.wav$/);const audio=readFileSync(new URL(file,root));assert.equal(audio.toString('ascii',0,4),'RIFF');assert.equal(audio.toString('ascii',8,12),'WAVE');assert.ok(audio.length>1000);}
+ for(const file of Object.values(manifest)){assert.match(file,/^[a-f0-9]{16}\.mp3$/);const audio=readFileSync(new URL(file,root));assert.ok(audio.toString('ascii',0,3)==='ID3'||(audio[0]===0xff&&(audio[1]&0xe0)===0xe0),'MP3 header');assert.ok(audio.length>1000);}
 });
