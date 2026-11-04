@@ -12,6 +12,9 @@ export const normalize = (s) =>
     .replace(/[.!?]+$/u, "")
     .trim()
     .replace(/\s+/g, " ");
+// Compare sans accents : une réponse juste à un accent près (« mange » pour « mangé ») n'est pas acceptée,
+// mais on prévient l'apprenant une fois sans lui retirer d'essai, car l'accent change souvent le sens.
+export const stripAccents = (s) => normalize(s).normalize("NFD").replace(/\p{Diacritic}/gu, "");
 export function createApp({
   dbPath = ":memory:",
   apiKey,
@@ -33,6 +36,27 @@ export function createApp({
     const x = Buffer.from(a || ""),
       y = Buffer.from(b);
     return x.length === y.length && timingSafeEqual(x, y);
+  };
+  // Indique ce qui est déjà juste après une 1re erreur, sans révéler la solution complète.
+  const partialFeedback = (e, answer) => {
+    if (e.type === "pairs") {
+      const good = new Set(e.answer.split("|").map(normalize));
+      return {
+        wrongLeft: answer
+          .split("|")
+          .filter((p) => !good.has(normalize(p)))
+          .map((p) => p.split("=")[0]),
+      };
+    }
+    if (e.type === "order") {
+      const a = normalize(answer).split(" "),
+        x = normalize(e.answer).split(" ");
+      let i = 0;
+      while (i < a.length && a[i] === x[i]) i++;
+      return { correctPrefix: i };
+    }
+    if (e.type === "repair") return { wordFound: answer.split(":")[0] === e.answer.split(":")[0] };
+    return null;
   };
   const publicLesson = (l) =>
     l ? { id: l.id, title: l.title, level: l.level, order: l.order, rule: l.rule } : null;
@@ -70,6 +94,23 @@ export function createApp({
       s.correct += r.correct;
     }
     const days = new Set(rows.map((r) => r.created.slice(0, 10)));
+    const sortedDays = [...days].sort();
+    let bestStreak = 0,
+      run = 0;
+    sortedDays.forEach((day, i) => {
+      const prev = i && new Date(sortedDays[i - 1]);
+      run = prev && (new Date(day) - prev) / 86400000 === 1 ? run + 1 : 1;
+      bestStreak = Math.max(bestStreak, run);
+    });
+    const answeredSet = new Set(rows.map((r) => r.exercise));
+    const latestByExercise = rows.reduce((m, r) => m.set(r.exercise, r), new Map());
+    const perfectSessions = db
+      .prepare(
+        `SELECT s.id FROM sessions s WHERE s.learner=? AND json_array_length(s.items) >= 3
+         AND (SELECT COUNT(*) FROM attempts a WHERE a.session=s.id AND a.correct=1) = json_array_length(s.items)
+         AND NOT EXISTS (SELECT 1 FROM submissions u WHERE u.session=s.id AND u.number=2)`,
+      )
+      .all(id).length;
     let streak = 0;
     let d = new Date(now());
     if (!days.has(d.toISOString().slice(0, 10))) d.setUTCDate(d.getUTCDate() - 1);
@@ -77,8 +118,36 @@ export function createApp({
       streak++;
       d.setUTCDate(d.getUTCDate() - 1);
     }
+    const lessonStats = lessons.map((l) => ({
+      id: l.id,
+      total: l.exercises.length,
+      answered: l.exercises.filter((e) => answeredSet.has(e.id)).length,
+      correct: l.exercises.filter((e) => mastered.has(e.id)).length,
+    }));
+    const lessonsDone = lessonStats.filter((l) => l.correct === l.total).length;
+    const xp = mastered.size * 10 + lessonsDone * 20 + perfectSessions * 5;
+    const worldsDone = [0, 1, 2, 3].filter((w) => lessonStats.slice(w * 3, w * 3 + 3).every((l) => l.correct === l.total));
+    const badgeRules = [
+      ["premier-pas", mastered.size >= 1],
+      ["dix-victoires", mastered.size >= 10],
+      ["trente-victoires", mastered.size >= 30],
+      ["tous-les-defis", mastered.size >= exercises.length],
+      ["trois-jours", bestStreak >= 3],
+      ["sept-jours", bestStreak >= 7],
+      ["trente-jours", bestStreak >= 30],
+      ["xp-100", xp >= 100],
+      ["xp-500", xp >= 500],
+      ["xp-1000", xp >= 1000],
+      ["sans-faute", perfectSessions >= 1],
+      ["cinq-sans-faute", perfectSessions >= 5],
+      ...worldsDone.map((w) => ["monde-" + (w + 1), true]),
+      ["parcours-complet", lessonsDone === lessons.length],
+    ];
     return {
-      xp: mastered.size * 10,
+      xp,
+      bestStreak,
+      perfectSessions,
+      lessonsDone,
       masteredExercises: mastered.size,
       totalExercises: exercises.length,
       attempts: rows.length,
@@ -88,17 +157,11 @@ export function createApp({
           .filter((r) => r.correct && r.created.slice(0, 10) === now().toISOString().slice(0, 10))
           .map((r) => r.exercise),
       ).size,
-      lessons: lessons.map((l) => ({
-        id: l.id,
-        total: l.exercises.length,
-        correct: l.exercises.filter((e) => mastered.has(e.id)).length,
-      })),
+      lessons: lessonStats,
+      reviewsDue: [...latestByExercise.values()].filter((r) => r.due <= now().toISOString()).length,
+      mistakes: [...latestByExercise.values()].filter((r) => !r.correct).length,
       skills,
-      badges: [
-        ...(mastered.size >= 1 ? ["premier-pas"] : []),
-        ...(mastered.size >= 10 ? ["dix-victoires"] : []),
-        ...(streak >= 3 ? ["trois-jours"] : []),
-      ],
+      badges: badgeRules.filter(([, ok]) => ok).map(([b]) => b),
     };
   };
   const server = http.createServer(async (req, res) => {
@@ -220,7 +283,7 @@ export function createApp({
             final = finals.find((r) => r.exercise === id);
           let tries = db
             .prepare(
-              "SELECT number,answer,correct,hint_used FROM submissions WHERE session=? AND exercise=? ORDER BY number",
+              "SELECT number,answer,correct,hint_used FROM submissions WHERE session=? AND exercise=? AND number>0 ORDER BY number",
             )
             .all(s.id, id);
           if (!tries.length)
@@ -317,7 +380,7 @@ export function createApp({
       }
       if (path === "/v1/sessions" && req.method === "POST") {
         const { kind = "practice", lessonId, gameType } = body;
-        if (!["practice", "diagnostic", "review", "daily", "game"].includes(kind))
+        if (!["practice", "diagnostic", "review", "daily", "game", "refill"].includes(kind))
           fail(400, "Invalid session kind");
         if (gameType !== undefined && !["order", "repair", "pairs", "listen"].includes(gameType))
           fail(400, "Invalid game type");
@@ -334,13 +397,22 @@ export function createApp({
           pool = first.exercises;
         }
         if (kind === "game")
-          pool = pool.filter((e) => ["order", "repair", "pairs", "listen"].includes(e.type));
+          pool = pool.filter((e) => e.id.startsWith("game-"));
         if (gameType) pool = pool.filter((e) => e.type === gameType);
         const latest = db
           .prepare("SELECT * FROM attempts WHERE learner=? ORDER BY created,rowid")
           .all(learner.id)
           .reduce((m, r) => m.set(r.exercise, r), new Map());
         if (kind === "diagnostic") pool = lessons.map((l) => l.exercises[0]);
+        else if (kind === "refill") {
+          // Entraînement : d'abord les questions ratées, puis les plus anciennes déjà vues.
+          const seen = exercises.filter((e) => latest.has(e.id));
+          pool = [...seen].sort(
+            (a, b) =>
+              latest.get(a.id).correct - latest.get(b.id).correct ||
+              latest.get(a.id).created.localeCompare(latest.get(b.id).created),
+          );
+        }
         else if (kind === "review")
           pool = pool.filter((e) => latest.has(e.id) && latest.get(e.id).due <= now().toISOString());
         else pool = [...pool].sort((a, b) => (latest.has(a.id) ? 1 : 0) - (latest.has(b.id) ? 1 : 0));
@@ -378,11 +450,32 @@ export function createApp({
           .get(s.id, exerciseId);
         if (prior) fail(409, "Exercise already answered in this session");
         const e = exercises.find((e) => e.id === exerciseId),
-          correct = normalize(answer) === normalize(e.answer);
+          correct = normalize(answer) === normalize(e.answer),
+          accentSlip = !correct && e.type === "fill" && stripAccents(answer) === stripAccents(e.answer);
         const count = db
-          .prepare("SELECT COUNT(*) AS n FROM submissions WHERE session=? AND exercise=?")
+          .prepare("SELECT COUNT(*) AS n FROM submissions WHERE session=? AND exercise=? AND number>0")
           .get(s.id, e.id).n;
         if (count >= 2) fail(409, "No attempts remaining");
+        const nudged = db
+          .prepare("SELECT 1 FROM submissions WHERE session=? AND exercise=? AND number=0")
+          .get(s.id, e.id);
+        if (accentSlip && !nudged) {
+          // Essai « gratuit » : enregistré avec le numéro 0, il ne compte ni comme essai ni dans le bilan.
+          db.prepare("INSERT INTO submissions VALUES(?,?,?,?,?,?,?)").run(
+            s.id, e.id, 0, answer, 0, +hintUsed, now().toISOString(),
+          );
+          return send(200, {
+            correct: false,
+            finalized: false,
+            accentCheck: true,
+            hint: e.hint || lessons.find((l) => l.id === e.lessonId).rule,
+            attempt: count,
+            attemptsRemaining: 2 - count,
+            xpEarned: 0,
+            completed: false,
+            progress: progress(learner.id),
+          });
+        }
         const attempt = count + 1,
           finalized = correct || attempt === 2;
         db.prepare("INSERT INTO submissions VALUES(?,?,?,?,?,?,?)").run(
@@ -401,6 +494,7 @@ export function createApp({
             attempt,
             attemptsRemaining: 1,
             hint: e.hint || lessons.find((l) => l.id === e.lessonId).rule,
+            feedback: partialFeedback(e, answer),
             xpEarned: 0,
             completed: false,
             progress: progress(learner.id),

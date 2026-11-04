@@ -31,7 +31,10 @@ test('learning lifecycle, ownership, validation and persistence',async()=>{
   assert.equal(result.data.xpEarned,0);assert.equal(result.data.progress.xp,10);
   const accented=(await request('/v1/sessions','POST',{lessonId:'passe-compose'},a.token)).data;
   result=await request(`/v1/sessions/${accented.id}/answers`,'POST',{exerciseId:'passe-compose-1',answer:'mange'},a.token);
-  assert.equal(result.data.correct,false);assert.equal(result.data.finalized,false);assert.ok(result.data.hint);assert.equal('expected' in result.data,false);
+  // Une erreur d'accent seule déclenche d'abord un avertissement gratuit, sans consommer d'essai.
+  assert.equal(result.data.accentCheck,true);assert.equal(result.data.attemptsRemaining,2);assert.equal('expected' in result.data,false);
+  result=await request(`/v1/sessions/${accented.id}/answers`,'POST',{exerciseId:'passe-compose-1',answer:'mange'},a.token);
+  assert.equal(result.data.accentCheck,undefined);assert.equal(result.data.correct,false);assert.equal(result.data.finalized,false);assert.ok(result.data.hint);assert.equal('expected' in result.data,false);
   result=await request(`/v1/sessions/${accented.id}/answers`,'POST',{exerciseId:'passe-compose-1',answer:'mange',hintUsed:true},a.token);
   assert.equal(result.data.correct,false);assert.equal(result.data.finalized,true);assert.ok(result.data.explanation);
   assert.equal((await request('/v1/sessions','POST',{lessonId:'unknown'},a.token)).status,400);
@@ -99,4 +102,53 @@ test('a continuous journey advances through all lessons in order and stops at th
   assert.equal((await req('/v1/me/progress','GET',null,a.token)).data.masteredExercises,exercises.length);
   assert.equal((await req('/v1/me','DELETE',{},a.token)).data.deleted,true);
  }finally{await new Promise(r=>app.server.close(r));app.db.close();}
+});
+test('gamification: partial feedback keeps learner work, practice mode, richer progress', async () => {
+  const app = createApp({ apiKey });
+  await new Promise((r) => app.server.listen(0, '127.0.0.1', r));
+  const base = `http://127.0.0.1:${app.server.address().port}`;
+  const req = async (path, method = 'POST', body, token) => {
+    const r = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : { 'X-API-Key': apiKey }) }, body: body ? JSON.stringify(body) : undefined });
+    return { status: r.status, data: await r.json() };
+  };
+  try {
+    const a = (await req('/v1/learners', 'POST', { externalId: 'gamer' })).data;
+    // Les mini-jeux ne contiennent que des exercices de jeu, jamais les questions écrites de leçon.
+    const g = (await req('/v1/sessions', 'POST', { kind: 'game', gameType: 'order' }, a.token)).data;
+    assert.ok(g.exercises.every((e) => e.id.startsWith('game-')));
+    // Chaque question écrite a désormais un indice propre.
+    assert.ok(exercises.every((e) => e.hint?.fr && e.hint?.en));
+    // Duos : la 1re erreur indique seulement les paires fausses.
+    const pairs = (await req('/v1/sessions', 'POST', { kind: 'game', gameType: 'pairs' }, a.token)).data;
+    const pe = gameExercises.find((e) => e.id === pairs.exercises[0].id);
+    const good = pe.answer.split('|');
+    const swapped = [good[0].split('=')[0] + '=' + good[1].split('=')[1], good[1].split('=')[0] + '=' + good[0].split('=')[1], ...good.slice(2)].join('|');
+    let r = await req(`/v1/sessions/${pairs.id}/answers`, 'POST', { exerciseId: pe.id, answer: swapped }, a.token);
+    assert.equal(r.data.finalized, false);
+    assert.deepEqual(r.data.feedback.wrongLeft.sort(), [good[0].split('=')[0], good[1].split('=')[0]].sort());
+    // Phrase : la 1re erreur indique combien de mots du début sont bien placés.
+    const order = (await req('/v1/sessions', 'POST', { kind: 'game', gameType: 'order' }, a.token)).data;
+    const oe = gameExercises.find((e) => e.id === order.exercises[0].id);
+    const words = oe.answer.split(' ');
+    r = await req(`/v1/sessions/${order.id}/answers`, 'POST', { exerciseId: oe.id, answer: [words[0], ...words.slice(1).reverse()].join(' ') }, a.token);
+    assert.equal(r.data.feedback.correctPrefix >= 1, true);
+    // Mode entraînement : les questions ratées passent en premier.
+    r = await req(`/v1/sessions/${pairs.id}/answers`, 'POST', { exerciseId: pe.id, answer: swapped }, a.token);
+    assert.equal(r.data.finalized, true);
+    assert.equal(r.data.expected, pe.answer);
+    const refill = (await req('/v1/sessions', 'POST', { kind: 'refill' }, a.token)).data;
+    assert.equal(refill.exercises[0].id, pe.id);
+    const p = (await req('/v1/me/progress', 'GET', undefined, a.token)).data;
+    assert.equal(p.mistakes, 1);
+    assert.ok(Array.isArray(p.badges) && 'bestStreak' in p && 'lessonsDone' in p);
+    // Une leçon terminée sans erreur rapporte les bonus et les badges associés.
+    const l = (await req('/v1/sessions', 'POST', { lessonId: 'premiers-mots' }, a.token)).data;
+    for (const e of l.exercises) await req(`/v1/sessions/${l.id}/answers`, 'POST', { exerciseId: e.id, answer: exercises.find((x) => x.id === e.id).answer }, a.token);
+    const after = (await req('/v1/me/progress', 'GET', undefined, a.token)).data;
+    assert.equal(after.lessonsDone, 1);
+    assert.ok(after.badges.includes('sans-faute') && after.badges.includes('premier-pas'));
+    assert.equal(after.xp, after.masteredExercises * 10 + 20 + after.perfectSessions * 5);
+  } finally {
+    app.server.close();
+  }
 });
