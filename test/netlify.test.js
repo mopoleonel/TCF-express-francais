@@ -25,7 +25,7 @@ test('Netlify cold instances retain accounts, sessions, attempts, reports and th
  let s=(await req('/v1/sessions','POST',{lessonId:'relatifs'},a.token)).data;
  assert.equal((await req(`/v1/sessions/${s.id}/answers`,'POST',{exerciseId:s.exercises[0].id,answer:'qui'},b.token)).status,404);
  for(const e of s.exercises){const source=exercises.find(x=>x.id===e.id);const r=await req(`/v1/sessions/${s.id}/answers`,'POST',{exerciseId:e.id,answer:source.answer},a.token);assert.equal(r.status,200);assert.equal(r.data.correct,true);}
- assert.equal((await req('/v1/me/progress','GET',undefined,a.token)).data.xp,30);
+ assert.equal((await req('/v1/me/progress','GET',undefined,a.token)).data.xp,55); // 3 × 10 XP + 20 XP leçon terminée + 5 XP sans-faute
  assert.equal((await req('/v1/me/progress','GET',undefined,b.token)).data.xp,0);
  const report=(await req(`/v1/sessions/${s.id}/report`,'GET',undefined,a.token)).data;assert.equal(report.correct,3);assert.equal(report.nextLesson.id,'subjonctif');
  const next=(await req(`/v1/sessions/${s.id}/next`,'POST',{},a.token)).data;assert.equal(next.lesson.id,'subjonctif');

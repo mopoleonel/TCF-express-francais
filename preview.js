@@ -7,11 +7,11 @@ mkdirSync('data',{recursive:true});
 const port=Number(process.env.PREVIEW_PORT||8081);
 const origin=`http://127.0.0.1:${port}`;
 const app=createApp({dbPath:'data/preview.sqlite',apiKey:randomBytes(32).toString('hex'),origins:[origin]});
-const assets={'/':['public/index.html','text/html; charset=utf-8'],'/app.js':['public/app.js','text/javascript; charset=utf-8'],'/oral.js':['public/oral.js','text/javascript; charset=utf-8'],'/oral-content.js':['public/oral-content.js','text/javascript; charset=utf-8'],'/assets/leo-avatar.png':['public/assets/leo-avatar.png','image/png'],'/style.css':['public/style.css','text/css; charset=utf-8']};
+const assets={'/':['public/index.html','text/html; charset=utf-8'],'/app.js':['public/app.js','text/javascript; charset=utf-8'],'/oral.js':['public/oral.js','text/javascript; charset=utf-8'],'/oral-content.js':['public/oral-content.js','text/javascript; charset=utf-8'],'/assets/leo-avatar.png':['public/assets/leo-avatar.png','image/png'],'/assets/leo-avatar.webp':['public/assets/leo-avatar.webp','image/webp'],'/game.js':['public/game.js','text/javascript; charset=utf-8'],'/quest.css':['public/quest.css','text/css; charset=utf-8'],'/fonts/inter-latin-wght-normal.woff2':['public/fonts/inter-latin-wght-normal.woff2','font/woff2'],'/style.css':['public/style.css','text/css; charset=utf-8']};
 assets['/audio/manifest.json']=['public/audio/manifest.json','application/json; charset=utf-8'];
 assets['/theme.css']=['public/theme.css','text/css; charset=utf-8'];
 assets['/audio-young/manifest.json']=['public/audio-young/manifest.json','application/json; charset=utf-8'];
-for(const file of readdirSync(new URL('public/audio-young/',import.meta.url)))if(/^[a-f0-9]{16}\.wav$/.test(file))assets['/audio-young/'+file]=['public/audio-young/'+file,'audio/wav'];
+for(const file of readdirSync(new URL('public/audio-young/',import.meta.url)))if(/^[a-f0-9]{16}\.mp3$/.test(file))assets['/audio-young/'+file]=['public/audio-young/'+file,'audio/mpeg'];
 for(const file of readdirSync(new URL('public/audio/',import.meta.url)))if(/^[a-f0-9]{16}\.wav$/.test(file))assets['/audio/'+file]=['public/audio/'+file,'audio/wav'];
 http.createServer((req,res)=>{
  if(req.headers.host!==`127.0.0.1:${port}`){res.writeHead(403);return res.end();}
