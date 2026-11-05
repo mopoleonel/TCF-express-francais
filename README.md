@@ -1,5 +1,17 @@
 # TCF-express-francais — Français Quest
 
+## Habillage « Voyage vers le Canada » (novembre 2026)
+
+Le parcours est mis en scène comme un voyage Douala → Paris → Québec → Montréal (`public/voyage.css`, police Baloo 2 hébergée dans `public/fonts`) :
+
+- **Accueil** : carte d’embarquement « Prochaine escale » et flamme de série animée.
+- **Carte** : chemin sinueux dans le ciel, étapes en pièces dorées, escales par ville ; l’avion vole jusqu’à l’étape atteinte au retour d’une leçon.
+- **Leçon** : Léo commente chaque réponse (saut de joie, grimace), cœur qui se brise, réponses qui apparaissent une à une.
+- **Fin de leçon** : 1 à 3 étoiles, compteurs d’XP et de précision qui défilent, retour à la carte pour voir l’avion avancer.
+- **Profil** : les badges deviennent des tampons de passeport.
+
+Toutes les animations décoratives s’arrêtent si l’appareil demande de réduire les mouvements.
+
 ## Version jeu (novembre 2026)
 
 L’apprentissage fonctionne maintenant comme une appli de langue :
