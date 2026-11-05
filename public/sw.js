@@ -3,7 +3,7 @@
 // - Les voix de Léo sont gardées au fur et à mesure qu'on les écoute (pas de gros téléchargement imposé).
 // - Les appels à l'API ne sont jamais mis en cache : les réponses sont toujours vérifiées par le serveur.
 // Changer VERSION à chaque mise en ligne pour que les téléphones prennent la nouvelle interface.
-const VERSION = "fq-2026-11-05b";
+const VERSION = "fq-2026-11-05c";
 const SHELL = [
   "/",
   "/app.js",
