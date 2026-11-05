@@ -152,3 +152,57 @@ test('gamification: partial feedback keeps learner work, practice mode, richer p
     app.server.close();
   }
 });
+test('reliability: accepted variants, session resume, synced game state, Douala days', async () => {
+  let clock = new Date('2026-11-05T22:30:00Z'); // 23 h 30 à Douala
+  const app = createApp({ apiKey, now: () => clock });
+  await new Promise((r) => app.server.listen(0, '127.0.0.1', r));
+  const base = `http://127.0.0.1:${app.server.address().port}`;
+  const req = async (path, method = 'POST', body, token) => {
+    const r = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : { 'X-API-Key': apiKey }) }, body: body ? JSON.stringify(body) : undefined });
+    return { status: r.status, data: await r.json() };
+  };
+  try {
+    const a = (await req('/v1/learners', 'POST', { externalId: 'fiable' })).data;
+    // « je suis Marie » est une bonne réponse ; la variante n'est jamais envoyée au navigateur.
+    const s = (await req('/v1/sessions', 'POST', { lessonId: 'premiers-mots' }, a.token)).data;
+    assert.ok(s.exercises.every((e) => !('alternatives' in e)));
+    assert.equal((await req(`/v1/sessions/${s.id}/answers`, 'POST', { exerciseId: 'premiers-mots-3', answer: 'suis' }, a.token)).data.correct, true);
+    // Les consignes ambiguës précisent qu'on attend un article indéfini.
+    assert.match(exercises.find((e) => e.id === 'articles-3').prompt, /Un, une ou des/);
+    // Reprise : la session indique ce qui est déjà fait.
+    await req(`/v1/sessions/${s.id}/answers`, 'POST', { exerciseId: 'premiers-mots-1', answer: 'Bonsoir' }, a.token);
+    const resume = (await req(`/v1/sessions/${s.id}`, 'GET', undefined, a.token)).data;
+    assert.deepEqual(resume.answered.find((x) => x.id === 'premiers-mots-3'), { id: 'premiers-mots-3', attempts: 1, finalized: true });
+    assert.deepEqual(resume.answered.find((x) => x.id === 'premiers-mots-1'), { id: 'premiers-mots-1', attempts: 1, finalized: false });
+    const other = (await req('/v1/learners', 'POST', { externalId: 'autre' })).data;
+    assert.equal((await req(`/v1/sessions/${s.id}`, 'GET', undefined, other.token)).status, 404);
+    // Journée comptée à l'heure de Douala : 22 h 30 UTC = 23 h 30 à Douala, puis 23 h 30 UTC = 00 h 30 le lendemain.
+    let p = (await req('/v1/me/progress', 'GET', undefined, a.token)).data;
+    assert.equal(p.today, '2026-11-05');
+    assert.equal(p.dailyCompleted, 1);
+    clock = new Date('2026-11-05T23:30:00Z');
+    p = (await req('/v1/me/progress', 'GET', undefined, a.token)).data;
+    assert.equal(p.today, '2026-11-06');
+    assert.equal(p.dailyCompleted, 0);
+    assert.equal(p.streakDays, 1);
+    // État de jeu : fusion entre deux appareils, XP de l'oral comptés par le serveur.
+    const xp0 = p.xp;
+    let st = (await req('/v1/me/state', 'POST', { state: { hearts: 3, heartsDate: '2026-11-06', goal: 10, oralEasy: ['p1'], oralChallengeDays: ['2026-11-06'] } }, a.token)).data;
+    assert.equal(st.state.hearts, 3);
+    assert.equal(st.progress.xp, xp0 + 15);
+    st = (await req('/v1/me/state', 'POST', { state: { hearts: 5, heartsDate: '2026-11-05', goal: 10, oralEasy: ['p2'] } }, a.token)).data;
+    assert.equal(st.state.hearts, 3, 'un état plus ancien ne recharge pas les cœurs');
+    assert.deepEqual(st.state.oralEasy.sort(), ['p1', 'p2']);
+    assert.equal(st.progress.xp, xp0 + 20);
+    assert.equal((await req('/v1/me/state', 'POST', { state: [] }, a.token)).status, 400);
+    const bad = (await req('/v1/me/state', 'POST', { state: { hearts: 99, goal: 7, oralEasy: 'x' } }, a.token)).data.state;
+    assert.equal(bad.hearts, 3);
+    assert.equal(bad.goal, 5);
+    // Les mini-jeux sont mélangés d'une partie à l'autre.
+    const firsts = new Set();
+    for (let i = 0; i < 8; i++) firsts.add((await req('/v1/sessions', 'POST', { kind: 'game', gameType: 'order' }, a.token)).data.exercises.map((e) => e.id).join());
+    assert.ok(firsts.size > 1);
+  } finally {
+    app.server.close();
+  }
+});

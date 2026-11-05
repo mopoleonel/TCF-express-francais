@@ -14,7 +14,24 @@ export const normalize = (s) =>
     .replace(/\s+/g, " ");
 // Compare sans accents : une réponse juste à un accent près (« mange » pour « mangé ») n'est pas acceptée,
 // mais on prévient l'apprenant une fois sans lui retirer d'essai, car l'accent change souvent le sens.
-export const stripAccents = (s) => normalize(s).normalize("NFD").replace(/\p{Diacritic}/gu, "");
+export const stripAccents = (s) =>
+  normalize(s)
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+// Les journées (série, objectif du jour) sont comptées à l'heure de Douala : UTC+1, sans heure d'été.
+const DAY_OFFSET_MIN = Number(process.env.QUEST_TZ_OFFSET_MINUTES ?? 60);
+export const dayKey = (iso) => new Date(Date.parse(iso) + DAY_OFFSET_MIN * 60000).toISOString().slice(0, 10);
+// Accepte la réponse principale et ses variantes correctes.
+export const accepted = (e, answer) =>
+  [e.answer, ...(e.alternatives || [])].some((a) => normalize(a) === normalize(answer));
+const shuffle = (list) => {
+  const a = [...list];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
 export function createApp({
   dbPath = ":memory:",
   apiKey,
@@ -28,7 +45,8 @@ export function createApp({
  CREATE TABLE IF NOT EXISTS sessions(id TEXT PRIMARY KEY, learner TEXT NOT NULL REFERENCES learners(id), kind TEXT NOT NULL, items TEXT NOT NULL, created TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS attempts(session TEXT NOT NULL REFERENCES sessions(id), exercise TEXT NOT NULL, learner TEXT NOT NULL REFERENCES learners(id), correct INTEGER NOT NULL, answer TEXT NOT NULL, created TEXT NOT NULL, due TEXT NOT NULL, PRIMARY KEY(session,exercise));
  CREATE TABLE IF NOT EXISTS submissions(session TEXT NOT NULL REFERENCES sessions(id), exercise TEXT NOT NULL, number INTEGER NOT NULL, answer TEXT NOT NULL, correct INTEGER NOT NULL, hint_used INTEGER NOT NULL, created TEXT NOT NULL, PRIMARY KEY(session,exercise,number));
- CREATE TABLE IF NOT EXISTS session_next(source TEXT PRIMARY KEY REFERENCES sessions(id), next_session TEXT NOT NULL REFERENCES sessions(id));`);
+ CREATE TABLE IF NOT EXISTS session_next(source TEXT PRIMARY KEY REFERENCES sessions(id), next_session TEXT NOT NULL REFERENCES sessions(id));
+ CREATE TABLE IF NOT EXISTS learner_state(learner TEXT PRIMARY KEY REFERENCES learners(id), data TEXT NOT NULL);`);
   const fail = (status, message) => {
     throw Object.assign(new Error(message), { status });
   };
@@ -81,6 +99,42 @@ export function createApp({
       journeyTotal: lessons.length,
     };
   };
+  // État de jeu synchronisé entre appareils : cœurs, objectif, coffre, XP de l'oral.
+  const readState = (id) => {
+    try {
+      return JSON.parse(db.prepare("SELECT data FROM learner_state WHERE learner=?").get(id)?.data || "{}");
+    } catch {
+      return {};
+    }
+  };
+  const cleanState = (x = {}) => {
+    const day = (v) => (typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null);
+    const ids = (v) =>
+      Array.isArray(v) ? v.filter((t) => typeof t === "string" && t.length < 64).slice(0, 200) : [];
+    return {
+      hearts: Number.isInteger(x.hearts) ? Math.max(0, Math.min(5, x.hearts)) : 5,
+      heartsDate: day(x.heartsDate),
+      goal: [5, 10, 20].includes(x.goal) ? x.goal : 5,
+      chestDate: day(x.chestDate),
+      oralEasy: ids(x.oralEasy),
+      oralChallengeDays: ids(x.oralChallengeDays).filter(day),
+    };
+  };
+  const mergeState = (a, b) => {
+    a = cleanState(a);
+    b = cleanState(b);
+    // Les cœurs du jour le plus récent l'emportent ; le même jour, on garde la valeur reçue.
+    const hearts = (b.heartsDate || "") >= (a.heartsDate || "") ? b : a;
+    return {
+      hearts: hearts.hearts,
+      heartsDate: hearts.heartsDate,
+      goal: b.goal,
+      chestDate: [a.chestDate, b.chestDate].filter(Boolean).sort().pop() || null,
+      oralEasy: [...new Set([...a.oralEasy, ...b.oralEasy])],
+      oralChallengeDays: [...new Set([...a.oralChallengeDays, ...b.oralChallengeDays])].sort().slice(-200),
+    };
+  };
+  const oralXp = (st) => st.oralEasy.length * 5 + st.oralChallengeDays.length * 10;
   const progress = (id) => {
     const rows = db.prepare("SELECT * FROM attempts WHERE learner=? ORDER BY created,rowid").all(id);
     const mastered = new Set(rows.filter((r) => r.correct).map((r) => r.exercise));
@@ -93,7 +147,9 @@ export function createApp({
       s.answered++;
       s.correct += r.correct;
     }
-    const days = new Set(rows.map((r) => r.created.slice(0, 10)));
+    const state = cleanState(readState(id));
+    const today = dayKey(now().toISOString());
+    const days = new Set([...rows.map((r) => dayKey(r.created)), ...state.oralChallengeDays]);
     const sortedDays = [...days].sort();
     let bestStreak = 0,
       run = 0;
@@ -112,7 +168,7 @@ export function createApp({
       )
       .all(id).length;
     let streak = 0;
-    let d = new Date(now());
+    let d = new Date(today + "T00:00:00Z");
     if (!days.has(d.toISOString().slice(0, 10))) d.setUTCDate(d.getUTCDate() - 1);
     while (days.has(d.toISOString().slice(0, 10))) {
       streak++;
@@ -125,8 +181,10 @@ export function createApp({
       correct: l.exercises.filter((e) => mastered.has(e.id)).length,
     }));
     const lessonsDone = lessonStats.filter((l) => l.correct === l.total).length;
-    const xp = mastered.size * 10 + lessonsDone * 20 + perfectSessions * 5;
-    const worldsDone = [0, 1, 2, 3].filter((w) => lessonStats.slice(w * 3, w * 3 + 3).every((l) => l.correct === l.total));
+    const xp = mastered.size * 10 + lessonsDone * 20 + perfectSessions * 5 + oralXp(state);
+    const worldsDone = [0, 1, 2, 3].filter((w) =>
+      lessonStats.slice(w * 3, w * 3 + 3).every((l) => l.correct === l.total),
+    );
     const badgeRules = [
       ["premier-pas", mastered.size >= 1],
       ["dix-victoires", mastered.size >= 10],
@@ -146,6 +204,8 @@ export function createApp({
     return {
       xp,
       bestStreak,
+      oralXp: oralXp(state),
+      today,
       perfectSessions,
       lessonsDone,
       masteredExercises: mastered.size,
@@ -153,9 +213,7 @@ export function createApp({
       attempts: rows.length,
       streakDays: streak,
       dailyCompleted: new Set(
-        rows
-          .filter((r) => r.correct && r.created.slice(0, 10) === now().toISOString().slice(0, 10))
-          .map((r) => r.exercise),
+        rows.filter((r) => r.correct && dayKey(r.created) === today).map((r) => r.exercise),
       ).size,
       lessons: lessonStats,
       reviewsDue: [...latestByExercise.values()].filter((r) => r.due <= now().toISOString()).length,
@@ -268,6 +326,44 @@ export function createApp({
         return send(200, { deleted: true });
       }
       if (path === "/v1/me/progress" && req.method === "GET") return send(200, progress(learner.id));
+      if (path === "/v1/me/state" && req.method === "GET")
+        return send(200, { state: cleanState(readState(learner.id)), progress: progress(learner.id) });
+      if (path === "/v1/me/state" && req.method === "POST") {
+        if (!body.state || typeof body.state !== "object" || Array.isArray(body.state))
+          fail(400, "Invalid state");
+        const merged = mergeState(readState(learner.id), body.state);
+        db.prepare(
+          "INSERT INTO learner_state VALUES(?,?) ON CONFLICT(learner) DO UPDATE SET data=excluded.data",
+        ).run(learner.id, JSON.stringify(merged));
+        return send(200, { state: merged, progress: progress(learner.id) });
+      }
+      // Reprendre une session après un rechargement de page.
+      const sessionRoute = path.match(/^\/v1\/sessions\/([^/]+)$/);
+      if (sessionRoute && req.method === "GET") {
+        const s = db
+          .prepare("SELECT * FROM sessions WHERE id=? AND learner=?")
+          .get(sessionRoute[1], learner.id);
+        if (!s) fail(404, "Session not found");
+        const tries = db
+          .prepare(
+            "SELECT exercise, COUNT(*) AS n FROM submissions WHERE session=? AND number>0 GROUP BY exercise",
+          )
+          .all(s.id);
+        const finals = new Set(
+          db
+            .prepare("SELECT exercise FROM attempts WHERE session=?")
+            .all(s.id)
+            .map((r) => r.exercise),
+        );
+        return send(200, {
+          ...sessionPayload(s),
+          answered: JSON.parse(s.items).map((id) => ({
+            id,
+            attempts: tries.find((t) => t.exercise === id)?.n || 0,
+            finalized: finals.has(id),
+          })),
+        });
+      }
       const reportRoute = path.match(/^\/v1\/sessions\/([^/]+)\/report$/);
       if (reportRoute && req.method === "GET") {
         const s = db
@@ -396,8 +492,7 @@ export function createApp({
           const first = lessons.find((l) => l.exercises.some((e) => !seen.has(e.id))) || lessons.at(-1);
           pool = first.exercises;
         }
-        if (kind === "game")
-          pool = pool.filter((e) => e.id.startsWith("game-"));
+        if (kind === "game") pool = pool.filter((e) => e.id.startsWith("game-"));
         if (gameType) pool = pool.filter((e) => e.type === gameType);
         const latest = db
           .prepare("SELECT * FROM attempts WHERE learner=? ORDER BY created,rowid")
@@ -412,10 +507,13 @@ export function createApp({
               latest.get(a.id).correct - latest.get(b.id).correct ||
               latest.get(a.id).created.localeCompare(latest.get(b.id).created),
           );
-        }
-        else if (kind === "review")
+        } else if (kind === "review")
           pool = pool.filter((e) => latest.has(e.id) && latest.get(e.id).due <= now().toISOString());
-        else pool = [...pool].sort((a, b) => (latest.has(a.id) ? 1 : 0) - (latest.has(b.id) ? 1 : 0));
+        else
+          // Une leçon garde son ordre pédagogique ; les jeux et entraînements sont mélangés à chaque partie.
+          pool = (lessonId ? [...pool] : shuffle(pool)).sort(
+            (a, b) => (latest.has(a.id) ? 1 : 0) - (latest.has(b.id) ? 1 : 0),
+          );
         const selected = pool.slice(0, kind === "diagnostic" ? 12 : kind === "game" ? 4 : 5),
           id = randomUUID();
         db.prepare("INSERT INTO sessions VALUES(?,?,?,?,?)").run(
@@ -450,8 +548,11 @@ export function createApp({
           .get(s.id, exerciseId);
         if (prior) fail(409, "Exercise already answered in this session");
         const e = exercises.find((e) => e.id === exerciseId),
-          correct = normalize(answer) === normalize(e.answer),
-          accentSlip = !correct && e.type === "fill" && stripAccents(answer) === stripAccents(e.answer);
+          correct = accepted(e, answer),
+          accentSlip =
+            !correct &&
+            e.type === "fill" &&
+            [e.answer, ...(e.alternatives || [])].some((a) => stripAccents(answer) === stripAccents(a));
         const count = db
           .prepare("SELECT COUNT(*) AS n FROM submissions WHERE session=? AND exercise=? AND number>0")
           .get(s.id, e.id).n;
@@ -462,7 +563,13 @@ export function createApp({
         if (accentSlip && !nudged) {
           // Essai « gratuit » : enregistré avec le numéro 0, il ne compte ni comme essai ni dans le bilan.
           db.prepare("INSERT INTO submissions VALUES(?,?,?,?,?,?,?)").run(
-            s.id, e.id, 0, answer, 0, +hintUsed, now().toISOString(),
+            s.id,
+            e.id,
+            0,
+            answer,
+            0,
+            +hintUsed,
+            now().toISOString(),
           );
           return send(200, {
             correct: false,

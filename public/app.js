@@ -55,6 +55,7 @@ let report = null,
   viewReport = false,
   pastReports = [];
 // Mesures prises au début d'une session pour fêter ce qui a changé à la fin.
+let waitingNet = false;
 let leoMood = "",
   leoLine = "";
 let combo = 0,
@@ -140,15 +141,57 @@ const worldOf = (l) => worlds[Math.floor((l.order - 1) / 3)];
 // Décalage horizontal des étapes : le chemin serpente comme sur une carte de jeu.
 const SWAY = [0, 70, 95, 50, -40, -90, -70, 10, 85, 60, -30, -80];
 const fox = () => avatarMarkup();
+// Appels au serveur : messages compréhensibles en français, y compris quand le réseau coupe.
+const OFFLINE_MSG = "Pas de connexion internet. Vérifie ton réseau : on réessaie dès qu’il revient.";
 async function api(path, method = "GET", body) {
-  const r = await fetch(path, {
-    method,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await r.json();
-  if (!r.ok) throw new Error(data.error || "Connexion indisponible");
+  let r;
+  try {
+    r = await fetch(path, {
+      method,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw Object.assign(new Error(OFFLINE_MSG), { offline: true });
+  }
+  let data = {};
+  try {
+    data = await r.json();
+  } catch {}
+  if (!r.ok) {
+    const msg =
+      r.status === 429
+        ? data.error
+        : r.status === 401
+          ? "Ta session a expiré. Recharge la page pour continuer."
+          : r.status === 409 && /retry/i.test(data.error || "")
+            ? "Le serveur était occupé. Réessaie dans un instant."
+            : r.status >= 500
+              ? "Le serveur est momentanément indisponible. Réessaie dans un instant."
+              : "Une erreur est survenue. Réessaie.";
+    throw Object.assign(new Error(msg), { status: r.status });
+  }
   return data;
+}
+// Petite mémoire locale pour afficher l'accueil tout de suite, même avec un réseau lent.
+const cache = {
+  get(k) {
+    try {
+      return JSON.parse(localStorage.getItem("quest-cache-" + k));
+    } catch {
+      return null;
+    }
+  },
+  set(k, v) {
+    try {
+      localStorage.setItem("quest-cache-" + k, JSON.stringify(v));
+    } catch {}
+  },
+};
+async function refreshProgress() {
+  progress = await api("/v1/me/progress");
+  cache.set("progress", progress);
+  return progress;
 }
 function toast(message) {
   $("#toast").textContent = message;
@@ -156,7 +199,7 @@ function toast(message) {
   clearTimeout(toast.t);
   toast.t = setTimeout(() => ($("#toast").style.display = "none"), 3500);
 }
-const totalXp = () => (progress.xp || 0) + game.oralXp;
+const totalXp = () => progress.xp || 0;
 const heading = (tag, title, sub) =>
   `<div class="heading"><div><span class="eyebrow">${tag}</span><h1>${title}</h1><p class="subtitle">${sub}</p></div></div>`;
 const complete = (id) => progress.lessons?.find((l) => l.id === id) || { correct: 0, answered: 0, total: 1 };
@@ -210,6 +253,9 @@ function oralChallengeCard() {
     done = game.oralChallengeDone();
   return `<div class="leo-tip oral-challenge ${done ? "done" : ""}">${fox()}<div><span class="eyebrow">DÉFI ORAL DU JOUR · +10 XP</span><h4>« ${esc(p.text)} »</h4><p>${done ? "Défi relevé aujourd’hui. Reviens demain pour une nouvelle phrase !" : "Écoute Léo, puis enregistre-toi une fois avec cette phrase."}</p>${done ? "" : `<button class="text-button" data-oral-challenge="${i}">Relever le défi →</button>`}</div></div>`;
 }
+function finishedHome() {
+  return `<article class="boarding-pass done-pass" aria-label="Voyage terminé"><div class="bp-main"><div class="bp-route"><div><small>Départ</small><b>Douala</b></div><span class="bp-plane" aria-hidden="true">✈</span><div><small>Arrivée</small><b>Montréal</b></div></div><div class="bp-lesson"><small>🏆 Voyage accompli</small><strong>Les 12 étapes sont réussies !</strong></div><div class="bp-meta"><div><small>XP</small><b>${totalXp()}</b></div><div><small>Défis</small><b>${progress.masteredExercises}/${progress.totalExercises}</b></div><div><small>Tampons</small><b>${progress.badges?.length || 0}</b></div></div></div><div class="bp-stub"><p class="bp-next">Garde ton niveau : un entraînement par jour, un défi oral, et rejoue tes leçons préférées.</p><button class="v-btn v-red big" data-start="refill">M’entraîner</button><button class="quiet" data-nav="oral">Défi oral du jour</button><button class="text-button" data-nav="courses">Revoir la carte du voyage</button></div></article>`;
+}
 function home() {
   const next = currentLesson();
   const p = complete(next.id);
@@ -223,7 +269,10 @@ function home() {
       : "Quelques minutes par jour, et ton français décolle.";
   return (
     `<section class="v-home"><div class="v-hello">${fox()}<div><h1>${progress.attempts ? "Bon retour à bord !" : "Bienvenue à bord !"}</h1><p>${greet}</p></div><div class="v-flame ${savedToday ? "lit" : ""}" aria-label="Série de ${streak} jours"><span>🔥</span><b>${streak}</b><small>jour${streak > 1 ? "s" : ""}</small></div></div>` +
-    `<article class="boarding-pass" aria-label="Ta prochaine leçon"><div class="bp-main"><div class="bp-route"><div><small>Départ</small><b>Douala</b></div><span class="bp-plane" aria-hidden="true">✈</span><div><small>Destination</small><b>Montréal</b></div></div><div class="bp-lesson"><small>Prochaine escale · ${w.flag} ${w.city}</small><strong>${esc(next.title.fr)}</strong></div><div class="bp-meta"><div><small>Étape</small><b>${next.order}/${catalog.length}</b></div><div><small>Niveau</small><b>${next.level}</b></div><div><small>Défis</small><b>${p.correct}/${p.total}</b></div></div></div><div class="bp-stub"><div class="bp-trip" aria-label="Avancement du voyage">${catalog.map((l) => `<i class="${complete(l.id).correct === complete(l.id).total ? "done" : l.id === next.id ? "now" : ""}"></i>`).join("")}</div><button class="v-btn v-red big" data-lesson="${next.id}">${p.answered ? "Reprendre le vol" : "Embarquer"}</button><button class="text-button" data-nav="courses">Voir la carte du voyage</button></div></article></section>` +
+    (progress.lessonsDone === catalog.length && catalog.length
+      ? finishedHome()
+      : `<article class="boarding-pass" aria-label="Ta prochaine leçon"><div class="bp-main"><div class="bp-route"><div><small>Départ</small><b>Douala</b></div><span class="bp-plane" aria-hidden="true">✈</span><div><small>Destination</small><b>Montréal</b></div></div><div class="bp-lesson"><small>Prochaine escale · ${w.flag} ${w.city}</small><strong>${esc(next.title.fr)}</strong></div><div class="bp-meta"><div><small>Étape</small><b>${next.order}/${catalog.length}</b></div><div><small>Niveau</small><b>${next.level}</b></div><div><small>Défis</small><b>${p.correct}/${p.total}</b></div></div></div><div class="bp-stub"><div class="bp-trip" role="img" aria-label="Avancement du voyage : ${catalog.filter((l) => complete(l.id).correct === complete(l.id).total).length} étapes sur ${catalog.length}">${catalog.map((l) => `<i class="${complete(l.id).correct === complete(l.id).total ? "done" : l.id === next.id ? "now" : ""}"></i>`).join("")}</div><button class="v-btn v-red big" data-lesson="${next.id}">${p.answered ? "Reprendre le vol" : "Embarquer"}</button><button class="text-button" data-nav="courses">Voir la carte du voyage</button></div></article>`) +
+    `</section>` +
     `<div class="home-grid"><section><div class="section-title"><h2>Mini-jeux express</h2><button class="text-button" data-nav="games">Tous les jeux</button></div><div class="games-grid">${Object.entries(gameInfo).map(gameCard).join("")}</div>${stats()}</section><aside class="home-rail">${goalCard()}${oralChallengeCard()}</aside></div>`
   );
 }
@@ -243,7 +292,7 @@ function map() {
             const stars = [1, 2, 3]
               .map((n) => `<i class="${p.correct / p.total >= n / 3 ? "lit" : ""}">★</i>`)
               .join("");
-            return `<div class="v-stop ${ok ? "done" : ""} ${open ? "" : "locked"} ${isCur ? "current" : ""}" style="--x:${SWAY[l.order - 1]}px">${isCur ? `<span class="v-bubble">${p.answered ? "Reprendre" : "Commencer"}</span>` : ""}<button class="v-node" ${open ? `data-lesson="${l.id}"` : `data-locked="${l.id}"`} aria-label="${open ? "Ouvrir" : "Leçon verrouillée :"} ${esc(l.title.fr)}"><span>${ok ? "★" : open ? l.order : "🔒"}</span></button><div class="v-label"><b>${esc(l.title.fr)}</b><span class="v-stars" aria-label="${p.correct} défis réussis sur ${p.total}">${stars}</span></div></div>`;
+            return `<div class="v-stop ${ok ? "done" : ""} ${open ? "" : "locked"} ${isCur ? "current" : ""}" style="--x:${SWAY[l.order - 1]}px">${isCur ? `<span class="v-bubble">${p.answered ? "Reprendre" : "Commencer"}</span>` : ""}<button class="v-node" ${open ? `data-lesson="${l.id}"` : `data-locked="${l.id}"`} aria-label="${ok ? "★" : l.order} — ${esc(l.title.fr)}${ok ? " (réussie)" : open ? "" : " (verrouillée)"}"><span aria-hidden="true">${ok ? "★" : open ? l.order : "🔒"}</span></button><div class="v-label"><b>${esc(l.title.fr)}</b><span class="v-stars" aria-label="${p.correct} défis réussis sur ${p.total}">${stars}</span></div></div>`;
           })
           .join("")}`,
     )
@@ -417,16 +466,34 @@ function countUp() {
     requestAnimationFrame(tick);
   });
 }
-async function navigate(p) {
+async function navigate(p, { fromHistory = false } = {}) {
   if (busy) return;
   cleanupOral();
+  if (page === "quiz") forgetSession();
   page = p;
-  history.replaceState(null, "", "#" + p);
+  // Chaque écran entre dans l'historique : le bouton retour du téléphone revient à l'écran précédent.
+  if (!fromHistory && location.hash !== "#" + p) history.pushState({ page: p }, "", "#" + p);
   session = null;
-  progress = await api("/v1/me/progress");
   render();
   window.scrollTo(0, 0);
+  try {
+    await refreshProgress();
+    if (page === p) render();
+  } catch (e) {
+    if (!e.offline) toast(e.message);
+  }
 }
+// Leçon en cours mémorisée pour la reprendre après un rechargement de la page.
+const rememberSession = (id) => {
+  try {
+    localStorage.setItem("quest-session", id);
+  } catch {}
+};
+const forgetSession = () => {
+  try {
+    localStorage.removeItem("quest-session");
+  } catch {}
+};
 
 /* ---------- Dialogues ---------- */
 function dialog(html, extraClass = "") {
@@ -490,8 +557,32 @@ function resetQuestion() {
   lockedPairs = [];
   notice = null;
 }
+// Mélange une fois par question l'ordre des choix, des tuiles et des paires : on apprend le français, pas une position.
+function mixOnce(e) {
+  if (e._mixed) return e;
+  const mix = (a) => {
+    const b = [...a];
+    for (let i = b.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [b[i], b[j]] = [b[j], b[i]];
+    }
+    return b;
+  };
+  if (e.choices) e.choices = mix(e.choices);
+  if (e.right) e.right = mix(e.right);
+  if (e.replacements) e.replacements = mix(e.replacements);
+  if (e.tiles && e.tiles.length > 2) {
+    let t = mix(e.tiles);
+    for (let k = 0; k < 4 && t.join(" ") === e.tiles.join(" "); k++) t = mix(e.tiles);
+    e.tiles = t;
+  }
+  e._mixed = true;
+  return e;
+}
 function beginSession(s) {
   session = s;
+  session.exercises.forEach(mixOnce);
+  rememberSession(s.id);
   report = null;
   reportPending = false;
   viewReport = false;
@@ -508,9 +599,25 @@ function beginSession(s) {
   };
   resetQuestion();
   page = "quiz";
+  if (location.hash !== "#jeu") history.pushState({ page: "quiz" }, "", "#jeu");
   render();
   autoListen();
   window.scrollTo(0, 0);
+}
+// Reprise d'une leçon interrompue (rechargement, appel, batterie…).
+async function resumeSession(id) {
+  const s = await api("/v1/sessions/" + id);
+  const pos = s.answered.findIndex((a) => !a.finalized);
+  if (pos < 0) return (forgetSession(), false);
+  beginSession(s);
+  index = pos;
+  if (s.answered[pos].attempts === 1) {
+    result = { correct: false, finalized: false };
+    notice = { text: "Il te reste un essai. L’indice peut t’aider." };
+  }
+  renderQuiz();
+  toast("On reprend ta leçon là où tu t’étais arrêté.");
+  return true;
 }
 async function start(kind, lessonId, gameType) {
   if (busy) return;
@@ -584,9 +691,9 @@ function footer(e, locked, second) {
     return `<div class="q-footer ${ok ? "is-correct" : "is-wrong"}" role="status"><div class="q-verdict"><span class="q-verdict-icon">${ok ? "✓" : "✕"}</span><div><b>${ok ? notice?.praise || "Excellent !" : "Bonne réponse :"}</b>${ok ? (result.xpEarned ? `<span class="q-xp">+${result.xpEarned} XP</span>` : "") + (combo >= 3 ? `<span class="q-combo">🔥 ${combo} d’affilée !</span>` : "") : `<p class="q-expected">${esc(displayExpected(e, result.expected))}</p>`}${expl && !ok ? `<p class="q-expl">${esc(expl)}</p>` : ""}</div>${!ok && e.type !== "pairs" ? `<button type="button" class="text-button" data-say="${esc(practiceSentence(e, result))}" aria-label="Écouter la bonne réponse">🔊</button>` : ""}</div><button class="primary big" id="next-q" type="button">Continuer</button></div>`;
   }
   const band = notice?.accent
-    ? `<div class="q-band warn"><b>Presque ! Vérifie les accents.</b><span>Cet essai ne compte pas : corrige et valide.</span></div>`
+    ? `<div class="q-band warn" role="status"><b>Presque ! Vérifie les accents.</b><span>Cet essai ne compte pas : corrige et valide.</span></div>`
     : second
-      ? `<div class="q-band wrong"><b>Pas tout à fait… ❤️ −1</b><span>${esc(notice?.text || "Il te reste un essai. L’indice peut t’aider.")}</span></div>`
+      ? `<div class="q-band wrong" role="status"><b>Pas tout à fait… ❤️ −1</b><span>${esc(notice?.text || "Il te reste un essai. L’indice peut t’aider.")}</span></div>`
       : "";
   return `<div class="q-footer ${second ? "is-retry" : ""}">${band}<div class="q-actions">${hintBtn}<button class="primary big" id="validate" type="submit" form="answer-form" ${!choice.trim() ? "disabled" : ""}>${second ? "Dernier essai" : "Valider"}</button></div></div>`;
 }
@@ -615,7 +722,7 @@ function renderQuiz() {
           ? g.name
           : "Entraînement";
   $("#main").innerHTML =
-    `<div class="q-screen"><div class="q-top"><button class="q-close" id="quit-q" aria-label="Quitter la leçon">✕</button><div class="q-progress" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${index + (locked ? 1 : 0)}"><span style="width:${((index + (locked ? 1 : 0)) / total) * 100}%"></span></div><span class="q-hearts ${game.hearts <= 1 ? "low" : ""} ${heartHit() ? "hit" : ""}" aria-label="${game.hearts} cœurs">❤️ ${game.hearts}</span></div><div class="v-coach ${leoMood}"><div class="v-coach-leo">${fox()}</div><p class="v-coach-say" aria-live="polite">${esc(leoLine || coachLine(e))}</p></div><div class="q-meta"><span>${esc(title)}</span>${session.lesson ? `<details class="q-rule"><summary>📖 La règle</summary><p>${esc(session.lesson.rule[locale] || session.lesson.rule.fr)}</p></details>` : ""}${pastReports.length ? '<button class="text-button" id="past-report">Bilans précédents</button>' : ""}</div><section class="q-card ${anim}"><span class="q-type">${g ? g.icon + " " + g.name : typeLabel[e.type] || "Défi"} · ${e.level}</span><h2>${esc(e.prompt)}</h2>${e.instruction ? `<p class="question-instruction">${esc(e.instruction)}</p>` : ""}<form id="answer-form">${answerGame(e, locked)}${hintOpen ? `<div class="hint-box"><b>💡 Indice</b><p>${esc(e.hint?.[locale] || e.hint?.fr || lessonData?.rule?.[locale] || "Observe le sujet, le verbe et les accords dans la phrase.")}</p></div>` : ""}</form></section>${footer(e, locked, second)}</div>`;
+    `<div class="q-screen"><div class="q-top"><button class="q-close" id="quit-q" aria-label="Quitter la leçon">✕</button><div class="q-progress" role="progressbar" aria-label="Progression de la leçon" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${index + (locked ? 1 : 0)}"><span style="width:${((index + (locked ? 1 : 0)) / total) * 100}%"></span></div><span class="q-hearts ${game.hearts <= 1 ? "low" : ""} ${heartHit() ? "hit" : ""}" aria-label="${game.hearts} cœurs">❤️ ${game.hearts}</span></div><h1 class="sr-only">${esc(title)}</h1><div class="v-coach ${leoMood}"><div class="v-coach-leo">${fox()}</div><p class="v-coach-say" aria-live="polite">${esc(leoLine || coachLine(e))}</p><button type="button" class="lang-toggle" aria-label="${locale === "en" ? "Retirer l’aide en anglais" : "Ajouter une aide en anglais"}" aria-pressed="${locale === "en"}">${locale === "en" ? "EN ✓" : "EN"}</button></div>${waitingNet ? '<p class="net-wait" role="status">📶 Pas de réseau : ta réponse partira dès que la connexion revient.</p>' : ""}<div class="q-meta"><span>${esc(title)}</span>${session.lesson ? `<details class="q-rule"><summary>📖 La règle</summary><p>${esc(session.lesson.rule[locale] || session.lesson.rule.fr)}</p></details>` : ""}${pastReports.length ? '<button class="text-button" id="past-report">Bilans précédents</button>' : ""}</div><section class="q-card ${anim}"><span class="q-type">${g ? g.icon + " " + g.name : typeLabel[e.type] || "Défi"} · ${e.level}</span><h2>${esc(e.prompt)}</h2>${e.instruction ? `<p class="question-instruction">${esc(e.instruction)}</p>` : ""}<form id="answer-form">${answerGame(e, locked)}${hintOpen ? `<div class="hint-box"><b>💡 Indice</b><p>${esc(e.hint?.[locale] || e.hint?.fr || lessonData?.rule?.[locale] || "Observe le sujet, le verbe et les accords dans la phrase.")}</p></div>` : ""}</form></section>${footer(e, locked, second)}</div>`;
   anim = "";
   leoMood = "";
   leoLine = "";
@@ -751,13 +858,23 @@ async function submit(ev) {
       }
     }
     hud();
+    waitingNet = false;
   } catch (err) {
-    toast(err.message);
+    if (err.offline) {
+      // La réponse est gardée : elle sera envoyée automatiquement au retour du réseau.
+      waitingNet = true;
+      renderQuiz();
+    } else toast(err.message);
     if ($("#validate")) $("#validate").disabled = false;
   } finally {
     busy = false;
   }
 }
+window.addEventListener("online", () => {
+  document.body.classList.remove("is-offline");
+  if (waitingNet && page === "quiz" && choice.trim()) submit();
+});
+window.addEventListener("offline", () => document.body.classList.add("is-offline"));
 
 /* ---------- Fin de leçon : célébration, puis bilan ---------- */
 function correctionsMarkup(report) {
@@ -789,7 +906,7 @@ function loadReport() {
     .then(async (data) => {
       if (page !== "quiz" || session?.id !== id) return;
       report = data;
-      progress = await api("/v1/me/progress");
+      await refreshProgress();
       reportPending = false;
       renderSummary(true);
     })
@@ -825,8 +942,11 @@ function renderVictory(fresh) {
     daily = progress.dailyCompleted || 0,
     chestReady = daily >= goal && !game.chestOpenedToday();
   const isGame = !session.lesson && session.kind === "game";
+  forgetSession();
   const title = perfect
-    ? "Leçon parfaite !"
+    ? isGame
+      ? "Partie parfaite !"
+      : "Leçon parfaite !"
     : accuracy >= 60
       ? isGame
         ? "Partie terminée !"
@@ -834,7 +954,7 @@ function renderVictory(fresh) {
       : "Bien tenté !";
   const stars = perfect ? 3 : accuracy >= 80 ? 2 : accuracy >= 40 ? 1 : 0;
   $("#main").innerHTML =
-    `<section class="victory"><div class="v-stars-big ${fresh ? "go" : "shown"}" aria-label="${stars} étoile${stars > 1 ? "s" : ""} sur 3">${[1, 2, 3].map((n) => `<span class="${n <= stars ? "lit" : ""}" style="--d:${0.35 + n * 0.35}s">★</span>`).join("")}</div><div class="victory-leo ${fresh ? "dance" : ""}">${fox()}</div><span class="eyebrow">${session.lesson ? `ÉTAPE ${session.lesson.order} / ${catalog.length}` : isGame ? "MINI-JEU" : "ENTRAÎNEMENT"}</span><h1>${title}</h1><p>${perfect ? "Zéro erreur, chapeau ! Bonus sans-faute débloqué." : report.incorrect ? `${report.incorrect} question${report.incorrect > 1 ? "s" : ""} à revoir : elles reviendront dans tes révisions.` : "Toutes les réponses sont trouvées. Bravo !"}</p><div class="victory-cards"><div class="vc xp"><small>XP gagnés</small><b>⚡ <span data-count="${gained}">${fresh ? 0 : gained}</span></b></div><div class="vc acc ${accuracy >= 80 ? "great" : ""}"><small>Précision</small><b>🎯 <span data-count="${accuracy}">${fresh ? 0 : accuracy}</span>%</b></div><div class="vc time"><small>Temps</small><b>⏱ ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}</b></div></div>${bestCombo >= 3 ? `<p class="victory-extra">🔥 Meilleure série de bonnes réponses : ${bestCombo}</p>` : ""}${streakUp ? `<div class="streak-up"><span>🔥</span><div><b>${progress.streakDays} jour${progress.streakDays > 1 ? "s" : ""} de suite !</b><small>Ta série grandit. Reviens demain pour la garder.</small></div></div>` : ""}${newBadges
+    `<section class="victory"><div class="v-stars-big ${fresh ? "go" : "shown"}" aria-label="${stars} étoile${stars > 1 ? "s" : ""} sur 3">${[1, 2, 3].map((n) => `<span class="${n <= stars ? "lit" : ""}" style="--d:${0.35 + n * 0.35}s">★</span>`).join("")}</div><div class="victory-leo ${fresh ? "dance" : ""}">${fox()}</div><span class="eyebrow">${session.lesson ? `ÉTAPE ${session.lesson.order} / ${catalog.length}` : isGame ? "MINI-JEU" : "ENTRAÎNEMENT"}</span><h1>${title}</h1><p>${perfect ? (isGame ? "Zéro erreur, chapeau !" : "Zéro erreur, chapeau ! Bonus sans-faute débloqué.") : report.incorrect ? `${report.incorrect} question${report.incorrect > 1 ? "s" : ""} à revoir : elles reviendront dans tes révisions.` : "Toutes les réponses sont trouvées. Bravo !"}</p><div class="victory-cards"><div class="vc xp"><small>XP gagnés</small><b>⚡ <span data-count="${gained}">${fresh ? 0 : gained}</span></b></div><div class="vc acc ${accuracy >= 80 ? "great" : ""}"><small>Précision</small><b>🎯 <span data-count="${accuracy}">${fresh ? 0 : accuracy}</span>%</b></div><div class="vc time"><small>Temps</small><b>⏱ ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}</b></div></div>${bestCombo >= 3 ? `<p class="victory-extra">🔥 Meilleure série de bonnes réponses : ${bestCombo}</p>` : ""}${streakUp ? `<div class="streak-up"><span>🔥</span><div><b>${progress.streakDays} jour${progress.streakDays > 1 ? "s" : ""} de suite !</b><small>Ta série grandit. Reviens demain pour la garder.</small></div></div>` : ""}${newBadges
       .map((b) => BADGES.find((x) => x[0] === b))
       .filter(Boolean)
       .map(
@@ -853,6 +973,7 @@ function renderVictory(fresh) {
   }
 }
 function renderFinale(fresh) {
+  forgetSession();
   hud();
   $("#main").innerHTML =
     `<section class="victory finale"><div class="big-emoji bounce">🏆</div><span class="eyebrow">PARCOURS TERMINÉ</span><h1>Tu as terminé les 12 leçons !</h1><p>De « Bonjour » au subjonctif : tu as parcouru les 4 mondes, de A1 à B2.</p><div class="victory-cards"><div class="vc xp"><small>XP TOTAL</small><b>⚡ ${totalXp()}</b></div><div class="vc"><small>DÉFIS RÉUSSIS</small><b>✓ ${progress.masteredExercises} / ${progress.totalExercises}</b></div><div class="vc"><small>BADGES</small><b>🏅 ${progress.badges.length}</b></div></div><div class="certificate"><label>Ton prénom pour le certificat<input id="cert-name" maxlength="40" placeholder="Ex. : Aïcha" autocomplete="given-name"></label><div class="victory-actions"><button class="primary" id="cert-download">📜 Télécharger mon certificat</button><button class="quiet" id="cert-share">Partager sur WhatsApp</button></div></div><div class="victory-actions"><button class="primary big" data-nav="oral">Continuer à l’oral →</button><button class="quiet" id="show-full-report">Voir mes corrections</button><button class="text-button" data-start="refill">Réviser mes erreurs</button></div></section>`;
@@ -1031,7 +1152,9 @@ document.addEventListener("click", async (ev) => {
       const old = token;
       token = code;
       try {
-        progress = await api("/v1/me/progress");
+        const st = await api("/v1/me/state");
+        game.adopt(st.state);
+        progress = st.progress;
         localStorage.setItem("quest-token", token);
         toast("Progression récupérée !");
         render();
@@ -1041,7 +1164,7 @@ document.addEventListener("click", async (ev) => {
       }
     }
     if (b.id === "add-reminder") reminderFile(19);
-    if (b.id === "language") {
+    if (b.id === "language" || b.classList.contains("lang-toggle")) {
       cleanupOral();
       locale = locale === "en" ? "fr" : "en";
       localStorage.setItem("quest-locale", locale);
@@ -1083,40 +1206,88 @@ document.addEventListener("quest:oral", (ev) => {
   }
   if (gained) {
     play("correct");
-    hud();
     flyXp($("#record-panel") || $("#main"), gained);
+    game
+      .sync()
+      .then((r) => {
+        if (r?.progress) progress = r.progress;
+        hud();
+      })
+      .catch(() => {});
   }
 });
 async function init() {
+  // 1. Afficher tout de suite ce qu'on connaît déjà (visite précédente), sans attendre le réseau.
+  const cachedCatalog = cache.get("catalog"),
+    cachedProgress = cache.get("progress");
+  if (token && cachedCatalog && cachedProgress) {
+    catalog = cachedCatalog;
+    progress = cachedProgress;
+    if (page === "quiz") page = "home";
+    render();
+  }
   try {
-    if (token) {
-      try {
-        progress = await api("/v1/me/progress");
-      } catch {
-        token = null;
-      }
-    }
     if (!token) {
-      const r = await fetch("/demo/register", { method: "POST" });
-      if (!r.ok) throw new Error("Impossible de créer le compte de démonstration");
+      const r = await fetch("/demo/register", { method: "POST" }).catch(() => null);
+      if (!r) throw Object.assign(new Error(OFFLINE_MSG), { offline: true });
+      if (!r.ok)
+        throw new Error(
+          (await r.json().catch(() => ({}))).error || "Impossible de créer ton profil. Réessaie.",
+        );
       token = (await r.json()).token;
       localStorage.setItem("quest-token", token);
-      progress = await api("/v1/me/progress");
     }
-    catalog = (await api("/v1/catalog")).lessons;
+    game.connect((st) => api("/v1/me/state", "POST", { state: st }));
+    // 2. Progression, état de jeu et catalogue en même temps.
+    const [st, cat] = await Promise.all([game.sync(), api("/v1/catalog")]);
+    progress = st.progress;
+    catalog = cat.lessons;
+    cache.set("progress", progress);
+    cache.set("catalog", catalog);
+    // 3. Reprendre une leçon interrompue, sinon afficher la page demandée.
+    const pending = localStorage.getItem("quest-session");
+    if (pending && (await resumeSession(pending).catch(() => (forgetSession(), false)))) return;
+    if (page === "quiz") page = "home";
     render();
   } catch (e) {
+    if (e.status === 401) {
+      localStorage.removeItem("quest-token");
+      token = null;
+      return init();
+    }
+    if (catalog.length) {
+      toast(e.message);
+      return;
+    }
     $("#main").innerHTML =
-      `<div class="panel empty"><h2>Léo a perdu le chemin…</h2><p>${esc(e.message)}</p><button class="primary" onclick="location.reload()">On réessaie ?</button></div>`;
+      `<div class="panel empty center-dialog">${fox()}<h2>${e.offline ? "Pas de connexion" : "Léo a perdu le chemin…"}</h2><p>${esc(e.message)}</p><button class="primary" onclick="location.reload()">Réessayer</button></div>`;
   }
 }
 const pages = ["home", "courses", "games", "oral", "review", "progress"];
 const initialPage = location.hash.slice(1);
 if (pages.includes(initialPage)) page = initialPage;
-window.addEventListener("resize", () => page === "courses" && drawRoute());
-window.addEventListener("hashchange", () => {
+if (initialPage === "jeu") page = "quiz";
+history.replaceState({ page }, "", location.hash || "#home");
+// Bouton retour du téléphone / du navigateur.
+window.addEventListener("popstate", () => {
   const requested = location.hash.slice(1);
-  if (pages.includes(requested) && requested !== page) navigate(requested).catch((e) => toast(e.message));
+  if (page === "quiz" && session && index < session.exercises.length) {
+    // Pendant une leçon : on reste et on demande confirmation.
+    history.pushState({ page: "quiz" }, "", "#jeu");
+    if (index === 0 && !result) navigate("courses");
+    else quitDialog();
+    return;
+  }
+  if ($("#lesson-dialog").open) $("#lesson-dialog").close();
+  if (pages.includes(requested) && requested !== page)
+    navigate(requested, { fromHistory: true }).catch((e) => toast(e.message));
 });
+window.addEventListener("resize", () => page === "courses" && drawRoute());
+if (!navigator.onLine) document.body.classList.add("is-offline");
+if (
+  "serviceWorker" in navigator &&
+  (location.protocol === "https:" || location.hostname === "127.0.0.1" || location.hostname === "localhost")
+)
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
 initLeo();
 init();

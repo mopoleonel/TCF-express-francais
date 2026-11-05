@@ -24,7 +24,19 @@ async function dispatch(app,{path,method,headers,body}){
  * Conditional writes prevent simultaneous function instances from losing an answer.
  * The temporary SQLite file is discarded after every invocation.
  */
-export function createNetlifyHandler({store,apiKey='',demoRegistration=true,allowedOrigins=[]}={}){
+async function allowRegistration(store,request,limit){
+ const ip=request.headers.get('x-nf-client-connection-ip')||request.headers.get('x-forwarded-for')?.split(',')[0].trim()||'inconnue';
+ const key='ratelimit/'+hash('register:'+ip).slice(0,32)+'/'+new Date().toISOString().slice(0,13);
+ for(let retry=0;retry<5;retry++){
+  const saved=await store.getWithMetadata(key,{type:'arrayBuffer',consistency:'strong'});
+  const count=saved?Number(Buffer.from(saved.data).toString()||0):0;
+  if(count>=limit)return false;
+  const {modified}=await store.set(key,String(count+1),saved?{onlyIfMatch:saved.etag}:{onlyIfNew:true});
+  if(modified)return true;
+ }
+ return false;
+}
+export function createNetlifyHandler({store,apiKey='',demoRegistration=true,allowedOrigins=[],registrationLimit=40}={}){
  if(!store)throw new Error('A persistent store is required');
  const engineKey=apiKey.length>=24?apiKey:randomBytes(32).toString('hex');
  return async function handle(request){
@@ -44,7 +56,9 @@ export function createNetlifyHandler({store,apiKey='',demoRegistration=true,allo
    const bootstrap=path==='/demo/register'&&method==='POST',create=path==='/v1/learners'&&method==='POST',rotation=path.match(/^\/v1\/learners\/([^/]+)\/token$/);
    const service=apiKey.length>=24&&same(request.headers.get('x-api-key'),apiKey);
    if(create||rotation){if(!service)return finish(401,{error:'Service key required'});}
-   if(bootstrap){if(!demoRegistration)return finish(403,{error:'Demo registration is disabled'});if(origin!==url.origin)return finish(403,{error:'Same-origin registration required'});}
+   if(bootstrap){if(!demoRegistration)return finish(403,{error:'Demo registration is disabled'});if(origin!==url.origin)return finish(403,{error:'Same-origin registration required'});
+    // Limite de créations de profils par adresse IP et par heure (une salle de classe partage souvent la même IP).
+    if(!(await allowRegistration(store,request,registrationLimit)))return finish(429,{error:'Trop de nouveaux profils depuis ce réseau. Réessaie dans une heure.'});}
    const token=request.headers.get('authorization')?.replace(/^Bearer /,''),tokenId=token?.split('.')[0];
    let id;
    if(bootstrap||create){

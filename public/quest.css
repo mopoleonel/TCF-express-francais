@@ -1050,7 +1050,7 @@ body[data-page="quiz"] .leo-dock {
 }
 
 /* ---------- Mobile : navigation en bas avec libellés, leçon en plein écran ---------- */
-@media (max-width: 760px) {
+@media (max-width: 760px), (max-height: 520px) and (orientation: landscape) {
   .sidebar {
     position: fixed !important;
     top: auto !important;
@@ -1165,7 +1165,7 @@ body[data-page="quiz"] .leo-dock {
     width: 100%;
   }
 }
-@media (min-width: 761px) {
+@media (min-width: 761px) and (min-height: 521px), (min-width: 761px) and (orientation: portrait) {
   .sidebar nav button em {
     font-style: normal;
   }

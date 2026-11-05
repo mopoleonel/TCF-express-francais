@@ -382,15 +382,30 @@ const units = [
 ];
 // Indices propres à chaque question écrite (avant, l'indice affichait la règle générale de la leçon).
 const writtenHints = {
-  "premiers-mots-1": ["Le matin, on salue avec le mot de la journée.", "In the morning, use the daytime greeting."],
-  "premiers-mots-2": ["C'est le mot qu'on dit quand on reçoit quelque chose.", "It is the word you say when you receive something."],
-  "premiers-mots-3": ["Pour donner son prénom : je m'… (verbe s'appeler).", "To give your name, use s'appeler: je m'…"],
+  "premiers-mots-1": [
+    "Le matin, on salue avec le mot de la journée.",
+    "In the morning, use the daytime greeting.",
+  ],
+  "premiers-mots-2": [
+    "C'est le mot qu'on dit quand on reçoit quelque chose.",
+    "It is the word you say when you receive something.",
+  ],
+  "premiers-mots-3": [
+    "Pour donner son prénom : je m'… (verbe s'appeler).",
+    "To give your name, use s'appeler: je m'…",
+  ],
   "etre-avoir-1": ["Le verbe être avec je.", "The verb être with je."],
   "etre-avoir-2": ["Le verbe avoir avec nous se termine par -ons.", "Avoir with nous ends in -ons."],
-  "etre-avoir-3": ["Pour l'âge, on utilise avoir. Avec elle, une seule lettre.", "Age uses avoir. With elle, it is a single letter."],
+  "etre-avoir-3": [
+    "Pour l'âge, on utilise avoir. Avec elle, une seule lettre.",
+    "Age uses avoir. With elle, it is a single letter.",
+  ],
   "articles-1": ["On dit « la maison » : le nom est féminin.", "We say « la maison »: the noun is feminine."],
   "articles-2": ["Plusieurs livres : l'article est au pluriel.", "Several books: the article is plural."],
-  "articles-3": ["On dit « le jardin » : le nom est masculin.", "We say « le jardin »: the noun is masculine."],
+  "articles-3": [
+    "On dit « le jardin » : le nom est masculin.",
+    "We say « le jardin »: the noun is masculine.",
+  ],
   "present-er-1": ["Avec tu, le verbe en -er se termine par -es.", "With tu, -er verbs end in -es."],
   "present-er-2": ["Avec nous, la terminaison est -ons.", "With nous, the ending is -ons."],
   "present-er-3": ["Avec vous, la terminaison est -ez.", "With vous, the ending is -ez."],
@@ -399,25 +414,79 @@ const writtenHints = {
   "phrase-negative-3": ["Devant une voyelle, ne devient n’.", "Before a vowel, ne becomes n’."],
   "adjectifs-1": ["Robe est féminin : ajoute un -e.", "Robe is feminine: add -e."],
   "adjectifs-2": ["Maisons est féminin pluriel : -e et -s.", "Maisons is feminine plural: add -e and -s."],
-  "adjectifs-3": ["Un adjectif en -x ne change pas au masculin pluriel.", "An adjective ending in -x does not change in the masculine plural."],
+  "adjectifs-3": [
+    "Un adjectif en -x ne change pas au masculin pluriel.",
+    "An adjective ending in -x does not change in the masculine plural.",
+  ],
   "passe-compose-1": ["Participe passé des verbes en -er : -é.", "Past participle of -er verbs: -é."],
-  "passe-compose-2": ["Avec être, le participe s'accorde avec elles (féminin pluriel).", "With être, the participle agrees with elles (feminine plural)."],
-  "passe-compose-3": ["Finir se conjugue avec avoir au passé composé.", "Finir takes avoir in the passé composé."],
-  "homophones-1": ["Devant une ville, on met la préposition avec un accent.", "Before a city, use the preposition with an accent."],
-  "homophones-2": ["Remplace par « étaient » : si ça marche, c'est le verbe être.", "Try « étaient »: if it works, it is the verb être."],
-  "homophones-3": ["Remplace par « avait » : si ça marche, c'est le verbe avoir.", "Try « avait »: if it works, it is the verb avoir."],
-  "imparfait-1": ["Imparfait avec nous : radical de « nous allons » + -ions.", "Imperfect with nous: stem of « nous allons » + -ions."],
+  "passe-compose-2": [
+    "Avec être, le participe s'accorde avec elles (féminin pluriel).",
+    "With être, the participle agrees with elles (feminine plural).",
+  ],
+  "passe-compose-3": [
+    "Finir se conjugue avec avoir au passé composé.",
+    "Finir takes avoir in the passé composé.",
+  ],
+  "homophones-1": [
+    "Devant une ville, on met la préposition avec un accent.",
+    "Before a city, use the preposition with an accent.",
+  ],
+  "homophones-2": [
+    "Remplace par « étaient » : si ça marche, c'est le verbe être.",
+    "Try « étaient »: if it works, it is the verb être.",
+  ],
+  "homophones-3": [
+    "Remplace par « avait » : si ça marche, c'est le verbe avoir.",
+    "Try « avait »: if it works, it is the verb avoir.",
+  ],
+  "imparfait-1": [
+    "Imparfait avec nous : radical de « nous allons » + -ions.",
+    "Imperfect with nous: stem of « nous allons » + -ions.",
+  ],
   "imparfait-2": ["Imparfait avec je : -ais.", "Imperfect with je: -ais."],
   "imparfait-3": ["Imparfait avec elles : -aient.", "Imperfect with elles: -aient."],
   "connecteurs-1": ["On donne une cause : pourquoi je reste ?", "We give a cause: why do I stay?"],
-  "connecteurs-2": ["Il pleut mais on sort quand même : une opposition.", "It rains but we go out anyway: a contrast."],
-  "connecteurs-3": ["On donne une conséquence : j'ai révisé, alors…", "We give a consequence: I studied, so…"],
-  "relatifs-1": ["Le mot manquant est le sujet du verbe « parle ».", "The missing word is the subject of « parle »."],
-  "relatifs-2": ["Le sujet de « lis » est déjà « je » : il faut le complément.", "« lis » already has the subject « je »: you need the object."],
-  "relatifs-3": ["Qui fait l'action de travailler ? Le mot est sujet.", "Who does the working? The word is the subject."],
-  "subjonctif-1": ["Être au subjonctif : que je sois, que tu…", "Être in the subjunctive: que je sois, que tu…"],
-  "subjonctif-2": ["Faire au subjonctif : que je fasse, que nous…", "Faire in the subjunctive: que je fasse, que nous…"],
-  "subjonctif-3": ["Venir au subjonctif : qu'il vienne, qu'elle…", "Venir in the subjunctive: qu'il vienne, qu'elle…"],
+  "connecteurs-2": [
+    "Il pleut mais on sort quand même : une opposition.",
+    "It rains but we go out anyway: a contrast.",
+  ],
+  "connecteurs-3": [
+    "On donne une conséquence : j'ai révisé, alors…",
+    "We give a consequence: I studied, so…",
+  ],
+  "relatifs-1": [
+    "Le mot manquant est le sujet du verbe « parle ».",
+    "The missing word is the subject of « parle ».",
+  ],
+  "relatifs-2": [
+    "Le sujet de « lis » est déjà « je » : il faut le complément.",
+    "« lis » already has the subject « je »: you need the object.",
+  ],
+  "relatifs-3": [
+    "Qui fait l'action de travailler ? Le mot est sujet.",
+    "Who does the working? The word is the subject.",
+  ],
+  "subjonctif-1": [
+    "Être au subjonctif : que je sois, que tu…",
+    "Être in the subjunctive: que je sois, que tu…",
+  ],
+  "subjonctif-2": [
+    "Faire au subjonctif : que je fasse, que nous…",
+    "Faire in the subjunctive: que je fasse, que nous…",
+  ],
+  "subjonctif-3": [
+    "Venir au subjonctif : qu'il vienne, qu'elle…",
+    "Venir in the subjunctive: qu'il vienne, qu'elle…",
+  ],
+};
+// Autres réponses correctes acceptées.
+const writtenAlternatives = {
+  "premiers-mots-3": ["suis"],
+};
+// Consignes précisées quand plusieurs réponses seraient correctes en français.
+const writtenPrompts = {
+  "articles-2": "Un, une ou des ? ___ livres (plusieurs)",
+  "articles-3": "Un, une ou des ? ___ jardin",
 };
 // Questions écrites transformées en jeu de tuiles (plus naturel que la saisie libre).
 const writtenTiles = { "phrase-negative-1": ["français", "parle", "Je"] };
@@ -438,7 +507,8 @@ export const lessons = units.map(([id, level, skill, title, enTitle, rule, enRul
       level,
       skill,
       type: tiles ? "order" : choices ? "choice" : "fill",
-      prompt: tiles ? "Remets les mots dans l’ordre." : prompt,
+      prompt: tiles ? "Remets les mots dans l’ordre." : writtenPrompts[exId] || prompt,
+      ...(writtenAlternatives[exId] ? { alternatives: writtenAlternatives[exId] } : {}),
       ...(tiles ? { tiles, instruction: "Touche les mots pour construire la phrase." } : {}),
       answer,
       choices,
@@ -449,4 +519,4 @@ export const lessons = units.map(([id, level, skill, title, enTitle, rule, enRul
 }));
 for (const lesson of lessons) lesson.exercises.push(...gameExercises.filter((e) => e.lessonId === lesson.id));
 export const exercises = lessons.flatMap((l) => l.exercises);
-export const publicExercise = ({ answer, explanation, ...e }) => e;
+export const publicExercise = ({ answer, explanation, alternatives, ...e }) => e;

@@ -334,6 +334,7 @@ export function initLeo() {
     .catch(() => {});
   const dock = document.createElement("aside");
   dock.className = "leo-dock collapsed";
+  dock.setAttribute("aria-label", "Léo, guide vocal");
   dock.setAttribute("aria-label", "Assistant vocal Léo");
   dock.innerHTML = `<button class="leo-dock-toggle" id="leo-toggle" aria-label="Ouvrir ou fermer le guide vocal Léo" aria-expanded="false">${avatarMarkup()}<span class="leo-dock-dot"></span></button><div class="leo-dock-content"><div><strong>Léo</strong><span>Ton guide vocal</span><button id="leo-collapse" aria-label="Réduire Léo">−</button></div><p id="leo-status" role="status">Clique sur ▶ pour écouter un mot ou une phrase.</p><button class="text-button" data-stop-speech>■ Arrêter la voix</button></div>`;
   document.body.append(dock);
