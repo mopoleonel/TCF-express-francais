@@ -55,6 +55,8 @@ let report = null,
   viewReport = false,
   pastReports = [];
 // Mesures prises au début d'une session pour fêter ce qui a changé à la fin.
+let leoMood = "",
+  leoLine = "";
 let combo = 0,
   bestCombo = 0,
   startedAt = 0,
@@ -103,36 +105,40 @@ const typeLabel = {
   pairs: "Relie",
   listen: "Écoute",
 };
+// Le parcours est un voyage vers le Canada : chaque monde est une escale.
 const worlds = [
   {
     name: "Les fondations du français",
-    tag: "MONDE 01",
-    icon: "🧱",
+    city: "Douala",
+    flag: "🇨🇲",
     color: "green",
     desc: "Dire bonjour, se présenter et découvrir les mots.",
   },
   {
     name: "Construire ses phrases",
-    tag: "MONDE 02",
-    icon: "🏗️",
+    city: "Paris",
+    flag: "🇫🇷",
     color: "blue",
     desc: "Assembler, conjuguer et accorder, un morceau à la fois.",
   },
   {
     name: "Raconter et préciser",
-    tag: "MONDE 03",
-    icon: "📜",
+    city: "Québec",
+    flag: "⚜️",
     color: "coral",
     desc: "Raconter hier et donner du sens à ses idées.",
   },
   {
     name: "Exprimer ses idées",
-    tag: "MONDE 04",
-    icon: "🗣️",
+    city: "Montréal",
+    flag: "🍁",
     color: "purple",
     desc: "Relier ses pensées et gagner en précision.",
   },
 ];
+const worldOf = (l) => worlds[Math.floor((l.order - 1) / 3)];
+// Décalage horizontal des étapes : le chemin serpente comme sur une carte de jeu.
+const SWAY = [0, 70, 95, 50, -40, -90, -70, 10, 85, 60, -30, -80];
 const fox = () => avatarMarkup();
 async function api(path, method = "GET", body) {
   const r = await fetch(path, {
@@ -166,16 +172,25 @@ const currentLesson = () =>
   catalog.find((l) => unlocked(l) && complete(l.id).correct < complete(l.id).total) || catalog[0];
 
 /* ---------- En-tête de jeu : série, XP, cœurs ---------- */
+// Quand un cœur est perdu, l'icône « se brise » pendant un court instant (même si l'écran est redessiné).
+let lastHearts = null,
+  heartHitUntil = 0;
+const heartHit = () => {
+  if (lastHearts !== null && game.hearts < lastHearts) heartHitUntil = Date.now() + 900;
+  lastHearts = game.hearts;
+  return Date.now() < heartHitUntil;
+};
 function hud() {
   const lit = (progress.dailyCompleted || 0) > 0;
   const el = $("#hud");
   if (!el) return;
-  el.innerHTML = `<span class="hud-chip streak ${lit ? "lit" : ""}" title="Jours de suite"><b>🔥</b>${progress.streakDays || 0}</span><span class="hud-chip xp" id="hud-xp" title="Points d’expérience"><b>⚡</b>${totalXp()}</span><span class="hud-chip hearts" title="Cœurs du jour"><b>❤️</b>${game.hearts}</span>`;
+  const hit = heartHit();
+  el.innerHTML = `<span class="hud-chip streak ${lit ? "lit" : ""}" title="Jours de suite"><b>🔥</b>${progress.streakDays || 0}</span><span class="hud-chip xp" id="hud-xp" title="Points d’expérience"><b>⚡</b>${totalXp()}</span><span class="hud-chip hearts ${hit ? "hit" : ""}" title="Cœurs du jour"><b>❤️</b>${game.hearts}</span>`;
 }
 
 /* ---------- Pages ---------- */
 function stats() {
-  return `<div class="stats"><div class="stat"><span>🔥</span><div><strong>${progress.streakDays || 0}</strong><small>jour${progress.streakDays > 1 ? "s" : ""} de suite</small></div></div><div class="stat"><span>⚡</span><div><strong>${totalXp()}</strong><small>XP gagnés</small></div></div><div class="stat"><span>✓</span><div><strong>${progress.masteredExercises || 0}<em> / ${progress.totalExercises || 52}</em></strong><small>défis réussis</small></div></div><div class="stat"><span>🏅</span><div><strong>${progress.badges?.length || 0}<em> / ${BADGES.length}</em></strong><small>badges</small></div></div></div>`;
+  return `<div class="stats v-stats"><div class="stat"><span>🔥</span><div><strong data-count="${progress.streakDays || 0}">0</strong><small>jour${progress.streakDays > 1 ? "s" : ""} de suite</small></div></div><div class="stat"><span>⚡</span><div><strong data-count="${totalXp()}">0</strong><small>XP gagnés</small></div></div><div class="stat"><span>✓</span><div><strong>${progress.masteredExercises || 0}<em> / ${progress.totalExercises || 52}</em></strong><small>défis réussis</small></div></div><div class="stat"><span>🏅</span><div><strong>${progress.badges?.length || 0}<em> / ${BADGES.length}</em></strong><small>badges</small></div></div></div>`;
 }
 function gameCard([type, g]) {
   return `<button class="game-card ${g.color}" data-game="${type}"><span class="game-art">${g.icon}<i>✦</i></span><span class="game-copy"><small>MINI-JEU · 4 DÉFIS</small><strong>${g.name}</strong><span>${g.desc}</span></span><b class="play-circle">▶</b></button>`;
@@ -198,39 +213,103 @@ function oralChallengeCard() {
 function home() {
   const next = currentLesson();
   const p = complete(next.id);
+  const w = worldOf(next);
+  const streak = progress.streakDays || 0,
+    savedToday = (progress.dailyCompleted || 0) > 0;
+  const greet = savedToday
+    ? "Ta série est sauvée pour aujourd’hui. On continue ?"
+    : streak
+      ? `Joue aujourd’hui pour garder ta série de ${streak} jour${streak > 1 ? "s" : ""}.`
+      : "Quelques minutes par jour, et ton français décolle.";
   return (
-    `<section class="home-hero-q"><div class="home-hero-text"><span class="eyebrow">TON ESPACE FRANÇAIS · TCF EXPRESS</span><h1>${progress.attempts ? "Content de te revoir !" : "Bienvenue dans Français Quest !"}</h1><p>${(progress.dailyCompleted || 0) > 0 ? "Ta série est sauvée pour aujourd’hui. On continue ?" : progress.streakDays ? `Joue aujourd’hui pour garder ta série de ${progress.streakDays} jour${progress.streakDays > 1 ? "s" : ""} 🔥` : "Quelques minutes par jour suffisent pour progresser."}</p></div><div class="next-up"><small>ÉTAPE ${next.order} / ${catalog.length} · ${next.level}</small><strong>${esc(next.title.fr)}</strong><div class="bar"><span style="width:${(p.correct / p.total) * 100}%"></span></div><button class="primary big" data-lesson="${next.id}">${p.answered ? "Continuer" : "Commencer"} →</button><button class="text-button" data-nav="courses">Voir la carte du parcours</button></div></section>` +
-    stats() +
-    `<div class="home-grid"><section><div class="section-title"><div><span class="eyebrow">LA PRATIQUE PAR LE JEU</span><h2>À toi de jouer avec les mots</h2></div><button class="text-button" data-nav="games">Tous les jeux →</button></div><div class="games-grid">${Object.entries(gameInfo).map(gameCard).join("")}</div></section><aside class="home-rail">${goalCard()}${oralChallengeCard()}</aside></div>`
+    `<section class="v-home"><div class="v-hello">${fox()}<div><h1>${progress.attempts ? "Bon retour à bord !" : "Bienvenue à bord !"}</h1><p>${greet}</p></div><div class="v-flame ${savedToday ? "lit" : ""}" aria-label="Série de ${streak} jours"><span>🔥</span><b>${streak}</b><small>jour${streak > 1 ? "s" : ""}</small></div></div>` +
+    `<article class="boarding-pass" aria-label="Ta prochaine leçon"><div class="bp-main"><div class="bp-route"><div><small>Départ</small><b>Douala</b></div><span class="bp-plane" aria-hidden="true">✈</span><div><small>Destination</small><b>Montréal</b></div></div><div class="bp-lesson"><small>Prochaine escale · ${w.flag} ${w.city}</small><strong>${esc(next.title.fr)}</strong></div><div class="bp-meta"><div><small>Étape</small><b>${next.order}/${catalog.length}</b></div><div><small>Niveau</small><b>${next.level}</b></div><div><small>Défis</small><b>${p.correct}/${p.total}</b></div></div></div><div class="bp-stub"><div class="bp-trip" aria-label="Avancement du voyage">${catalog.map((l) => `<i class="${complete(l.id).correct === complete(l.id).total ? "done" : l.id === next.id ? "now" : ""}"></i>`).join("")}</div><button class="v-btn v-red big" data-lesson="${next.id}">${p.answered ? "Reprendre le vol" : "Embarquer"}</button><button class="text-button" data-nav="courses">Voir la carte du voyage</button></div></article></section>` +
+    `<div class="home-grid"><section><div class="section-title"><h2>Mini-jeux express</h2><button class="text-button" data-nav="games">Tous les jeux</button></div><div class="games-grid">${Object.entries(gameInfo).map(gameCard).join("")}</div>${stats()}</section><aside class="home-rail">${goalCard()}${oralChallengeCard()}</aside></div>`
   );
 }
 function map() {
   const cur = catalog.find((l) => unlocked(l) && complete(l.id).correct < complete(l.id).total) || {};
-  return (
-    heading(
-      "TON PARCOURS ÉCRIT",
-      "Avance étape par étape.",
-      "Chaque leçon terminée ouvre la suivante. Les étoiles montrent tes défis réussis.",
-    ) +
-    `<div class="adventure-map">${worlds
-      .map(
-        (w, i) =>
-          `<section class="world ${w.color}"><div class="world-title"><span>${w.icon}</span><div><small>${w.tag}</small><h2>${w.name}</h2><p>${w.desc}</p></div></div><div class="path-nodes">${catalog
-            .slice(i * 3, i * 3 + 3)
-            .map((l) => {
-              const p = complete(l.id),
-                done = p.correct === p.total,
-                open = unlocked(l),
-                isCur = l.id === cur.id;
-              return `<div class="path-stop ${open ? "" : "locked"} ${isCur ? "current" : ""}">${isCur ? '<span class="start-bubble">COMMENCER</span>' : ""}<button class="path-node ${done ? "done" : ""}" ${open ? `data-lesson="${l.id}"` : `data-locked="${l.id}"`} aria-label="${open ? "Ouvrir" : "Leçon verrouillée :"} ${esc(l.title.fr)}"><span>${done ? "✓" : open ? String(l.order).padStart(2, "0") : "🔒"}</span></button><strong>${esc(l.title.fr)}</strong><span class="node-stars" aria-label="${p.correct} défis réussis sur ${p.total}">${[1, 2, 3].map((n) => `<i class="${p.correct / p.total >= n / 3 ? "lit" : ""}">★</i>`).join("")}</span><small>${p.correct} / ${p.total} défis · ${l.level}</small></div>`;
-            })
-            .join(
-              "",
-            )}<div class="path-chest ${progress.badges?.includes("monde-" + (i + 1)) ? "open" : ""}" aria-hidden="true">${progress.badges?.includes("monde-" + (i + 1)) ? "🏆" : "🎁"}<small>${progress.badges?.includes("monde-" + (i + 1)) ? "Monde terminé !" : "Badge du monde"}</small></div></div></section>`,
-      )
-      .join(
-        "",
-      )}</div><p class="help-note">A1 à B2 indiquent la difficulté des activités. Ce parcours ne remplace pas une certification officielle.</p>`
+  const done = catalog.filter((l) => complete(l.id).correct === complete(l.id).total).length;
+  return `<section class="v-sky"><div class="v-clouds" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="v-sky-head"><h1>Ton voyage vers le Canada</h1><p>${done}/${catalog.length} étapes réussies. Chaque leçon terminée ouvre la suivante.</p></div><div class="v-route" id="v-route"><svg class="v-trail" aria-hidden="true"></svg>${worlds
+    .map(
+      (w, i) =>
+        `<div class="v-stopover ${w.color}"><span class="v-flag">${w.flag}</span><div><small>Escale ${i + 1}</small><b>${w.city}</b><span>${w.name}</span></div></div>${catalog
+          .slice(i * 3, i * 3 + 3)
+          .map((l) => {
+            const p = complete(l.id),
+              ok = p.correct === p.total,
+              open = unlocked(l),
+              isCur = l.id === cur.id;
+            const stars = [1, 2, 3]
+              .map((n) => `<i class="${p.correct / p.total >= n / 3 ? "lit" : ""}">★</i>`)
+              .join("");
+            return `<div class="v-stop ${ok ? "done" : ""} ${open ? "" : "locked"} ${isCur ? "current" : ""}" style="--x:${SWAY[l.order - 1]}px">${isCur ? `<span class="v-bubble">${p.answered ? "Reprendre" : "Commencer"}</span>` : ""}<button class="v-node" ${open ? `data-lesson="${l.id}"` : `data-locked="${l.id}"`} aria-label="${open ? "Ouvrir" : "Leçon verrouillée :"} ${esc(l.title.fr)}"><span>${ok ? "★" : open ? l.order : "🔒"}</span></button><div class="v-label"><b>${esc(l.title.fr)}</b><span class="v-stars" aria-label="${p.correct} défis réussis sur ${p.total}">${stars}</span></div></div>`;
+          })
+          .join("")}`,
+    )
+    .join(
+      "",
+    )}<div class="v-arrival ${done === catalog.length ? "reached" : ""}"><span>🏆</span><b>Arrivée à Montréal</b><small>${done === catalog.length ? "Voyage accompli !" : "Termine les 12 étapes"}</small></div><span class="v-plane" id="v-plane" aria-hidden="true">✈️</span></div><p class="help-note">A1 à B2 indiquent la difficulté des activités. Ce parcours ne remplace pas une certification officielle.</p></section>`;
+}
+// Trace le chemin pointillé entre les étapes et fait voler l'avion jusqu'à l'étape en cours.
+function drawRoute() {
+  const route = $("#v-route");
+  if (!route) return;
+  const box = route.getBoundingClientRect();
+  const pts = [...route.querySelectorAll(".v-node")].map((n) => {
+    const r = n.getBoundingClientRect();
+    return {
+      x: r.left - box.left + r.width / 2,
+      y: r.top - box.top + r.height / 2,
+      done: n.closest(".v-stop").classList.contains("done"),
+    };
+  });
+  if (pts.length < 2) return;
+  const seg = (a, b) => {
+    const my = (a.y + b.y) / 2;
+    return `M${a.x},${a.y} C${a.x},${my} ${b.x},${my} ${b.x},${b.y}`;
+  };
+  const svg = route.querySelector(".v-trail");
+  svg.setAttribute("viewBox", `0 0 ${box.width} ${route.scrollHeight}`);
+  svg.style.height = route.scrollHeight + "px";
+  svg.innerHTML = pts
+    .slice(1)
+    .map((b, i) => `<path class="${pts[i].done ? "flown" : ""}" d="${seg(pts[i], b)}"/>`)
+    .join("");
+  const curIdx = [...route.querySelectorAll(".v-stop")].findIndex((s) => s.classList.contains("current"));
+  const plane = $("#v-plane");
+  if (curIdx < 0) {
+    plane.hidden = true;
+    return;
+  }
+  const to = pts[curIdx],
+    from = pts[Math.max(0, curIdx - 1)];
+  const place = (p) => (plane.style.transform = `translate(${p.x + 46}px, ${p.y - 34}px)`);
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // L'avion ne vole que lorsqu'une nouvelle étape vient d'être atteinte.
+  let flown = 0;
+  try {
+    flown = Number(localStorage.getItem("quest-plane") || 0);
+    localStorage.setItem("quest-plane", String(curIdx));
+  } catch {}
+  if (reduce || curIdx === 0 || curIdx <= flown) {
+    place(to);
+    setTimeout(() => route.querySelector(".v-stop.current")?.scrollIntoView({ block: "center" }), 50);
+    return;
+  }
+  place(from);
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      plane.classList.add("flying");
+      place(to);
+    }),
+  );
+  setTimeout(
+    () =>
+      route
+        .querySelector(".v-stop.current")
+        ?.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }),
+    250,
   );
 }
 function games() {
@@ -273,9 +352,9 @@ function progressPage() {
       )
       .join(
         "",
-      )}<p class="help-note">Réussite sur tes tentatives, sans estimation de niveau officiel. Meilleure série : ${progress.bestStreak || 0} jour${progress.bestStreak > 1 ? "s" : ""}.</p></section><section class="panel trophy-panel"><h2>Mes badges <small>${badges.length} / ${BADGES.length}</small></h2><div class="badge-grid">${BADGES.map(
-      ([id, icon, name, desc]) =>
-        `<div class="badge ${badges.includes(id) ? "unlocked" : ""}" title="${esc(desc)}"><span>${icon}</span><strong>${name}</strong><small>${desc}</small></div>`,
+      )}<p class="help-note">Réussite sur tes tentatives, sans estimation de niveau officiel. Meilleure série : ${progress.bestStreak || 0} jour${progress.bestStreak > 1 ? "s" : ""}.</p></section><section class="v-passport"><div class="v-passport-head"><span>🛂</span><div><h2>Mon passeport</h2><p>${badges.length} tampon${badges.length > 1 ? "s" : ""} sur ${BADGES.length}</p></div></div><div class="v-stamps">${BADGES.map(
+      ([id, icon, name, desc], i) =>
+        `<div class="v-stamp-cell ${badges.includes(id) ? "got" : ""}" title="${esc(desc)}"><span class="v-stamp" style="--r:${((i * 37) % 23) - 11}deg">${icon}</span><b>${name}</b><small>${desc}</small></div>`,
     ).join("")}</div></section></div>` +
     `<div class="progress-layout"><section class="panel"><h2>Garder ma progression</h2><p>Ta progression est liée à ce téléphone. Note ce code de sauvegarde pour la retrouver sur un autre appareil ou après avoir vidé ton navigateur. Garde-le pour toi, comme un mot de passe.</p><div class="save-code"><code id="save-code">${esc(token || "")}</code><button class="quiet" id="copy-code">Copier</button></div><details class="restore"><summary>J’ai déjà un code de sauvegarde</summary><div class="save-code"><input id="restore-code" placeholder="Colle ton code ici" autocomplete="off"><button class="primary" id="restore-btn">Récupérer</button></div></details></section><section class="panel"><h2>Ne casse pas ta série 🔥</h2><p>Ajoute un rappel quotidien à 19 h dans l’agenda de ton téléphone : Léo te préviendra chaque soir.</p><button class="primary" id="add-reminder">⏰ Ajouter le rappel</button><h3 class="spaced">Mon objectif du jour</h3><div class="goal-choices" role="group">${GOALS.map((g) => `<button class="${g.value === game.goal ? "selected" : ""}" data-goal="${g.value}">${g.label}<small>${g.value}/jour</small></button>`).join("")}</div></section></div>`
   );
@@ -294,8 +373,9 @@ function render() {
     oral: "Mon studio oral",
     quiz: "À toi de jouer !",
   }[page];
-  $("#language").textContent = locale === "en" ? "🇬🇧 Aide EN" : "🇫🇷 Aide FR";
-  $("#sound").textContent = sound ? "🔊 Son" : "🔇 Son";
+  $("#language").innerHTML = locale === "en" ? "🇬🇧<em> Aide</em> EN" : "🇫🇷<em> Aide</em> FR";
+  $("#sound").innerHTML = sound ? "🔊<em> Son</em>" : "🔇<em> Son</em>";
+  $("#sound").setAttribute("aria-label", sound ? "Couper le son" : "Activer le son");
   $("#sound").setAttribute("aria-pressed", String(sound));
   hud();
   if (page === "oral") {
@@ -304,6 +384,10 @@ function render() {
     return;
   }
   if (page === "quiz") return renderQuiz();
+  const m = $("#main");
+  m.classList.remove("v-enter");
+  void m.offsetWidth;
+  m.classList.add("v-enter");
   $("#main").innerHTML =
     page === "courses"
       ? map()
@@ -314,6 +398,24 @@ function render() {
           : page === "progress"
             ? progressPage()
             : home();
+  if (page === "courses") requestAnimationFrame(drawRoute);
+  countUp();
+}
+// Les chiffres importants défilent jusqu'à leur valeur (data-count).
+function countUp() {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("[data-count]").forEach((el) => {
+    const target = Number(el.dataset.count);
+    if (reduce || !target) return (el.textContent = target);
+    const t0 = performance.now(),
+      dur = Math.min(1400, 500 + target * 4);
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / dur);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - k, 3)));
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
 }
 async function navigate(p) {
   if (busy) return;
@@ -461,6 +563,19 @@ function practiceSentence(e, r) {
   if (e.prompt.includes("___")) return e.prompt.replace("___", r.expected).replace(/\([^)]*\)/g, "");
   return r.expected;
 }
+// Ce que Léo dit avant la réponse, selon le type de défi.
+function coachLine(e) {
+  return (
+    {
+      choice: "Lis bien la phrase, puis choisis.",
+      fill: "Écris le mot qui manque. Attention aux accents !",
+      order: "Remets les mots dans l’ordre, du sujet au verbe.",
+      repair: "Un mot s’est trompé de place… trouve-le !",
+      pairs: "Relie chaque mot à son partenaire.",
+      listen: "Écoute-moi bien, puis choisis la phrase.",
+    }[e.type] || "À toi de jouer !"
+  );
+}
 function footer(e, locked, second) {
   const hintBtn = `<button class="quiet" type="button" id="hint" ${locked ? "disabled" : ""}>💡 ${hintOpen ? "Masquer" : "Indice"}</button>`;
   if (locked) {
@@ -476,6 +591,7 @@ function footer(e, locked, second) {
   return `<div class="q-footer ${second ? "is-retry" : ""}">${band}<div class="q-actions">${hintBtn}<button class="primary big" id="validate" type="submit" form="answer-form" ${!choice.trim() ? "disabled" : ""}>${second ? "Dernier essai" : "Valider"}</button></div></div>`;
 }
 function renderQuiz() {
+  $("#main").classList.remove("v-enter");
   $("#page-name").textContent = "À toi de jouer !";
   document.body.dataset.page = "quiz";
   hud();
@@ -499,8 +615,10 @@ function renderQuiz() {
           ? g.name
           : "Entraînement";
   $("#main").innerHTML =
-    `<div class="q-screen"><div class="q-top"><button class="q-close" id="quit-q" aria-label="Quitter la leçon">✕</button><div class="q-progress" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${index + (locked ? 1 : 0)}"><span style="width:${((index + (locked ? 1 : 0)) / total) * 100}%"></span></div><span class="q-hearts ${game.hearts <= 1 ? "low" : ""}" aria-label="${game.hearts} cœurs">❤️ ${game.hearts}</span></div><div class="q-meta"><span>${esc(title)}</span>${session.lesson ? `<details class="q-rule"><summary>📖 La règle</summary><p>${esc(session.lesson.rule[locale] || session.lesson.rule.fr)}</p></details>` : ""}${pastReports.length ? '<button class="text-button" id="past-report">Bilans précédents</button>' : ""}</div><section class="q-card ${anim}"><span class="q-type">${g ? g.icon + " " + g.name : typeLabel[e.type] || "Défi"} · ${e.level}</span><h2>${esc(e.prompt)}</h2>${e.instruction ? `<p class="question-instruction">${esc(e.instruction)}</p>` : ""}<form id="answer-form">${answerGame(e, locked)}${hintOpen ? `<div class="hint-box"><b>💡 Indice</b><p>${esc(e.hint?.[locale] || e.hint?.fr || lessonData?.rule?.[locale] || "Observe le sujet, le verbe et les accords dans la phrase.")}</p></div>` : ""}</form></section>${footer(e, locked, second)}</div>`;
+    `<div class="q-screen"><div class="q-top"><button class="q-close" id="quit-q" aria-label="Quitter la leçon">✕</button><div class="q-progress" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${index + (locked ? 1 : 0)}"><span style="width:${((index + (locked ? 1 : 0)) / total) * 100}%"></span></div><span class="q-hearts ${game.hearts <= 1 ? "low" : ""} ${heartHit() ? "hit" : ""}" aria-label="${game.hearts} cœurs">❤️ ${game.hearts}</span></div><div class="v-coach ${leoMood}"><div class="v-coach-leo">${fox()}</div><p class="v-coach-say" aria-live="polite">${esc(leoLine || coachLine(e))}</p></div><div class="q-meta"><span>${esc(title)}</span>${session.lesson ? `<details class="q-rule"><summary>📖 La règle</summary><p>${esc(session.lesson.rule[locale] || session.lesson.rule.fr)}</p></details>` : ""}${pastReports.length ? '<button class="text-button" id="past-report">Bilans précédents</button>' : ""}</div><section class="q-card ${anim}"><span class="q-type">${g ? g.icon + " " + g.name : typeLabel[e.type] || "Défi"} · ${e.level}</span><h2>${esc(e.prompt)}</h2>${e.instruction ? `<p class="question-instruction">${esc(e.instruction)}</p>` : ""}<form id="answer-form">${answerGame(e, locked)}${hintOpen ? `<div class="hint-box"><b>💡 Indice</b><p>${esc(e.hint?.[locale] || e.hint?.fr || lessonData?.rule?.[locale] || "Observe le sujet, le verbe et les accords dans la phrase.")}</p></div>` : ""}</form></section>${footer(e, locked, second)}</div>`;
   anim = "";
+  leoMood = "";
+  leoLine = "";
   $("#answer-form")?.addEventListener("submit", submit);
   const input = $("#answer");
   input?.addEventListener("input", (ev) => {
@@ -551,6 +669,8 @@ async function submit(ev) {
     if (r.accentCheck) {
       result = r;
       notice = { accent: true };
+      leoMood = "think";
+      leoLine = "Presque ! Il manque juste un accent.";
       if (r.hint) e.hint = r.hint;
       renderQuiz();
       return;
@@ -566,6 +686,11 @@ async function submit(ev) {
       notice = { praise: pick(PRAISE) };
       play(combo >= 3 ? "combo" : "correct");
       anim = "pop";
+      leoMood = "happy";
+      leoLine =
+        combo >= 3
+          ? `${combo} bonnes réponses d’affilée, tu es en feu !`
+          : pick(["Je le savais !", "Trop fort !", "C’est exactement ça !", "Tu progresses vite !"]);
       renderQuiz();
       flyXp($(".q-verdict"), r.xpEarned);
     } else {
@@ -573,6 +698,10 @@ async function submit(ev) {
       game.loseHeart();
       play("wrong");
       anim = "shake";
+      leoMood = "sad";
+      leoLine = r.finalized
+        ? "Pas grave, retiens bien la correction en bas."
+        : "Oups ! Regarde l’indice, tu vas y arriver.";
       if (r.finalized) {
         notice = null;
         renderQuiz();
@@ -703,20 +832,24 @@ function renderVictory(fresh) {
         ? "Partie terminée !"
         : "Leçon terminée !"
       : "Bien tenté !";
+  const stars = perfect ? 3 : accuracy >= 80 ? 2 : accuracy >= 40 ? 1 : 0;
   $("#main").innerHTML =
-    `<section class="victory"><div class="victory-leo ${fresh ? "dance" : ""}">${fox()}</div><span class="eyebrow">${session.lesson ? `ÉTAPE ${session.lesson.order} / ${catalog.length}` : isGame ? "MINI-JEU" : "ENTRAÎNEMENT"}</span><h1>${title}</h1><p>${perfect ? "Zéro erreur, chapeau ! Bonus sans-faute débloqué." : report.incorrect ? `${report.incorrect} question${report.incorrect > 1 ? "s" : ""} à revoir : elles reviendront dans tes révisions.` : "Toutes les réponses sont trouvées. Bravo !"}</p><div class="victory-cards"><div class="vc xp"><small>XP GAGNÉS</small><b>⚡ ${gained}</b></div><div class="vc acc ${accuracy >= 80 ? "great" : ""}"><small>PRÉCISION</small><b>🎯 ${accuracy}%</b></div><div class="vc time"><small>TEMPS</small><b>⏱ ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}</b></div></div>${bestCombo >= 3 ? `<p class="victory-extra">🔥 Meilleure série de bonnes réponses : ${bestCombo}</p>` : ""}${streakUp ? `<div class="streak-up"><span>🔥</span><div><b>${progress.streakDays} jour${progress.streakDays > 1 ? "s" : ""} de suite !</b><small>Ta série grandit. Reviens demain pour la garder.</small></div></div>` : ""}${newBadges
+    `<section class="victory"><div class="v-stars-big ${fresh ? "go" : "shown"}" aria-label="${stars} étoile${stars > 1 ? "s" : ""} sur 3">${[1, 2, 3].map((n) => `<span class="${n <= stars ? "lit" : ""}" style="--d:${0.35 + n * 0.35}s">★</span>`).join("")}</div><div class="victory-leo ${fresh ? "dance" : ""}">${fox()}</div><span class="eyebrow">${session.lesson ? `ÉTAPE ${session.lesson.order} / ${catalog.length}` : isGame ? "MINI-JEU" : "ENTRAÎNEMENT"}</span><h1>${title}</h1><p>${perfect ? "Zéro erreur, chapeau ! Bonus sans-faute débloqué." : report.incorrect ? `${report.incorrect} question${report.incorrect > 1 ? "s" : ""} à revoir : elles reviendront dans tes révisions.` : "Toutes les réponses sont trouvées. Bravo !"}</p><div class="victory-cards"><div class="vc xp"><small>XP gagnés</small><b>⚡ <span data-count="${gained}">${fresh ? 0 : gained}</span></b></div><div class="vc acc ${accuracy >= 80 ? "great" : ""}"><small>Précision</small><b>🎯 <span data-count="${accuracy}">${fresh ? 0 : accuracy}</span>%</b></div><div class="vc time"><small>Temps</small><b>⏱ ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}</b></div></div>${bestCombo >= 3 ? `<p class="victory-extra">🔥 Meilleure série de bonnes réponses : ${bestCombo}</p>` : ""}${streakUp ? `<div class="streak-up"><span>🔥</span><div><b>${progress.streakDays} jour${progress.streakDays > 1 ? "s" : ""} de suite !</b><small>Ta série grandit. Reviens demain pour la garder.</small></div></div>` : ""}${newBadges
       .map((b) => BADGES.find((x) => x[0] === b))
       .filter(Boolean)
       .map(
         ([, icon, name, desc]) =>
-          `<div class="new-badge"><span>${icon}</span><div><small>NOUVEAU BADGE</small><b>${name}</b><span>${desc}</span></div></div>`,
+          `<div class="new-badge"><span class="v-stamp mini">${icon}</span><div><small>Nouveau tampon dans ton passeport</small><b>${name}</b><span>${desc}</span></div></div>`,
       )
       .join(
         "",
-      )}<div class="victory-goal"><div><small>OBJECTIF DU JOUR</small><b>${Math.min(daily, goal)} / ${goal}</b></div><div class="bar"><span style="width:${Math.min(100, (daily / goal) * 100)}%"></span></div>${chestReady ? '<button class="primary sunny" id="open-chest">🎁 Ouvrir mon coffre</button>' : ""}</div><div class="victory-actions">${report.nextLesson && session.lesson ? `<button class="primary big" id="continue-journey">Continuer : ${esc(report.nextLesson.title.fr)} →</button>` : `<button class="primary big" data-nav="${isGame ? "games" : "home"}">Continuer →</button>`}<button class="quiet" id="show-full-report">Voir mes corrections</button>${report.incorrect ? '<button class="text-button" id="restart-session">↻ Rejouer cette leçon</button>' : ""}</div></section>`;
+      )}<div class="victory-goal"><div><small>OBJECTIF DU JOUR</small><b>${Math.min(daily, goal)} / ${goal}</b></div><div class="bar"><span style="width:${Math.min(100, (daily / goal) * 100)}%"></span></div>${chestReady ? '<button class="primary sunny" id="open-chest">🎁 Ouvrir mon coffre</button>' : ""}</div><div class="victory-actions">${report.nextLesson && session.lesson ? `<button class="primary big" data-nav="courses">Continuer le voyage</button><button class="quiet" id="continue-journey">Enchaîner : ${esc(report.nextLesson.title.fr)}</button>` : `<button class="primary big" data-nav="${isGame ? "games" : session.lesson ? "courses" : "home"}">Continuer</button>`}<button class="quiet" id="show-full-report">Voir mes corrections</button>${report.incorrect ? '<button class="text-button" id="restart-session">↻ Rejouer cette leçon</button>' : ""}</div></section>`;
   if (fresh) {
     play("victory");
     confetti(perfect ? 120 : 70);
+    // Une note par étoile qui s'allume.
+    [1, 2, 3].forEach((n) => n <= stars && setTimeout(() => sound && sfx.correct(), 350 + n * 350));
+    setTimeout(countUp, 600);
   }
 }
 function renderFinale(fresh) {
@@ -980,6 +1113,7 @@ async function init() {
 const pages = ["home", "courses", "games", "oral", "review", "progress"];
 const initialPage = location.hash.slice(1);
 if (pages.includes(initialPage)) page = initialPage;
+window.addEventListener("resize", () => page === "courses" && drawRoute());
 window.addEventListener("hashchange", () => {
   const requested = location.hash.slice(1);
   if (pages.includes(requested) && requested !== page) navigate(requested).catch((e) => toast(e.message));
