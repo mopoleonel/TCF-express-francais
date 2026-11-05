@@ -1538,3 +1538,61 @@ body.is-offline .offline-bar {
   background: var(--v-btn-red) !important;
   box-shadow: 0 5px 0 #9c0f1c !important;
 }
+
+/* ---------- Léo vivant : bouche synchronisée, tête qui bouge avec la voix, respiration au repos ---------- */
+body.leo-speaking .leo-sprite {
+  animation: none !important;
+  background-position: left center;
+}
+body.leo-speaking.leo-mouth-open .leo-sprite {
+  background-position: right center;
+}
+body.leo-speaking .leo-avatar {
+  transform: translateY(calc(var(--leo-level, 0) * -3px)) rotate(calc(var(--leo-tilt, 0) * 1deg))
+    scale(calc(1 + var(--leo-level, 0) * 0.035));
+  transition: transform 70ms linear;
+  border-color: #1cb0f6;
+  box-shadow: 0 0 0 calc(3px + var(--leo-level, 0) * 7px) #1cb0f633;
+}
+/* Les barres de voix suivent le volume réel */
+body.leo-speaking .leo-voice-bars i {
+  animation: none;
+  transition: height 70ms linear;
+}
+body.leo-speaking .leo-voice-bars i:nth-child(1) {
+  height: calc(3px + var(--leo-level, 0) * 7px);
+}
+body.leo-speaking .leo-voice-bars i:nth-child(2) {
+  height: calc(3px + var(--leo-level, 0) * 10px);
+}
+body.leo-speaking .leo-voice-bars i:nth-child(3) {
+  height: calc(3px + var(--leo-level, 0) * 6px);
+}
+/* Au repos, Léo respire doucement (grands avatars uniquement) */
+.v-hello .leo-sprite,
+.victory-leo .leo-sprite,
+.oral-model-avatar .leo-sprite,
+.v-coach-leo .leo-sprite,
+.dialogue-question .leo-sprite {
+  transform-origin: 50% 100%;
+  animation: leo-breathe 3.6s ease-in-out infinite;
+}
+@keyframes leo-breathe {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.025, 1.015) translateY(-1px);
+  }
+}
+/* Dans le studio oral, Léo est plus grand pour qu'on voie sa bouche */
+.oral-model-avatar .leo-avatar {
+  width: 72px !important;
+  height: 72px !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.leo-speaking .leo-avatar {
+    transform: none !important;
+  }
+}

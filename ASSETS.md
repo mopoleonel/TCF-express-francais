@@ -4,7 +4,7 @@
 
 Image de référence fournie par l’utilisateur dans cette conversation : personnage fictif en 3D, peau brune, cheveux courts crépus, haut jaune et sac à dos rouge.
 
-Outil utilisé : **ImageGen intégré** (pas de CLI). Fichier livré : `public/assets/leo-avatar.png` (1774 × 887, transparence, deux cases carrées côte à côte). La première case est au repos, la deuxième parle. Affichage dans le site : 25 à 48 pixels selon le contexte. Le changement de bouche est une animation indicative de parole, pas une synchronisation labiale phonétique.
+Outil utilisé : **ImageGen intégré** (pas de CLI). Fichier livré : `public/assets/leo-avatar.png` (1774 × 887, transparence, deux cases carrées côte à côte). La première case est au repos, la deuxième parle. Affichage dans le site : 25 à 48 pixels selon le contexte. Animation de parole : `public/audio-young/lipsync.json` donne le volume de chaque voix 25 fois par seconde (`node scripts/build-lipsync.mjs`, à relancer après tout changement de voix). La bouche s'ouvre à chaque syllabe, la tête et le halo suivent le volume. Avec la voix du navigateur, un rythme de syllabes est relancé à chaque mot.
 
 Prompt final utilisé :
 

@@ -42,7 +42,74 @@ function sayStatus(text) {
   const inline = $("#oral-speech-status") || $("#speech-status");
   if (inline) inline.textContent = text;
 }
+// ---------- Léo parle : bouche synchronisée sur sa voix ----------
+// Pour chaque voix enregistrée, lipsync.json donne le volume 25 fois par seconde (scripts/build-lipsync.mjs).
+// La bouche s'ouvre quand le volume monte, la tête bouge légèrement avec la voix.
+let lipsync = {},
+  mouthRaf = 0;
+const rootStyle = document.documentElement.style;
+let mouthPeak = 0,
+  mouthSince = 0;
+function setMouth(level, t) {
+  rootStyle.setProperty("--leo-level", level.toFixed(2));
+  rootStyle.setProperty("--leo-tilt", (Math.sin(t / 700) * 1.4 + Math.sin(t / 210) * level * 1.6).toFixed(2));
+  const b = document.body.classList,
+    open = b.contains("leo-mouth-open");
+  // Une ouverture par syllabe : la bouche s'ouvre quand la voix monte et se referme dans le creux qui suit.
+  if (!open) {
+    if (level > 0.34 && t - mouthSince > 55) {
+      b.add("leo-mouth-open");
+      mouthPeak = level;
+      mouthSince = t;
+    }
+  } else {
+    mouthPeak = Math.max(mouthPeak, level);
+    if ((level < mouthPeak * 0.72 || level < 0.2) && t - mouthSince > 70) {
+      b.remove("leo-mouth-open");
+      mouthSince = t;
+    }
+  }
+}
+function stopMouth() {
+  cancelAnimationFrame(mouthRaf);
+  mouthRaf = 0;
+  setMouth(0, 0);
+  document.body.classList.remove("leo-mouth-open");
+}
+function animateMouth(getLevel) {
+  cancelAnimationFrame(mouthRaf);
+  let smooth = 0;
+  const tick = (t) => {
+    const target = getLevel(t);
+    if (target === null) return stopMouth();
+    smooth += (target - smooth) * 0.8;
+    setMouth(smooth, t);
+    mouthRaf = requestAnimationFrame(tick);
+  };
+  mouthRaf = requestAnimationFrame(tick);
+}
+// Voix enregistrée : on lit le volume prévu à l'instant exact de la lecture.
+function mouthFromAudio(audio, file) {
+  const env = lipsync[file];
+  animateMouth((t) => {
+    if (audio !== speechAudio || audio.ended) return null;
+    if (!env) return audio.paused ? 0 : 0.5 + 0.5 * Math.sin(t / 45);
+    return Number(env[Math.floor(audio.currentTime * 25)] || 0) / 9;
+  });
+}
+// Voix du navigateur (pas d'accès au son) : rythme de syllabes, relancé à chaque mot prononcé.
+let wordAt = 0;
+function mouthFromSpeech(u) {
+  wordAt = performance.now();
+  animateMouth((t) => {
+    if (u !== utterance) return null;
+    const since = t - wordAt;
+    if (since > 900) return 0;
+    return Math.max(0, Math.sin((since / 1000) * Math.PI * 2 * 4.4)) * (0.75 + 0.25 * Math.sin(t / 97));
+  });
+}
 export function stopSpeaking() {
+  stopMouth();
   speechVersion++;
   window.speechSynthesis?.cancel();
   if (speechAudio) {
@@ -70,10 +137,12 @@ export function speakText(text, { slow = false } = {}) {
     audio.onplaying = () => {
       if (version !== speechVersion) return;
       document.body.classList.add("leo-speaking");
+      mouthFromAudio(audio, file);
       sayStatus(slow ? "Léo parle doucement. Écoute, puis répète." : "Léo parle. Écoute, puis répète.");
     };
     audio.onended = () => {
       if (version !== speechVersion) return;
+      stopMouth();
       document.body.classList.remove("leo-speaking");
       sayStatus("À toi ! Répète la phrase, puis écoute ta propre voix.");
       speechAudio = null;
@@ -113,10 +182,12 @@ function speakBrowser(text, { slow = false } = {}) {
   u.onstart = () => {
     if (version !== speechVersion) return;
     document.body.classList.add("leo-speaking");
+    mouthFromSpeech(u);
     sayStatus(slow ? "Léo parle doucement. Écoute, puis répète." : "Léo parle. Écoute, puis répète.");
   };
   u.onboundary = (ev) => {
     if (version !== speechVersion) return;
+    wordAt = performance.now();
     document
       .querySelectorAll("[data-char-start]")
       .forEach((el) =>
@@ -130,6 +201,7 @@ function speakBrowser(text, { slow = false } = {}) {
   };
   u.onend = () => {
     if (version !== speechVersion) return;
+    stopMouth();
     document.body.classList.remove("leo-speaking");
     document.querySelectorAll(".word-active").forEach((el) => el.classList.remove("word-active"));
     sayStatus("À toi ! Répète la phrase, puis écoute ta propre voix.");
@@ -137,6 +209,7 @@ function speakBrowser(text, { slow = false } = {}) {
   };
   u.onerror = (ev) => {
     if (version !== speechVersion) return;
+    stopMouth();
     document.body.classList.remove("leo-speaking");
     sayStatus(
       ev.error === "not-allowed"
@@ -330,6 +403,12 @@ export function initLeo() {
     .then((r) => (r.ok ? r.json() : {}))
     .then((data) => {
       audioCatalog = data;
+    })
+    .catch(() => {});
+  fetch("/audio-young/lipsync.json")
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((data) => {
+      lipsync = data;
     })
     .catch(() => {});
   const dock = document.createElement("aside");
