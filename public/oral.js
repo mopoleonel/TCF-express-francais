@@ -47,14 +47,19 @@ function sayStatus(text) {
 // La bouche s'ouvre quand le volume monte, la tête bouge légèrement avec la voix.
 let lipsync = {},
   mouthRaf = 0;
-const rootStyle = document.documentElement.style;
+// Accès prudents : ce module est aussi chargé hors navigateur par les tests.
+const setVar = (k, v) => globalThis.document?.documentElement?.style?.setProperty?.(k, v);
+const bodyClass = () => globalThis.document?.body?.classList;
+const raf = (f) => (globalThis.requestAnimationFrame ? requestAnimationFrame(f) : 0);
+const caf = (id) => globalThis.cancelAnimationFrame?.(id);
 let mouthPeak = 0,
   mouthSince = 0;
 function setMouth(level, t) {
-  rootStyle.setProperty("--leo-level", level.toFixed(2));
-  rootStyle.setProperty("--leo-tilt", (Math.sin(t / 700) * 1.4 + Math.sin(t / 210) * level * 1.6).toFixed(2));
-  const b = document.body.classList,
-    open = b.contains("leo-mouth-open");
+  setVar("--leo-level", level.toFixed(2));
+  setVar("--leo-tilt", (Math.sin(t / 700) * 1.4 + Math.sin(t / 210) * level * 1.6).toFixed(2));
+  const b = bodyClass();
+  if (!b?.contains || !b.add) return;
+  const open = b.contains("leo-mouth-open");
   // Une ouverture par syllabe : la bouche s'ouvre quand la voix monte et se referme dans le creux qui suit.
   if (!open) {
     if (level > 0.34 && t - mouthSince > 55) {
@@ -71,22 +76,22 @@ function setMouth(level, t) {
   }
 }
 function stopMouth() {
-  cancelAnimationFrame(mouthRaf);
+  caf(mouthRaf);
   mouthRaf = 0;
   setMouth(0, 0);
-  document.body.classList.remove("leo-mouth-open");
+  bodyClass()?.remove?.("leo-mouth-open");
 }
 function animateMouth(getLevel) {
-  cancelAnimationFrame(mouthRaf);
+  caf(mouthRaf);
   let smooth = 0;
   const tick = (t) => {
     const target = getLevel(t);
     if (target === null) return stopMouth();
     smooth += (target - smooth) * 0.8;
     setMouth(smooth, t);
-    mouthRaf = requestAnimationFrame(tick);
+    mouthRaf = raf(tick);
   };
-  mouthRaf = requestAnimationFrame(tick);
+  mouthRaf = raf(tick);
 }
 // Voix enregistrée : on lit le volume prévu à l'instant exact de la lecture.
 function mouthFromAudio(audio, file) {
@@ -100,7 +105,7 @@ function mouthFromAudio(audio, file) {
 // Voix du navigateur (pas d'accès au son) : rythme de syllabes, relancé à chaque mot prononcé.
 let wordAt = 0;
 function mouthFromSpeech(u) {
-  wordAt = performance.now();
+  wordAt = globalThis.performance?.now() ?? 0;
   animateMouth((t) => {
     if (u !== utterance) return null;
     const since = t - wordAt;
@@ -187,7 +192,7 @@ function speakBrowser(text, { slow = false } = {}) {
   };
   u.onboundary = (ev) => {
     if (version !== speechVersion) return;
-    wordAt = performance.now();
+    wordAt = globalThis.performance?.now() ?? 0;
     document
       .querySelectorAll("[data-char-start]")
       .forEach((el) =>
