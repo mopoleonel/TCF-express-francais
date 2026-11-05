@@ -4,7 +4,7 @@
 
 Image de référence fournie par l’utilisateur dans cette conversation : personnage fictif en 3D, peau brune, cheveux courts crépus, haut jaune et sac à dos rouge.
 
-Outil utilisé : **ImageGen intégré** (pas de CLI). Fichier livré : `public/assets/leo-avatar.png` (1774 × 887, transparence, deux cases carrées côte à côte). La première case est au repos, la deuxième parle. Affichage dans le site : 25 à 48 pixels selon le contexte. Le changement de bouche est une animation indicative de parole, pas une synchronisation labiale phonétique.
+Outil utilisé : **ImageGen intégré** (pas de CLI). Fichier livré : `public/assets/leo-avatar.png` (1774 × 887, transparence, deux cases carrées côte à côte). La première case est au repos, la deuxième parle. Affichage dans le site : 25 à 48 pixels selon le contexte. Animation de parole : `public/audio-young/lipsync.json` donne le volume de chaque voix 25 fois par seconde (`node scripts/build-lipsync.mjs`, à relancer après tout changement de voix). La bouche s'ouvre à chaque syllabe, la tête et le halo suivent le volume. Avec la voix du navigateur, un rythme de syllabes est relancé à chaque mot.
 
 Prompt final utilisé :
 
@@ -12,15 +12,18 @@ Prompt final utilisé :
 
 ## Voix
 
-Version actuelle : **timbre synthétique enfantin**. Les 197 fichiers de `public/audio-young/` partent de la voix française Microsoft Julie, avec élévation contrôlée de hauteur (+22 %) et des formants via Rubber Band / FFmpeg, sans accélération du texte. Ce n’est pas la voix enregistrée d’un vrai enfant. Le bouton de lecture et la vitesse lente utilisent ce corpus par défaut. Reconstruction : `./scripts/build-young-voice.ps1` depuis PowerShell 7, avec FFmpeg disponible.
+Version actuelle : **voix neuronale gratuite, rajeunie**. Les 197 fichiers de `public/audio-young/` sont produits par **Kokoro-82M** (licence Apache 2.0, usage commercial autorisé) avec la voix française `ff_siwis`, puis rajeunis : hauteur ×1,18 et formants ×1,10 (pyworld), vitesse 0,95. Ce n'est pas la voix d'un vrai enfant ni d'une personne réelle. Choix validé à l'écoute le 5 novembre 2026 (variante « enfant léger »).
 
-Corpus précédent conservé : 197 exemples français produits localement avec **Microsoft Paul**, voix Windows, via System.Speech, dans `public/audio/`. Aucun service TTS externe, aucune clé API. Une autre voix française du navigateur peut être choisie ; sa disponibilité dépend de l’appareil. La voix de synthèse est un modèle d’écoute, pas celle d’une personne réelle ou du personnage de référence.
+Reconstruction (voir l'en-tête de `scripts/build-leo-voice.py`) :
 
-Reconstruction sur une machine Windows possédant cette voix :
-
-```powershell
-node scripts/build-speech-manifest.mjs
-./scripts/build-speech.ps1
+```bash
+pip install kokoro-onnx pyworld soundfile
+npm pack kokoro-q8-shards kokoro-js
+cat package/kokoro-q8.part{0,1,2,3,4,5}.bin > model_quantized.onnx
+python3 scripts/build-leo-voice.py model_quantized.onnx package/voices/ff_siwis.bin
+node scripts/build-lipsync.mjs
 ```
+
+Ancienne voix (Microsoft Julie montée de 22 %) : scripts `build-young-voice.ps1` et `build-speech.ps1`, conservés pour mémoire.
 
 Les fichiers déjà produits permettent de lire les exemples sur un autre appareil sans installer la voix Windows.

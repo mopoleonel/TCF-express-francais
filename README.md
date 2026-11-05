@@ -67,7 +67,7 @@ Le bilan présente chaque question, les deux réponses éventuelles, l’utilisa
 
 API : `GET /v1/sessions/:id/report` pour le bilan complet ; `POST /v1/sessions/:id/restart` pour rejouer. Le bilan ne révèle les solutions qu’après finalisation de toutes les questions. Les essais individuels sont stockés dans `submissions`, les résultats finaux dans `attempts`. Le champ facultatif `hintUsed` des réponses trace l’usage d’un indice.
 
-Le thème central `public/theme.css` applique partout la même palette de marque : bleu nuit #081b3e, bleu #002395, rouge #ED2939, fond clair et cartes blanches. La voix par défaut est désormais un timbre synthétique enfantin produit dans `public/audio-young/` ; elle n’est pas l’enregistrement d’un vrai enfant.
+Le thème central `public/theme.css` applique partout la même palette de marque : bleu nuit #081b3e, bleu #002395, rouge #ED2939, fond clair et cartes blanches. La voix par défaut est une voix neuronale gratuite (Kokoro, Apache 2.0) rajeunie en timbre d’enfant, produite dans `public/audio-young/` (voir ASSETS.md) ; ce n’est pas l’enregistrement d’un vrai enfant.
 
 ### Écrire et parler avec Léo
 

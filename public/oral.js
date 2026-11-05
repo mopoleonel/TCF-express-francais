@@ -42,7 +42,79 @@ function sayStatus(text) {
   const inline = $("#oral-speech-status") || $("#speech-status");
   if (inline) inline.textContent = text;
 }
+// ---------- Léo parle : bouche synchronisée sur sa voix ----------
+// Pour chaque voix enregistrée, lipsync.json donne le volume 25 fois par seconde (scripts/build-lipsync.mjs).
+// La bouche s'ouvre quand le volume monte, la tête bouge légèrement avec la voix.
+let lipsync = {},
+  mouthRaf = 0;
+// Accès prudents : ce module est aussi chargé hors navigateur par les tests.
+const setVar = (k, v) => globalThis.document?.documentElement?.style?.setProperty?.(k, v);
+const bodyClass = () => globalThis.document?.body?.classList;
+const raf = (f) => (globalThis.requestAnimationFrame ? requestAnimationFrame(f) : 0);
+const caf = (id) => globalThis.cancelAnimationFrame?.(id);
+let mouthPeak = 0,
+  mouthSince = 0;
+function setMouth(level, t) {
+  setVar("--leo-level", level.toFixed(2));
+  setVar("--leo-tilt", (Math.sin(t / 700) * 1.4 + Math.sin(t / 210) * level * 1.6).toFixed(2));
+  const b = bodyClass();
+  if (!b?.contains || !b.add) return;
+  const open = b.contains("leo-mouth-open");
+  // Une ouverture par syllabe : la bouche s'ouvre quand la voix monte et se referme dans le creux qui suit.
+  if (!open) {
+    if (level > 0.34 && t - mouthSince > 55) {
+      b.add("leo-mouth-open");
+      mouthPeak = level;
+      mouthSince = t;
+    }
+  } else {
+    mouthPeak = Math.max(mouthPeak, level);
+    if ((level < mouthPeak * 0.72 || level < 0.2) && t - mouthSince > 70) {
+      b.remove("leo-mouth-open");
+      mouthSince = t;
+    }
+  }
+}
+function stopMouth() {
+  caf(mouthRaf);
+  mouthRaf = 0;
+  setMouth(0, 0);
+  bodyClass()?.remove?.("leo-mouth-open");
+}
+function animateMouth(getLevel) {
+  caf(mouthRaf);
+  let smooth = 0;
+  const tick = (t) => {
+    const target = getLevel(t);
+    if (target === null) return stopMouth();
+    smooth += (target - smooth) * 0.8;
+    setMouth(smooth, t);
+    mouthRaf = raf(tick);
+  };
+  mouthRaf = raf(tick);
+}
+// Voix enregistrée : on lit le volume prévu à l'instant exact de la lecture.
+function mouthFromAudio(audio, file) {
+  const env = lipsync[file];
+  animateMouth((t) => {
+    if (audio !== speechAudio || audio.ended) return null;
+    if (!env) return audio.paused ? 0 : 0.5 + 0.5 * Math.sin(t / 45);
+    return Number(env[Math.floor(audio.currentTime * 25)] || 0) / 9;
+  });
+}
+// Voix du navigateur (pas d'accès au son) : rythme de syllabes, relancé à chaque mot prononcé.
+let wordAt = 0;
+function mouthFromSpeech(u) {
+  wordAt = globalThis.performance?.now() ?? 0;
+  animateMouth((t) => {
+    if (u !== utterance) return null;
+    const since = t - wordAt;
+    if (since > 900) return 0;
+    return Math.max(0, Math.sin((since / 1000) * Math.PI * 2 * 4.4)) * (0.75 + 0.25 * Math.sin(t / 97));
+  });
+}
 export function stopSpeaking() {
+  stopMouth();
   speechVersion++;
   window.speechSynthesis?.cancel();
   if (speechAudio) {
@@ -70,10 +142,12 @@ export function speakText(text, { slow = false } = {}) {
     audio.onplaying = () => {
       if (version !== speechVersion) return;
       document.body.classList.add("leo-speaking");
+      mouthFromAudio(audio, file);
       sayStatus(slow ? "Léo parle doucement. Écoute, puis répète." : "Léo parle. Écoute, puis répète.");
     };
     audio.onended = () => {
       if (version !== speechVersion) return;
+      stopMouth();
       document.body.classList.remove("leo-speaking");
       sayStatus("À toi ! Répète la phrase, puis écoute ta propre voix.");
       speechAudio = null;
@@ -113,10 +187,12 @@ function speakBrowser(text, { slow = false } = {}) {
   u.onstart = () => {
     if (version !== speechVersion) return;
     document.body.classList.add("leo-speaking");
+    mouthFromSpeech(u);
     sayStatus(slow ? "Léo parle doucement. Écoute, puis répète." : "Léo parle. Écoute, puis répète.");
   };
   u.onboundary = (ev) => {
     if (version !== speechVersion) return;
+    wordAt = globalThis.performance?.now() ?? 0;
     document
       .querySelectorAll("[data-char-start]")
       .forEach((el) =>
@@ -130,6 +206,7 @@ function speakBrowser(text, { slow = false } = {}) {
   };
   u.onend = () => {
     if (version !== speechVersion) return;
+    stopMouth();
     document.body.classList.remove("leo-speaking");
     document.querySelectorAll(".word-active").forEach((el) => el.classList.remove("word-active"));
     sayStatus("À toi ! Répète la phrase, puis écoute ta propre voix.");
@@ -137,6 +214,7 @@ function speakBrowser(text, { slow = false } = {}) {
   };
   u.onerror = (ev) => {
     if (version !== speechVersion) return;
+    stopMouth();
     document.body.classList.remove("leo-speaking");
     sayStatus(
       ev.error === "not-allowed"
@@ -302,7 +380,7 @@ function voices() {
   if (!list) return;
   const options = window.speechSynthesis?.getVoices().filter((v) => /^fr([_-]|$)/i.test(v.lang)) || [];
   list.innerHTML =
-    '<option value="">Léo · timbre enfantin</option>' +
+    '<option value="">Léo · voix d’enfant</option>' +
     options
       .map((v) => `<option value="${esc(v.voiceURI)}">${esc(v.name)} · ${esc(v.lang)}</option>`)
       .join("");
@@ -312,7 +390,7 @@ export function oralPage(language = "en") {
   locale = language;
   const p = model(),
     done = oralPhrases.filter((p) => stored[p.id]?.status === "easy").length;
-  return `<section class="oral-heading"><div><span class="eyebrow">ÉCOUTER · RÉPÉTER · OSER PARLER</span><h1>Ton français prend la parole.</h1><p class="subtitle">Avec Léo, entraîne ta voix aussi souvent que ton écriture.</p></div><div class="oral-counter"><b>${done} / ${oralPhrases.length}</b><span>phrases à l’aise</span></div></section><div class="oral-layout"><aside class="oral-library"><div class="oral-library-title"><h2>Mes situations</h2><span>${oralPhrases.length} ateliers</span></div>${oralPhrases.map((item, i) => `<button class="oral-item ${i === current ? "active" : ""}" data-oral-select="${i}" aria-current="${i === current ? "step" : "false"}"><span class="oral-item-num">${stored[item.id]?.status === "easy" ? "✓" : String(i + 1).padStart(2, "0")}</span><span><strong>${esc(item.theme)}</strong><small>${esc(item.text)}</small></span><em>${item.level}</em></button>`).join("")}<p class="oral-local-note">« Je suis à l’aise » rapporte 5 XP la première fois. Ton auto-évaluation reste dans ce navigateur.</p></aside><div class="oral-workspace">${challengeIndex === current ? '<div class="oral-challenge-banner">🎯 <b>Défi du jour :</b> écoute Léo, puis enregistre-toi une fois avec cette phrase pour gagner 10 XP.</div>' : ""}<div class="oral-tools"><span class="pill">${p.level} · ${esc(p.theme)}</span><details class="voice-settings"><summary>⚙ Réglages de la voix</summary><div><label>Voix française<select id="oral-voice"><option value="">Léo · timbre enfantin</option></select></label><label>Vitesse<select id="oral-rate"><option value="0.75">Douce</option><option value="0.9" selected>Naturelle</option><option value="1">Normale</option></select></label><small>Voix disponibles selon ton navigateur et ton appareil.</small></div></details></div><article class="oral-card"><div class="oral-step-label"><span>1</span> Écoute et comprends</div><div class="oral-model"><div class="oral-model-avatar">${avatarMarkup()}<span>Léo</span></div><div class="oral-model-text"><p class="spoken-sentence">${wordsHtml(p.text)}</p>${locale === "en" ? `<p class="oral-translation">${esc(p.en)}</p>` : ""}<small>Touche un mot pour l’écouter seul.</small></div></div><div class="oral-play-actions"><button class="primary" data-say="${esc(p.text)}">▶ Écouter la phrase</button><button class="quiet" data-say="${esc(p.text)}" data-slow="true">◷ Plus lentement</button><button class="text-button" data-stop-speech>■ Arrêter</button></div><p id="oral-speech-status" class="speech-inline-status" role="status">La lecture démarre uniquement à ta demande.</p><div class="chunk-practice"><h3>Répète par petits morceaux</h3><div>${p.chunks.map((c, i) => `<button data-say="${esc(c)}" data-slow="true"><small>${i + 1}</small> ${esc(c)} <span>↗</span></button>`).join("")}</div></div><div class="pronunciation-tip"><span>💡</span><div><b>Le repère de prononciation</b><p>${esc(locale === "en" ? p.enTip : p.tip)}</p></div></div></article><article class="oral-card" id="record-panel"><div class="oral-step-label"><span>2</span> À toi de parler</div><h2>Répète. Écoute-toi. Recommence.</h2><p class="oral-description">Écoute Léo, enregistre la même phrase, puis compare le rythme, les sons et les pauses.</p><div class="recorder-actions"><button class="record-button" id="record-start">● M’enregistrer</button><button class="quiet" id="record-stop" disabled>■ Terminer</button></div><p class="record-status" id="record-status" role="status">Le micro s’active uniquement quand tu cliques sur « M’enregistrer ».</p><audio id="my-recording" controls hidden aria-label="Réécouter mon enregistrement"></audio><div id="oral-compare" hidden><button class="text-button" data-say="${esc(p.text)}">↻ Réécouter le modèle de Léo</button><div class="compare-checklist"><span>□ Mes mots sont-ils compréhensibles ?</span><span>□ Est-ce que je respecte les pauses ?</span><span>□ Quel son puis-je améliorer ?</span></div></div><p class="record-privacy">🔒 Aucun enregistrement n’est envoyé par ce module ni conservé après avoir quitté cet atelier. Le microphone est coupé à l’arrêt.</p></article><article class="oral-card dialogue-card"><div class="oral-step-label"><span>3</span> Utilise la phrase dans la vraie vie</div><div class="dialogue-question">${avatarMarkup()}<div><small>LÉO TE DEMANDE</small><p>${esc(p.question)}</p><button class="text-button" data-say="${esc(p.question)}">▶ Écouter la question</button></div></div><p class="oral-description">Réponds à voix haute avec tes propres mots. Tu peux aussi enregistrer ta réponse avec le micro ci-dessus.</p><details class="reply-example"><summary>Besoin d’une idée de réponse ?</summary><p>${esc(p.reply)}</p><button class="text-button" data-say="${esc(p.reply)}">▶ Écouter l’exemple</button></details></article><section class="oral-selfcheck"><div><span class="eyebrow">TON RESSENTI, SANS NOTE</span><h3>Comment te sens-tu avec cette phrase ?</h3><p>Une auto-évaluation pour guider tes prochaines répétitions.</p></div><div><button class="quiet ${stored[p.id]?.status === "retry" ? "selected" : ""}" data-oral-rate="retry">↻ Je veux la retravailler</button><button class="primary ${stored[p.id]?.status === "easy" ? "selected" : ""}" data-oral-rate="easy">✓ Je suis à l’aise</button></div><p id="oral-rating-status" role="status">${stored[p.id]?.status === "easy" ? "Tu as indiqué être à l’aise avec cette phrase." : stored[p.id]?.status === "retry" ? "Cette phrase est à retravailler à ton rythme." : ""}</p></section><div class="oral-bottom-nav"><button class="quiet" data-oral-move="-1" ${current === 0 ? "disabled" : ""}>← Précédent</button><span>Atelier ${current + 1} / ${oralPhrases.length}</span><button class="primary" data-oral-move="1" ${current === oralPhrases.length - 1 ? "disabled" : ""}>Atelier suivant →</button></div><p class="help-note">Ce studio entraîne l’écoute et la prise de parole. Il ne donne pas de score automatique de prononciation ni de note officielle TCF.</p></div></div>`;
+  return `<section class="oral-heading"><div><span class="eyebrow">ÉCOUTER · RÉPÉTER · OSER PARLER</span><h1>Ton français prend la parole.</h1><p class="subtitle">Avec Léo, entraîne ta voix aussi souvent que ton écriture.</p></div><div class="oral-counter"><b>${done} / ${oralPhrases.length}</b><span>phrases à l’aise</span></div></section><div class="oral-layout"><aside class="oral-library"><div class="oral-library-title"><h2>Mes situations</h2><span>${oralPhrases.length} ateliers</span></div>${oralPhrases.map((item, i) => `<button class="oral-item ${i === current ? "active" : ""}" data-oral-select="${i}" aria-current="${i === current ? "step" : "false"}"><span class="oral-item-num">${stored[item.id]?.status === "easy" ? "✓" : String(i + 1).padStart(2, "0")}</span><span><strong>${esc(item.theme)}</strong><small>${esc(item.text)}</small></span><em>${item.level}</em></button>`).join("")}<p class="oral-local-note">« Je suis à l’aise » rapporte 5 XP la première fois. Ton auto-évaluation reste dans ce navigateur.</p></aside><div class="oral-workspace">${challengeIndex === current ? '<div class="oral-challenge-banner">🎯 <b>Défi du jour :</b> écoute Léo, puis enregistre-toi une fois avec cette phrase pour gagner 10 XP.</div>' : ""}<div class="oral-tools"><span class="pill">${p.level} · ${esc(p.theme)}</span><details class="voice-settings"><summary>⚙ Réglages de la voix</summary><div><label>Voix française<select id="oral-voice"><option value="">Léo · voix d’enfant</option></select></label><label>Vitesse<select id="oral-rate"><option value="0.75">Douce</option><option value="0.9" selected>Naturelle</option><option value="1">Normale</option></select></label><small>Voix disponibles selon ton navigateur et ton appareil.</small></div></details></div><article class="oral-card"><div class="oral-step-label"><span>1</span> Écoute et comprends</div><div class="oral-model"><div class="oral-model-avatar">${avatarMarkup()}<span>Léo</span></div><div class="oral-model-text"><p class="spoken-sentence">${wordsHtml(p.text)}</p>${locale === "en" ? `<p class="oral-translation">${esc(p.en)}</p>` : ""}<small>Touche un mot pour l’écouter seul.</small></div></div><div class="oral-play-actions"><button class="primary" data-say="${esc(p.text)}">▶ Écouter la phrase</button><button class="quiet" data-say="${esc(p.text)}" data-slow="true">◷ Plus lentement</button><button class="text-button" data-stop-speech>■ Arrêter</button></div><p id="oral-speech-status" class="speech-inline-status" role="status">La lecture démarre uniquement à ta demande.</p><div class="chunk-practice"><h3>Répète par petits morceaux</h3><div>${p.chunks.map((c, i) => `<button data-say="${esc(c)}" data-slow="true"><small>${i + 1}</small> ${esc(c)} <span>↗</span></button>`).join("")}</div></div><div class="pronunciation-tip"><span>💡</span><div><b>Le repère de prononciation</b><p>${esc(locale === "en" ? p.enTip : p.tip)}</p></div></div></article><article class="oral-card" id="record-panel"><div class="oral-step-label"><span>2</span> À toi de parler</div><h2>Répète. Écoute-toi. Recommence.</h2><p class="oral-description">Écoute Léo, enregistre la même phrase, puis compare le rythme, les sons et les pauses.</p><div class="recorder-actions"><button class="record-button" id="record-start">● M’enregistrer</button><button class="quiet" id="record-stop" disabled>■ Terminer</button></div><p class="record-status" id="record-status" role="status">Le micro s’active uniquement quand tu cliques sur « M’enregistrer ».</p><audio id="my-recording" controls hidden aria-label="Réécouter mon enregistrement"></audio><div id="oral-compare" hidden><button class="text-button" data-say="${esc(p.text)}">↻ Réécouter le modèle de Léo</button><div class="compare-checklist"><span>□ Mes mots sont-ils compréhensibles ?</span><span>□ Est-ce que je respecte les pauses ?</span><span>□ Quel son puis-je améliorer ?</span></div></div><p class="record-privacy">🔒 Aucun enregistrement n’est envoyé par ce module ni conservé après avoir quitté cet atelier. Le microphone est coupé à l’arrêt.</p></article><article class="oral-card dialogue-card"><div class="oral-step-label"><span>3</span> Utilise la phrase dans la vraie vie</div><div class="dialogue-question">${avatarMarkup()}<div><small>LÉO TE DEMANDE</small><p>${esc(p.question)}</p><button class="text-button" data-say="${esc(p.question)}">▶ Écouter la question</button></div></div><p class="oral-description">Réponds à voix haute avec tes propres mots. Tu peux aussi enregistrer ta réponse avec le micro ci-dessus.</p><details class="reply-example"><summary>Besoin d’une idée de réponse ?</summary><p>${esc(p.reply)}</p><button class="text-button" data-say="${esc(p.reply)}">▶ Écouter l’exemple</button></details></article><section class="oral-selfcheck"><div><span class="eyebrow">TON RESSENTI, SANS NOTE</span><h3>Comment te sens-tu avec cette phrase ?</h3><p>Une auto-évaluation pour guider tes prochaines répétitions.</p></div><div><button class="quiet ${stored[p.id]?.status === "retry" ? "selected" : ""}" data-oral-rate="retry">↻ Je veux la retravailler</button><button class="primary ${stored[p.id]?.status === "easy" ? "selected" : ""}" data-oral-rate="easy">✓ Je suis à l’aise</button></div><p id="oral-rating-status" role="status">${stored[p.id]?.status === "easy" ? "Tu as indiqué être à l’aise avec cette phrase." : stored[p.id]?.status === "retry" ? "Cette phrase est à retravailler à ton rythme." : ""}</p></section><div class="oral-bottom-nav"><button class="quiet" data-oral-move="-1" ${current === 0 ? "disabled" : ""}>← Précédent</button><span>Atelier ${current + 1} / ${oralPhrases.length}</span><button class="primary" data-oral-move="1" ${current === oralPhrases.length - 1 ? "disabled" : ""}>Atelier suivant →</button></div><p class="help-note">Ce studio entraîne l’écoute et la prise de parole. Il ne donne pas de score automatique de prononciation ni de note officielle TCF.</p></div></div>`;
 }
 export function oralAfterRender() {
   voices();
@@ -330,6 +408,12 @@ export function initLeo() {
     .then((r) => (r.ok ? r.json() : {}))
     .then((data) => {
       audioCatalog = data;
+    })
+    .catch(() => {});
+  fetch("/audio-young/lipsync.json")
+    .then((r) => (r.ok ? r.json() : {}))
+    .then((data) => {
+      lipsync = data;
     })
     .catch(() => {});
   const dock = document.createElement("aside");
