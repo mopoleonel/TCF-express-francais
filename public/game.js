@@ -1,10 +1,8 @@
-// Mécaniques de jeu côté navigateur : cœurs, objectif du jour, coffre, XP oral, célébrations.
-// Les points des exercices écrits restent calculés par l'API ; ici on ne garde que ce qui est propre à cet appareil.
+// Mécaniques de jeu : cœurs, objectif du jour, coffre, XP de l'oral.
+// Gardées dans le navigateur pour répondre tout de suite, puis envoyées au serveur (POST /v1/me/state)
+// pour suivre l'apprenant sur tous ses appareils. Les journées sont comptées à l'heure de Douala (UTC+1).
 const KEY = "quest-game";
-const today = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-};
+export const today = () => new Date(Date.now() + 60 * 60000).toISOString().slice(0, 10);
 export const MAX_HEARTS = 5;
 export const GOALS = [
   { value: 5, label: "Tranquille", desc: "5 activités par jour" },
@@ -15,12 +13,37 @@ let state = {};
 try {
   state = JSON.parse(localStorage.getItem(KEY) || "{}");
 } catch {}
-state = { goal: 5, oralXp: 0, oralEasy: {}, ...state };
+// Ancien format (avant la synchronisation) : on le convertit.
+if (state.oralEasy && !Array.isArray(state.oralEasy)) state.oralEasy = Object.keys(state.oralEasy);
+if (state.oralChallengeDate && !state.oralChallengeDays) state.oralChallengeDays = [state.oralChallengeDate];
+state = {
+  goal: 5,
+  hearts: MAX_HEARTS,
+  heartsDate: today(),
+  oralEasy: [],
+  oralChallengeDays: [],
+  chestDate: null,
+  ...state,
+};
+let push = null,
+  pushTimer = null;
 function save() {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
   } catch {}
+  if (push) {
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(() => push(snapshot()).catch(() => {}), 600);
+  }
 }
+const snapshot = () => ({
+  hearts: state.hearts,
+  heartsDate: state.heartsDate,
+  goal: state.goal,
+  chestDate: state.chestDate,
+  oralEasy: state.oralEasy,
+  oralChallengeDays: state.oralChallengeDays,
+});
 function refreshDay() {
   if (state.heartsDate !== today()) {
     state.heartsDate = today();
@@ -29,6 +52,24 @@ function refreshDay() {
   }
 }
 export const game = {
+  // Branche la synchronisation : `send(state)` renvoie l'état fusionné par le serveur.
+  connect(send) {
+    push = async (st) => {
+      const r = await send(st);
+      if (r?.state) game.adopt(r.state);
+      return r;
+    };
+  },
+  adopt(server) {
+    if (!server) return;
+    state = { ...state, ...server };
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    } catch {}
+  },
+  sync() {
+    return push ? push(snapshot()) : Promise.resolve(null);
+  },
   get hearts() {
     refreshDay();
     return state.hearts;
@@ -61,31 +102,26 @@ export const game = {
     state.hearts = MAX_HEARTS;
     save();
   },
-  get oralXp() {
-    return state.oralXp || 0;
-  },
-  // +5 XP la première fois qu'une phrase orale est marquée « à l'aise ».
+  // +5 XP la première fois qu'une phrase orale est marquée « à l'aise » (compté par le serveur).
   oralEasy(id) {
-    if (state.oralEasy[id]) return 0;
-    state.oralEasy[id] = true;
-    state.oralXp = (state.oralXp || 0) + 5;
+    if (state.oralEasy.includes(id)) return 0;
+    state.oralEasy = [...state.oralEasy, id];
     save();
     return 5;
   },
   oralChallengeDone() {
-    return state.oralChallengeDate === today();
+    return state.oralChallengeDays.includes(today());
   },
-  // +10 XP une fois par jour pour le défi oral (un enregistrement de la phrase du jour).
+  // +10 XP une fois par jour pour le défi oral ; il compte aussi pour la série de jours.
   completeOralChallenge() {
     if (this.oralChallengeDone()) return 0;
-    state.oralChallengeDate = today();
-    state.oralXp = (state.oralXp || 0) + 10;
+    state.oralChallengeDays = [...state.oralChallengeDays, today()];
     save();
     return 10;
   },
   oralChallengeIndex(total) {
-    const d = new Date();
-    return (d.getFullYear() * 372 + d.getMonth() * 31 + d.getDate()) % total;
+    const [y, m, d] = today().split("-").map(Number);
+    return (y * 372 + (m - 1) * 31 + d) % total;
   },
 };
 
@@ -264,10 +300,10 @@ export function certificateImage(name, xp) {
   g.fillStyle = "#334";
   g.fillText("pour avoir terminé les 12 leçons, de A1 à B2.", 600, 540);
   g.fillText(`${xp} XP gagnés · ${new Date().toLocaleDateString("fr-FR")}`, 600, 590);
-  g.font = "100px serif";
-  g.fillText("🏆", 600, 720);
+  g.font = "90px serif";
+  g.fillText("🏆", 600, 700);
   g.font = "400 20px Inter, Arial";
   g.fillStyle = "#889";
-  g.fillText("Certificat de participation. Ne remplace pas une certification officielle TCF.", 600, 790);
+  g.fillText("Certificat de participation. Ne remplace pas une certification officielle TCF.", 600, 762);
   return c.toDataURL("image/png");
 }

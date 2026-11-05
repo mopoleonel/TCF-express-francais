@@ -1008,7 +1008,7 @@ nav button.active span {
   animation: v-hop 0.5s ease-out;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 760px), (max-height: 520px) and (orientation: landscape) {
   .boarding-pass {
     grid-template-columns: 1fr;
   }
@@ -1274,7 +1274,7 @@ nav button.active span {
 #language em {
   font-style: normal;
 }
-@media (max-width: 760px) {
+@media (max-width: 760px), (max-height: 520px) and (orientation: landscape) {
   #sound em,
   #language em {
     display: none;
@@ -1284,4 +1284,257 @@ nav button.active span {
     white-space: nowrap;
     min-width: 40px;
   }
+}
+
+/* ---------- Lisibilité : tailles minimales et gris assez foncés (contraste AA) ---------- */
+:root {
+  --v-muted: #56627e;
+  --v-btn-red: #d41e2e;
+}
+main small,
+main .help-note,
+main .game-helper,
+main .question-instruction,
+.goal-choices small,
+.stat small,
+.skill-row small,
+.v-stamp-cell small,
+.game-card small {
+  font-size: 12.5px !important;
+  color: var(--v-muted);
+  letter-spacing: 0 !important;
+}
+.stat strong em,
+.goal-ring small {
+  color: var(--v-muted) !important;
+  font-size: 15px !important;
+}
+.game-card .game-copy > span:last-child {
+  color: #46536f !important;
+  font-size: 14px !important;
+  line-height: 1.4;
+}
+.game-card small {
+  text-transform: none !important;
+  font-weight: 700;
+}
+.game-card.blue small {
+  color: #1640b4 !important;
+}
+.game-card.coral small {
+  color: #b5162a !important;
+}
+.game-card.purple small {
+  color: #5a2fc0 !important;
+}
+.game-card.green small {
+  color: #26780c !important;
+}
+#sound,
+#language,
+.text-button {
+  color: #2c3a63 !important;
+}
+.text-button {
+  font-size: 14px !important;
+  font-weight: 700;
+}
+/* Rouge des boutons un peu plus profond : texte blanc lisible */
+.v-btn.v-red,
+.next-up .primary.big,
+.q-footer.is-wrong .primary.big {
+  background: var(--v-btn-red) !important;
+}
+.v-stars i {
+  color: #b8c3d6;
+}
+.v-stop.locked .v-label {
+  opacity: 0.85;
+}
+.v-stop.locked .v-label b {
+  color: #3c4866;
+}
+footer,
+footer span {
+  color: var(--v-muted) !important;
+  font-size: 12.5px !important;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Leçon : bouton d'aide en anglais à portée de main ---------- */
+.v-coach .lang-toggle {
+  margin: 0 0 8px auto;
+  align-self: flex-end;
+  border: 2px solid #d6e2f5;
+  border-bottom-width: 4px;
+  border-radius: 12px;
+  background: #fff;
+  color: #2c3a63;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 6px 10px;
+  min-height: 36px;
+  cursor: pointer;
+}
+.v-coach .lang-toggle[aria-pressed="true"] {
+  border-color: #84d8ff;
+  background: #ddf4ff;
+}
+
+/* ---------- Réseau ---------- */
+.net-wait {
+  margin: 0 0 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #fff6e0;
+  border: 2px solid #ffd27a;
+  color: #6b4700;
+  font-weight: 700;
+}
+.offline-bar {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 90;
+  padding: 8px 14px;
+  background: #3b2a00;
+  color: #ffe9b0;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: center;
+}
+body.is-offline .offline-bar {
+  display: block;
+}
+.boot {
+  display: grid;
+  place-items: center;
+  min-height: 50vh;
+  color: var(--v-muted);
+  font-weight: 600;
+}
+.boot-plane {
+  font-size: 44px;
+  animation: v-glide 2.4s ease-in-out infinite;
+}
+
+/* ---------- Voyage terminé ---------- */
+.done-pass .bp-main {
+  background:
+    radial-gradient(circle at 90% 10%, #ffffff33 0 60px, transparent 61px),
+    linear-gradient(135deg, #b77a00 0%, var(--v-gold) 100%);
+}
+.done-pass .bp-route small,
+.done-pass .bp-lesson small,
+.done-pass .bp-meta small {
+  color: #fff3cf;
+}
+.bp-next {
+  margin: 0;
+  color: #3c4866;
+  font-size: 14px;
+}
+
+/* Téléphone couché : la leçon tient dans la hauteur */
+@media (max-height: 520px) and (orientation: landscape) {
+  .v-coach-leo .leo-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  .v-coach-say {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .q-card h2 {
+    font-size: 20px !important;
+  }
+  .q-screen {
+    padding-bottom: 120px;
+  }
+  .q-footer {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .q-meta,
+  .q-card .question-instruction {
+    display: none;
+  }
+  .q-card {
+    padding-top: 6px;
+  }
+  .q-card .choices {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .q-card .choice {
+    padding: 10px 12px !important;
+    font-size: 15px;
+  }
+}
+
+/* Contraste : textes secondaires assez foncés partout (studio oral compris) */
+.oral-item-num,
+.oral-item span,
+.oral-item em,
+.oral-description,
+.oral-counter span,
+.oral-model-avatar span,
+.oral-model-text small,
+.speech-inline-status,
+.chunk-practice button,
+.pronunciation-tip p,
+.record-status,
+.record-privacy,
+.dialogue-question small,
+.dialogue-question p,
+.reply-example summary,
+.oral-selfcheck p,
+.quest-card .eyebrow,
+.quest-card > p,
+.leo-tip p,
+.review-scene p,
+.review-counts span,
+.goal-choices small,
+.goal-choices .selected small {
+  color: #4a5775 !important;
+}
+.chunk-practice h3,
+.pronunciation-tip b,
+.oral-selfcheck h3 {
+  color: #2c3a63 !important;
+}
+.quest-card .primary,
+.oral-bottom-nav .primary,
+.oral-play-actions .primary,
+.review-scene .primary {
+  background: var(--v-btn-red) !important;
+  box-shadow: 0 5px 0 #9c0f1c !important;
+}
+.v-bubble {
+  color: #c4152a;
+}
+#record-start {
+  color: #a01d30 !important;
+}
+.oral-item strong {
+  color: #3a4a6e !important;
+}
+.oral-item small {
+  color: #4a5775 !important;
+}
+.oral-item.active .oral-item-num {
+  color: #fff !important;
+}
+#add-reminder,
+[data-oral-rate="easy"] {
+  background: var(--v-btn-red) !important;
+  box-shadow: 0 5px 0 #9c0f1c !important;
 }

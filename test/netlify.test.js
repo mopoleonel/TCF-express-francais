@@ -63,3 +63,9 @@ test('Netlify registration and input validation preserve origin and service boun
  assert.equal((await client(store)('/v1/catalog','GET',undefined,'wrong-token')).status,401);
  assert.equal((await client(store)('/health')).data.storage,'netlify-blobs');
 });
+
+test('demo registrations are limited per network and per hour',async()=>{
+ const store=new Store(),req=client(store,{registrationLimit:3});
+ const codes=[];for(let i=0;i<5;i++)codes.push((await req('/demo/register','POST')).status);
+ assert.deepEqual(codes,[201,201,201,429,429]);
+});

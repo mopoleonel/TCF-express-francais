@@ -1,5 +1,16 @@
 # TCF-express-francais — Français Quest
 
+## Fiabilité (novembre 2026)
+
+- **Réponses** : variantes correctes acceptées (`alternatives` dans `src/content.js`), consignes précisées quand plusieurs réponses étaient possibles.
+- **Réseau** : messages en français ; une réponse envoyée sans réseau part automatiquement au retour de la connexion ; bandeau « Hors connexion ».
+- **Appli installable** : `manifest.webmanifest` et `sw.js`. L'interface s'ouvre sans réseau, les voix écoutées restent disponibles hors ligne. Changer `VERSION` dans `public/sw.js` à chaque mise en ligne.
+- **Démarrage** : affichage immédiat depuis la dernière visite, appels au serveur en parallèle.
+- **Navigation** : le bouton retour du téléphone change d'écran ; en leçon, il demande confirmation. Une leçon interrompue reprend après un rechargement (`GET /v1/sessions/:id`).
+- **État de jeu sur le serveur** : cœurs, objectif, coffre et XP de l'oral (`GET/POST /v1/me/state`) suivent le code de sauvegarde. Les journées sont comptées à l'heure de Douala (`QUEST_TZ_OFFSET_MINUTES`, 60 par défaut).
+- **Inscriptions** : 40 nouveaux profils par heure et par réseau au maximum (`REGISTRATION_LIMIT`).
+- **Lisibilité** : textes de 12,5 px minimum, contrastes corrigés, mise en page adaptée au téléphone couché, mini-jeux et choix mélangés à chaque partie.
+
 ## Habillage « Voyage vers le Canada » (novembre 2026)
 
 Le parcours est mis en scène comme un voyage Douala → Paris → Québec → Montréal (`public/voyage.css`, police Baloo 2 hébergée dans `public/fonts`) :
