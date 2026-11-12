@@ -1,9 +1,9 @@
-// Service worker de Français Quest : l'appli s'ouvre même sans réseau.
+// Service worker de L’Atelier de français : l'appli s'ouvre même sans réseau.
 // - L'interface (pages, styles, police, images) est gardée sur le téléphone dès la première visite.
 // - Les voix de Léo sont gardées au fur et à mesure qu'on les écoute (pas de gros téléchargement imposé).
 // - Les appels à l'API ne sont jamais mis en cache : les réponses sont toujours vérifiées par le serveur.
 // Changer VERSION à chaque mise en ligne pour que les téléphones prennent la nouvelle interface.
-const VERSION = "fq-2026-11-05c";
+const VERSION = "fq-2026-11-12a";
 const SHELL = [
   "/",
   "/app.js",

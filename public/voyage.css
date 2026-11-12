@@ -1,4 +1,4 @@
-/* Thème « Voyage vers le Canada » : l'habillage de jeu de Français Quest.
+/* Thème « Voyage vers le Canada » : l'habillage de jeu de L’Atelier de français.
    Chargé en dernier, il donne l'identité visuelle (ciel, carte d'embarquement, chemin, passeport)
    et toutes les animations. Les animations décoratives s'arrêtent si l'appareil demande moins de mouvement. */
 @font-face {
@@ -1595,4 +1595,33 @@ body.leo-speaking .leo-voice-bars i:nth-child(3) {
   body.leo-speaking .leo-avatar {
     transform: none !important;
   }
+}
+
+/* Nom de l'appli : « L’Atelier de français » + petit sous-titre « avec ton ami Léo » */
+.workspace small.brand-tagline {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.2px;
+  opacity: 0.75;
+  margin-top: 1px;
+}
+/* Rappel du nom en tête de l'accueil (visible aussi sur téléphone, où la barre latérale est masquée) */
+.v-hello .v-appname {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--v-blue, #1d4ed8);
+}
+.v-hello .v-appname small {
+  font-size: 9.5px;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.2px;
+  text-transform: none;
+  opacity: 0.75;
+  margin-left: 4px;
 }
