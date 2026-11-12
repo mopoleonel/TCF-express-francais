@@ -146,7 +146,7 @@ const OFFLINE_MSG = "Pas de connexion internet. Vérifie ton réseau : on réess
 async function api(path, method = "GET", body) {
   let r;
   try {
-    r = await fetch(path, {
+    r = await fetch(path.replace(/^\//, ""), {
       method,
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: body ? JSON.stringify(body) : undefined,
@@ -1138,7 +1138,7 @@ document.addEventListener("click", async (ev) => {
         a.download = "certificat-francais-quest.png";
         a.click();
       } else {
-        const text = `🏆 ${name || "J’"}${name ? " a" : "ai"} terminé les 12 leçons de L’Atelier de français (TCF Express), de A1 à B2 ! ${location.origin}`;
+        const text = `🏆 ${name || "J’"}${name ? " a" : "ai"} terminé les 12 leçons de L’Atelier de français (TCF Express), de A1 à B2 ! ${new URL(".", location.href).href}`;
         window.open("https://wa.me/?text=" + encodeURIComponent(text), "_blank", "noopener");
       }
     }
@@ -1216,6 +1216,39 @@ document.addEventListener("quest:oral", (ev) => {
       .catch(() => {});
   }
 });
+// Sur tcf-express.com/atelier/, l'élève connecté à son compte TCF Express retrouve la même progression
+// sur tous ses appareils : le site officiel garde la clé d'élève liée à son compte (api/atelier/compte/).
+// Ailleurs, ou sans compte connecté, rien ne change. Une erreur ici ne bloque jamais l'Atelier.
+const TCF_API = "https://api.tcf-express.com/api/atelier/compte/";
+let accountLinked = false,
+  adoptFailed = false;
+async function linkTcfAccount() {
+  if (accountLinked || !/(^|\.)tcf-express\.com$/.test(location.hostname)) return;
+  accountLinked = true;
+  let access = null;
+  try {
+    access = localStorage.getItem("accessToken");
+  } catch {}
+  if (!access) return;
+  const call = (method, body) =>
+    fetch(TCF_API, {
+      method,
+      headers: { Authorization: `Bearer ${access}`, "Content-Type": "application/json" },
+      body: body && JSON.stringify(body),
+      signal: AbortSignal.timeout?.(5000),
+    }).then((r) => (r.ok ? r.json() : null));
+  try {
+    const saved = (await call("GET"))?.learner_token;
+    if (saved && saved !== token && !adoptFailed) {
+      // Ce compte a déjà une progression : on la reprend sur cet appareil.
+      token = saved;
+      localStorage.setItem("quest-token", token);
+      localStorage.removeItem("quest-cache-progress");
+    } else if (!saved || adoptFailed) {
+      await call("PUT", { learner_token: token });
+    }
+  } catch {}
+}
 async function init() {
   // 1. Afficher tout de suite ce qu'on connaît déjà (visite précédente), sans attendre le réseau.
   const cachedCatalog = cache.get("catalog"),
@@ -1228,7 +1261,7 @@ async function init() {
   }
   try {
     if (!token) {
-      const r = await fetch("/demo/register", { method: "POST" }).catch(() => null);
+      const r = await fetch("demo/register", { method: "POST" }).catch(() => null);
       if (!r) throw Object.assign(new Error(OFFLINE_MSG), { offline: true });
       if (!r.ok)
         throw new Error(
@@ -1237,6 +1270,7 @@ async function init() {
       token = (await r.json()).token;
       localStorage.setItem("quest-token", token);
     }
+    await linkTcfAccount();
     game.connect((st) => api("/v1/me/state", "POST", { state: st }));
     // 2. Progression, état de jeu et catalogue en même temps.
     const [st, cat] = await Promise.all([game.sync(), api("/v1/catalog")]);
@@ -1251,6 +1285,8 @@ async function init() {
     render();
   } catch (e) {
     if (e.status === 401) {
+      // Clé refusée (ex. clé du compte expirée) : nouveau profil, puis on le lie au compte.
+      if (accountLinked) [accountLinked, adoptFailed] = [false, true];
       localStorage.removeItem("quest-token");
       token = null;
       return init();
@@ -1288,6 +1324,6 @@ if (
   "serviceWorker" in navigator &&
   (location.protocol === "https:" || location.hostname === "127.0.0.1" || location.hostname === "localhost")
 )
-  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
 initLeo();
 init();

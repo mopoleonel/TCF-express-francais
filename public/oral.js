@@ -135,7 +135,7 @@ export function speakText(text, { slow = false } = {}) {
   if (file && !localStorage.getItem("quest-voice") && window.Audio) {
     stopSpeaking();
     const version = speechVersion,
-      audio = new Audio("/audio-young/" + file);
+      audio = new Audio("audio-young/" + file);
     speechAudio = audio;
     audio.playbackRate = slow ? 0.75 : rate / 0.9;
     sayStatus("Préparation de la voix de Léo…");
@@ -404,13 +404,13 @@ function remount() {
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 export function initLeo() {
-  fetch("/audio-young/manifest.json")
+  fetch("audio-young/manifest.json")
     .then((r) => (r.ok ? r.json() : {}))
     .then((data) => {
       audioCatalog = data;
     })
     .catch(() => {});
-  fetch("/audio-young/lipsync.json")
+  fetch("audio-young/lipsync.json")
     .then((r) => (r.ok ? r.json() : {}))
     .then((data) => {
       lipsync = data;

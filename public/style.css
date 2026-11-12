@@ -3049,7 +3049,7 @@ h1 {
   inset: 1px;
   overflow: hidden;
   border-radius: 50%;
-  background-image: url("/assets/leo-avatar.webp");
+  background-image: url("assets/leo-avatar.webp");
   background-repeat: no-repeat;
   background-position: left center;
   background-size: 200% 100%;

@@ -241,7 +241,7 @@ export function reminderFile(hour = 19) {
   const pad = (n) => String(n).padStart(2, "0");
   const start = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hour)}0000`;
   const end = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hour)}1000`;
-  const url = location.origin;
+  const url = new URL(".", location.href).href.replace(/\/$/, "");
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
