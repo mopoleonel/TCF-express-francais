@@ -295,7 +295,7 @@ export function createApp({
       if (!learner) fail(401, "Learner bearer token required");
       if (path === "/v1/catalog" && req.method === "GET")
         return send(200, {
-          name: "Français Quest",
+          name: "L’Atelier de français",
           version: "0.1.0",
           lessons: lessons.map(({ exercises, ...l }) => ({ ...l, exerciseCount: exercises.length })),
           levelNotice: "Exercise difficulty only; not an official CEFR or TCF assessment.",
