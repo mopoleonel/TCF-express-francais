@@ -6,7 +6,7 @@
   font-style: normal;
   font-weight: 400 800;
   font-display: swap;
-  src: url("/fonts/baloo-2-latin-wght-normal.woff2") format("woff2");
+  src: url("fonts/baloo-2-latin-wght-normal.woff2") format("woff2");
 }
 :root {
   --v-sky: #dcebff;
