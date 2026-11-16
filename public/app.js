@@ -143,12 +143,27 @@ const SWAY = [0, 70, 95, 50, -40, -90, -70, 10, 85, 60, -30, -80];
 const fox = () => avatarMarkup();
 // Appels au serveur : messages compréhensibles en français, y compris quand le réseau coupe.
 const OFFLINE_MSG = "Pas de connexion internet. Vérifie ton réseau : on réessaie dès qu’il revient.";
+// Sur tcf-express.com, l'Atelier parle au serveur officiel (api.tcf-express.com) et utilise le compte
+// TCF Express de l'élève s'il est connecté ; ailleurs (version de test), le serveur de l'Atelier.
+const OFFICIAL = /(^|\.)tcf-express\.com$/.test(location.hostname);
+const API_BASE = OFFICIAL ? "https://api.tcf-express.com/api/atelier/" : "";
+let accountOff = false;
+function accountToken() {
+  if (!OFFICIAL || accountOff) return null;
+  try {
+    const jwt = localStorage.getItem("accessToken");
+    return /^[\w-]+\.[\w-]+\.[\w-]+$/.test(jwt || "") ? jwt : null;
+  } catch {
+    return null;
+  }
+}
 async function api(path, method = "GET", body) {
   let r;
+  const account = accountToken();
   try {
-    r = await fetch(path.replace(/^\//, ""), {
+    r = await fetch(API_BASE + path.replace(/^\//, ""), {
       method,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${account || token}` },
       body: body ? JSON.stringify(body) : undefined,
     });
   } catch {
@@ -158,6 +173,12 @@ async function api(path, method = "GET", body) {
   try {
     data = await r.json();
   } catch {}
+  if (r.status === 401 && account) {
+    // Connexion TCF Express expirée : on continue avec la progression de ce téléphone.
+    accountOff = true;
+    if (!token) await registerAnonymous();
+    return api(path, method, body);
+  }
   if (!r.ok) {
     const msg =
       r.status === 429
@@ -405,7 +426,7 @@ function progressPage() {
       ([id, icon, name, desc], i) =>
         `<div class="v-stamp-cell ${badges.includes(id) ? "got" : ""}" title="${esc(desc)}"><span class="v-stamp" style="--r:${((i * 37) % 23) - 11}deg">${icon}</span><b>${name}</b><small>${desc}</small></div>`,
     ).join("")}</div></section></div>` +
-    `<div class="progress-layout"><section class="panel"><h2>Garder ma progression</h2><p>Ta progression est liée à ce téléphone. Note ce code de sauvegarde pour la retrouver sur un autre appareil ou après avoir vidé ton navigateur. Garde-le pour toi, comme un mot de passe.</p><div class="save-code"><code id="save-code">${esc(token || "")}</code><button class="quiet" id="copy-code">Copier</button></div><details class="restore"><summary>J’ai déjà un code de sauvegarde</summary><div class="save-code"><input id="restore-code" placeholder="Colle ton code ici" autocomplete="off"><button class="primary" id="restore-btn">Récupérer</button></div></details></section><section class="panel"><h2>Ne casse pas ta série 🔥</h2><p>Ajoute un rappel quotidien à 19 h dans l’agenda de ton téléphone : Léo te préviendra chaque soir.</p><button class="primary" id="add-reminder">⏰ Ajouter le rappel</button><h3 class="spaced">Mon objectif du jour</h3><div class="goal-choices" role="group">${GOALS.map((g) => `<button class="${g.value === game.goal ? "selected" : ""}" data-goal="${g.value}">${g.label}<small>${g.value}/jour</small></button>`).join("")}</div></section></div>`
+    `<div class="progress-layout"><section class="panel"><h2>Garder ma progression</h2>${accountToken() ? `<p>✅ Ta progression est enregistrée dans ton compte TCF Express : tu la retrouves sur tous tes appareils en te connectant.</p></section>` : `${OFFICIAL ? `<p><a class="primary" href="/login">Se connecter à TCF Express</a></p><p>Connecte-toi pour garder ta progression dans ton compte et la retrouver sur tous tes appareils. Sans compte, elle reste liée à ce téléphone.</p>` : ""}<p>Ta progression est liée à ce téléphone. Note ce code de sauvegarde pour la retrouver sur un autre appareil ou après avoir vidé ton navigateur. Garde-le pour toi, comme un mot de passe.</p><div class="save-code"><code id="save-code">${esc(token || "")}</code><button class="quiet" id="copy-code">Copier</button></div><details class="restore"><summary>J’ai déjà un code de sauvegarde</summary><div class="save-code"><input id="restore-code" placeholder="Colle ton code ici" autocomplete="off"><button class="primary" id="restore-btn">Récupérer</button></div></details></section>`}<section class="panel"><h2>Ne casse pas ta série 🔥</h2><p>Ajoute un rappel quotidien à 19 h dans l’agenda de ton téléphone : Léo te préviendra chaque soir.</p><button class="primary" id="add-reminder">⏰ Ajouter le rappel</button><h3 class="spaced">Mon objectif du jour</h3><div class="goal-choices" role="group">${GOALS.map((g) => `<button class="${g.value === game.goal ? "selected" : ""}" data-goal="${g.value}">${g.label}<small>${g.value}/jour</small></button>`).join("")}</div></section></div>`
   );
 }
 function render() {
@@ -1216,38 +1237,35 @@ document.addEventListener("quest:oral", (ev) => {
       .catch(() => {});
   }
 });
-// Sur tcf-express.com/atelier/, l'élève connecté à son compte TCF Express retrouve la même progression
-// sur tous ses appareils : le site officiel garde la clé d'élève liée à son compte (api/atelier/compte/).
-// Ailleurs, ou sans compte connecté, rien ne change. Une erreur ici ne bloque jamais l'Atelier.
-const TCF_API = "https://api.tcf-express.com/api/atelier/compte/";
-let accountLinked = false,
-  adoptFailed = false;
-async function linkTcfAccount() {
-  if (accountLinked || !/(^|\.)tcf-express\.com$/.test(location.hostname)) return;
-  accountLinked = true;
-  let access = null;
-  try {
-    access = localStorage.getItem("accessToken");
-  } catch {}
-  if (!access) return;
-  const call = (method, body) =>
-    fetch(TCF_API, {
-      method,
-      headers: { Authorization: `Bearer ${access}`, "Content-Type": "application/json" },
-      body: body && JSON.stringify(body),
-      signal: AbortSignal.timeout?.(5000),
-    }).then((r) => (r.ok ? r.json() : null));
-  try {
-    const saved = (await call("GET"))?.learner_token;
-    if (saved && saved !== token && !adoptFailed) {
-      // Ce compte a déjà une progression : on la reprend sur cet appareil.
-      token = saved;
-      localStorage.setItem("quest-token", token);
-      localStorage.removeItem("quest-cache-progress");
-    } else if (!saved || adoptFailed) {
-      await call("PUT", { learner_token: token });
-    }
-  } catch {}
+// Élève qui se connecte à son compte TCF Express : sa progression faite sans compte sur ce téléphone
+// passe dans son compte (si le compte n'en a pas déjà une).
+async function linkAnonymousProgress() {
+  if (!accountToken() || !token) return;
+  const r = await api("/v1/me/link", "POST", { token }).catch(() => null);
+  if (r?.linked) {
+    token = null;
+    localStorage.removeItem("quest-token");
+  }
+}
+// Encadré du bas de la barre latérale : prénom du compte TCF Express, ou « sans compte ».
+function showAccount() {
+  if (!OFFICIAL) return;
+  const box = $(".profile");
+  if (!box) return;
+  const set = (initial, name, sub) =>
+    (box.innerHTML = `<div class="avatar">${esc(initial)}</div><div>${esc(name)}<small>${esc(sub)}</small></div>`);
+  if (!accountToken()) return set("?", "Sans compte", "Progression sur ce téléphone");
+  api("/v1/me/account")
+    .then((a) => set((a.firstName || "T")[0].toUpperCase(), a.firstName || "Mon compte", "Compte TCF Express"))
+    .catch(() => {});
+}
+async function registerAnonymous() {
+  const r = await fetch(API_BASE + "demo/register", { method: "POST" }).catch(() => null);
+  if (!r) throw Object.assign(new Error(OFFLINE_MSG), { offline: true });
+  if (!r.ok)
+    throw new Error((await r.json().catch(() => ({}))).error || "Impossible de créer ton profil. Réessaie.");
+  token = (await r.json()).token;
+  localStorage.setItem("quest-token", token);
 }
 async function init() {
   // 1. Afficher tout de suite ce qu'on connaît déjà (visite précédente), sans attendre le réseau.
@@ -1260,17 +1278,9 @@ async function init() {
     render();
   }
   try {
-    if (!token) {
-      const r = await fetch("demo/register", { method: "POST" }).catch(() => null);
-      if (!r) throw Object.assign(new Error(OFFLINE_MSG), { offline: true });
-      if (!r.ok)
-        throw new Error(
-          (await r.json().catch(() => ({}))).error || "Impossible de créer ton profil. Réessaie.",
-        );
-      token = (await r.json()).token;
-      localStorage.setItem("quest-token", token);
-    }
-    await linkTcfAccount();
+    if (accountToken()) await linkAnonymousProgress();
+    else if (!token) await registerAnonymous();
+    showAccount();
     game.connect((st) => api("/v1/me/state", "POST", { state: st }));
     // 2. Progression, état de jeu et catalogue en même temps.
     const [st, cat] = await Promise.all([game.sync(), api("/v1/catalog")]);
@@ -1285,8 +1295,6 @@ async function init() {
     render();
   } catch (e) {
     if (e.status === 401) {
-      // Clé refusée (ex. clé du compte expirée) : nouveau profil, puis on le lie au compte.
-      if (accountLinked) [accountLinked, adoptFailed] = [false, true];
       localStorage.removeItem("quest-token");
       token = null;
       return init();
