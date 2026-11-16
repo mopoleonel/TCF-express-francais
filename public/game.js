@@ -241,17 +241,17 @@ export function reminderFile(hour = 19) {
   const pad = (n) => String(n).padStart(2, "0");
   const start = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hour)}0000`;
   const end = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(hour)}1000`;
-  const url = location.origin;
+  const url = new URL(".", location.href).href.replace(/\/$/, "");
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//TCF Express//Francais Quest//FR",
+    "PRODID:-//TCF Express//Atelier de francais//FR",
     "BEGIN:VEVENT",
     `UID:francais-quest-rappel-${Date.now()}@tcf-express`,
     `DTSTART:${start}`,
     `DTEND:${end}`,
     "RRULE:FREQ=DAILY",
-    "SUMMARY:🔥 Léo t’attend sur Français Quest",
+    "SUMMARY:🔥 Léo t’attend à L’Atelier de français",
     `DESCRIPTION:5 minutes de français pour garder ta série ! ${url}`,
     `URL:${url}`,
     "BEGIN:VALARM",

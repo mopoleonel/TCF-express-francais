@@ -69,3 +69,18 @@ test('demo registrations are limited per network and per hour',async()=>{
  const codes=[];for(let i=0;i<5;i++)codes.push((await req('/demo/register','POST')).status);
  assert.deepEqual(codes,[201,201,201,429,429]);
 });
+
+test('L’Atelier servi via le proxy de tcf-express.com : inscription acceptée et limite comptée par élève', async () => {
+  const store = new Store(), official = 'https://tcf-express.com';
+  const handler = createNetlifyHandler({ store, apiKey, allowedOrigins: [official], registrationLimit: 2 });
+  const reg = (ip) => handler(new Request(site + '/demo/register', { method: 'POST', headers: { Origin: official, 'x-nf-client-connection-ip': '10.0.0.1', 'x-forwarded-for': ip + ', 10.0.0.1' } }));
+  const r = await reg('41.202.1.1');
+  assert.equal(r.status, 201);
+  assert.equal(r.headers.get('access-control-allow-origin'), official);
+  // Deux élèves derrière le même proxy ne se bloquent pas entre eux.
+  assert.equal((await reg('41.202.1.1')).status, 201);
+  assert.equal((await reg('41.202.1.1')).status, 429);
+  assert.equal((await reg('41.202.9.9')).status, 201);
+  // Une autre origine reste refusée.
+  assert.equal((await handler(new Request(site + '/demo/register', { method: 'POST', headers: { Origin: 'https://other.example' } }))).status, 403);
+});
