@@ -3,7 +3,7 @@
 // - Les voix de Léo sont gardées au fur et à mesure qu'on les écoute (pas de gros téléchargement imposé).
 // - Les appels à l'API ne sont jamais mis en cache : les réponses sont toujours vérifiées par le serveur.
 // Changer VERSION à chaque mise en ligne pour que les téléphones prennent la nouvelle interface.
-const VERSION = "fq-2026-11-16a";
+const VERSION = "fq-2026-11-16b";
 const SHELL = [
   "./",
   "app.js",
@@ -14,6 +14,7 @@ const SHELL = [
   "theme.css",
   "quest.css",
   "voyage.css",
+  "dark.css",
   "fonts/inter-latin-wght-normal.woff2",
   "fonts/baloo-2-latin-wght-normal.woff2",
   "assets/leo-avatar.webp",

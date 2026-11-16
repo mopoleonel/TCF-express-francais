@@ -1271,16 +1271,19 @@ nav button.active span {
 
 /* En-tête compact sur téléphone : icônes seules pour le son et la langue */
 #sound em,
-#language em {
+#language em,
+#theme em {
   font-style: normal;
 }
 @media (max-width: 760px), (max-height: 520px) and (orientation: landscape) {
   #sound em,
-  #language em {
+  #language em,
+  #theme em {
     display: none;
   }
   #sound,
-  #language {
+  #language,
+  #theme {
     white-space: nowrap;
     min-width: 40px;
   }
