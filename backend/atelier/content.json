@@ -1,0 +1,1329 @@
+{
+ "lessons": [
+  {
+   "id": "premiers-mots",
+   "level": "A1",
+   "skill": "vocabulaire",
+   "title": {
+    "fr": "Les premiers mots",
+    "en": "First words"
+   },
+   "rule": {
+    "fr": "Pour saluer, on dit « Bonjour ». Pour remercier, on dit « Merci ».",
+    "en": "Say “Bonjour” to greet someone and “Merci” to thank them."
+   },
+   "order": 1,
+   "exercises": [
+    {
+     "id": "premiers-mots-1",
+     "lessonId": "premiers-mots",
+     "level": "A1",
+     "skill": "vocabulaire",
+     "type": "choice",
+     "prompt": "Tu rencontres un voisin le matin : ___ !",
+     "answer": "Bonjour",
+     "choices": [
+      "Bonsoir",
+      "Bonjour",
+      "Au revoir"
+     ],
+     "hint": {
+      "fr": "Le matin, on salue avec le mot de la journée.",
+      "en": "In the morning, use the daytime greeting."
+     },
+     "explanation": {
+      "fr": "Bonjour est une salutation utilisée dans la journée.",
+      "en": "Bonjour is a daytime greeting."
+     }
+    },
+    {
+     "id": "premiers-mots-2",
+     "lessonId": "premiers-mots",
+     "level": "A1",
+     "skill": "vocabulaire",
+     "type": "choice",
+     "prompt": "Quel mot signifie “thank you” ?",
+     "answer": "Merci",
+     "choices": [
+      "Merci",
+      "Salut",
+      "Demain"
+     ],
+     "hint": {
+      "fr": "C'est le mot qu'on dit quand on reçoit quelque chose.",
+      "en": "It is the word you say when you receive something."
+     },
+     "explanation": {
+      "fr": "Merci permet de remercier.",
+      "en": "Merci means thank you."
+     }
+    },
+    {
+     "id": "premiers-mots-3",
+     "lessonId": "premiers-mots",
+     "level": "A1",
+     "skill": "vocabulaire",
+     "type": "fill",
+     "prompt": "Complète : Bonjour, je ___ Marie.",
+     "alternatives": [
+      "suis"
+     ],
+     "answer": "m’appelle",
+     "choices": null,
+     "hint": {
+      "fr": "Pour donner son prénom : je m'… (verbe s'appeler).",
+      "en": "To give your name, use s'appeler: je m'…"
+     },
+     "explanation": {
+      "fr": "Se présenter : je m’appelle + prénom.",
+      "en": "To introduce yourself: je m’appelle + name."
+     }
+    },
+    {
+     "id": "game-pairs-1",
+     "lessonId": "premiers-mots",
+     "level": "A1",
+     "skill": "vocabulaire",
+     "type": "pairs",
+     "prompt": "Crée les bonnes rencontres !",
+     "instruction": "Touche un mot français, puis son sens en anglais.",
+     "left": [
+      "Bonjour",
+      "Merci",
+      "Demain",
+      "Maison"
+     ],
+     "right": [
+      "Tomorrow",
+      "House",
+      "Hello",
+      "Thank you"
+     ],
+     "answer": "Bonjour=Hello|Merci=Thank you|Demain=Tomorrow|Maison=House",
+     "hint": {
+      "fr": "Commence par les mots que tu connais déjà.",
+      "en": "Start with the words you already know."
+     },
+     "explanation": {
+      "fr": "Bonjour : hello ; merci : thank you ; demain : tomorrow ; maison : house.",
+      "en": "Bonjour means hello; merci means thank you; demain means tomorrow; maison means house."
+     }
+    },
+    {
+     "id": "game-listen-1",
+     "lessonId": "premiers-mots",
+     "level": "A1",
+     "skill": "vocabulaire",
+     "type": "listen",
+     "prompt": "Écoute le petit message.",
+     "instruction": "Écoute, puis retrouve la phrase. Tu peux réécouter.",
+     "speech": "Bonjour, je m’appelle Marie.",
+     "choices": [
+      "Bonjour, je m’appelle Marie.",
+      "Bonsoir, je m’appelle Julie.",
+      "Bonjour, elle s’appelle Marie."
+     ],
+     "answer": "Bonjour, je m’appelle Marie.",
+     "hint": {
+      "fr": "Écoute la salutation et le prénom.",
+      "en": "Listen for the greeting and the name."
+     },
+     "explanation": {
+      "fr": "Je m’appelle permet de donner son prénom.",
+      "en": "Je m’appelle is used to introduce your name."
+     }
+    }
+   ]
+  },
+  {
+   "id": "etre-avoir",
+   "level": "A1",
+   "skill": "conjugaison",
+   "title": {
+    "fr": "Être et avoir",
+    "en": "Being and having"
+   },
+   "rule": {
+    "fr": "Être : je suis, tu es, il/elle est, nous sommes, vous êtes, ils/elles sont. Avoir : j’ai, tu as, il/elle a, nous avons, vous avez, ils/elles ont.",
+    "en": "French uses avoir for age: “J’ai vingt ans”, literally “I have twenty years”."
+   },
+   "order": 2,
+   "exercises": [
+    {
+     "id": "etre-avoir-1",
+     "lessonId": "etre-avoir",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "choice",
+     "prompt": "Je ___ étudiant.",
+     "answer": "suis",
+     "choices": [
+      "suis",
+      "est",
+      "ai"
+     ],
+     "hint": {
+      "fr": "Le verbe être avec je.",
+      "en": "The verb être with je."
+     },
+     "explanation": {
+      "fr": "Avec je, être devient suis.",
+      "en": "With je, être becomes suis."
+     }
+    },
+    {
+     "id": "etre-avoir-2",
+     "lessonId": "etre-avoir",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "choice",
+     "prompt": "Nous ___ une voiture.",
+     "answer": "avons",
+     "choices": [
+      "ont",
+      "sommes",
+      "avons"
+     ],
+     "hint": {
+      "fr": "Le verbe avoir avec nous se termine par -ons.",
+      "en": "Avoir with nous ends in -ons."
+     },
+     "explanation": {
+      "fr": "Avec nous, avoir devient avons.",
+      "en": "With nous, avoir becomes avons."
+     }
+    },
+    {
+     "id": "etre-avoir-3",
+     "lessonId": "etre-avoir",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Elle ___ vingt ans.",
+     "answer": "a",
+     "choices": null,
+     "hint": {
+      "fr": "Pour l'âge, on utilise avoir. Avec elle, une seule lettre.",
+      "en": "Age uses avoir. With elle, it is a single letter."
+     },
+     "explanation": {
+      "fr": "Pour exprimer l’âge, on utilise avoir.",
+      "en": "Use avoir, not être, to state age."
+     }
+    },
+    {
+     "id": "game-order-2",
+     "lessonId": "etre-avoir",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "order",
+     "prompt": "Dis ton âge : tu as vingt ans.",
+     "instruction": "Remets les mots dans le bon ordre.",
+     "tiles": [
+      "ans",
+      "vingt",
+      "J’ai"
+     ],
+     "answer": "J’ai vingt ans",
+     "hint": {
+      "fr": "Pour donner ton âge, utilise avoir.",
+      "en": "French uses avoir, not être, to express age."
+     },
+     "explanation": {
+      "fr": "En français, on a un âge : J’ai vingt ans.",
+      "en": "In French, you “have” an age: J’ai vingt ans."
+     }
+    },
+    {
+     "id": "game-pairs-2",
+     "lessonId": "etre-avoir",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "pairs",
+     "prompt": "Chaque sujet cherche son verbe être.",
+     "instruction": "Associe chaque sujet à la bonne forme.",
+     "left": [
+      "Je",
+      "Tu",
+      "Nous",
+      "Vous"
+     ],
+     "right": [
+      "sommes",
+      "êtes",
+      "suis",
+      "es"
+     ],
+     "answer": "Je=suis|Tu=es|Nous=sommes|Vous=êtes",
+     "hint": {
+      "fr": "Récite : je suis, tu es…",
+      "en": "Recall the present forms of être."
+     },
+     "explanation": {
+      "fr": "Je suis, tu es, nous sommes, vous êtes.",
+      "en": "I am = je suis; you are = tu es / vous êtes; we are = nous sommes."
+     }
+    }
+   ]
+  },
+  {
+   "id": "articles",
+   "level": "A1",
+   "skill": "accords",
+   "title": {
+    "fr": "Un, une, des",
+    "en": "Articles and gender"
+   },
+   "rule": {
+    "fr": "Un accompagne un nom masculin, une un nom féminin et des un nom pluriel. Apprends chaque nom avec son article.",
+    "en": "Learn each noun together with its article. French nouns have grammatical gender."
+   },
+   "order": 3,
+   "exercises": [
+    {
+     "id": "articles-1",
+     "lessonId": "articles",
+     "level": "A1",
+     "skill": "accords",
+     "type": "choice",
+     "prompt": "___ maison",
+     "answer": "une",
+     "choices": [
+      "un",
+      "une",
+      "des"
+     ],
+     "hint": {
+      "fr": "On dit « la maison » : le nom est féminin.",
+      "en": "We say « la maison »: the noun is feminine."
+     },
+     "explanation": {
+      "fr": "Maison est un nom féminin singulier.",
+      "en": "Maison is feminine singular."
+     }
+    },
+    {
+     "id": "articles-2",
+     "lessonId": "articles",
+     "level": "A1",
+     "skill": "accords",
+     "type": "fill",
+     "prompt": "Un, une ou des ? ___ livres (plusieurs)",
+     "answer": "des",
+     "choices": null,
+     "hint": {
+      "fr": "Plusieurs livres : l'article est au pluriel.",
+      "en": "Several books: the article is plural."
+     },
+     "explanation": {
+      "fr": "Des accompagne un nom pluriel.",
+      "en": "Des is the plural indefinite article."
+     }
+    },
+    {
+     "id": "articles-3",
+     "lessonId": "articles",
+     "level": "A1",
+     "skill": "accords",
+     "type": "fill",
+     "prompt": "Un, une ou des ? ___ jardin",
+     "answer": "un",
+     "choices": null,
+     "hint": {
+      "fr": "On dit « le jardin » : le nom est masculin.",
+      "en": "We say « le jardin »: the noun is masculine."
+     },
+     "explanation": {
+      "fr": "Jardin est masculin singulier.",
+      "en": "Jardin is masculine singular."
+     }
+    },
+    {
+     "id": "game-repair-1",
+     "lessonId": "articles",
+     "level": "A1",
+     "skill": "accords",
+     "type": "repair",
+     "prompt": "Un maison est près du parc.",
+     "instruction": "Trouve le mot qui ne va pas, puis choisis son remplacement.",
+     "words": [
+      "Un",
+      "maison",
+      "est",
+      "près",
+      "du",
+      "parc."
+     ],
+     "replacements": [
+      "Une",
+      "Des",
+      "Le"
+     ],
+     "answer": "0:Une",
+     "hint": {
+      "fr": "Maison est un nom féminin.",
+      "en": "Maison is a feminine noun."
+     },
+     "explanation": {
+      "fr": "On écrit Une maison : l’article doit être féminin singulier.",
+      "en": "Use Une maison: the article must be feminine singular."
+     }
+    },
+    {
+     "id": "game-pairs-3",
+     "lessonId": "articles",
+     "level": "A1",
+     "skill": "vocabulaire",
+     "type": "pairs",
+     "prompt": "Prépare ton petit sac de voyage.",
+     "instruction": "Associe les objets à leur traduction.",
+     "left": [
+      "Un livre",
+      "Une clé",
+      "Un billet",
+      "Une pomme"
+     ],
+     "right": [
+      "An apple",
+      "A ticket",
+      "A book",
+      "A key"
+     ],
+     "answer": "Un livre=A book|Une clé=A key|Un billet=A ticket|Une pomme=An apple",
+     "hint": {
+      "fr": "Une clé sert à ouvrir une porte.",
+      "en": "Une clé is used to open a door."
+     },
+     "explanation": {
+      "fr": "Apprends chaque nom avec son article : un livre, une clé, un billet, une pomme.",
+      "en": "Learn each noun with its article, so you remember its gender."
+     }
+    }
+   ]
+  },
+  {
+   "id": "present-er",
+   "level": "A1",
+   "skill": "conjugaison",
+   "title": {
+    "fr": "Le présent en -er",
+    "en": "Present tense: -er verbs"
+   },
+   "rule": {
+    "fr": "Pour parler : je parle, tu parles, il parle, nous parlons, vous parlez, ils parlent.",
+    "en": "Remove -er and add the ending. Final -ent in ils parlent is silent."
+   },
+   "order": 4,
+   "exercises": [
+    {
+     "id": "present-er-1",
+     "lessonId": "present-er",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Tu ___ français. (parler)",
+     "answer": "parles",
+     "choices": null,
+     "hint": {
+      "fr": "Avec tu, le verbe en -er se termine par -es.",
+      "en": "With tu, -er verbs end in -es."
+     },
+     "explanation": {
+      "fr": "Avec tu, on ajoute -es au radical parl-.",
+      "en": "For tu, add -es to parl-."
+     }
+    },
+    {
+     "id": "present-er-2",
+     "lessonId": "present-er",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Nous ___ à Douala. (habiter)",
+     "answer": "habitons",
+     "choices": null,
+     "hint": {
+      "fr": "Avec nous, la terminaison est -ons.",
+      "en": "With nous, the ending is -ons."
+     },
+     "explanation": {
+      "fr": "Avec nous : habit- + ons.",
+      "en": "For nous: habit- + ons."
+     }
+    },
+    {
+     "id": "present-er-3",
+     "lessonId": "present-er",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Vous ___ la musique. (aimer)",
+     "answer": "aimez",
+     "choices": null,
+     "hint": {
+      "fr": "Avec vous, la terminaison est -ez.",
+      "en": "With vous, the ending is -ez."
+     },
+     "explanation": {
+      "fr": "Avec vous, la terminaison est -ez.",
+      "en": "The vous ending is -ez."
+     }
+    },
+    {
+     "id": "game-order-3",
+     "lessonId": "present-er",
+     "level": "A1",
+     "skill": "syntaxe",
+     "type": "order",
+     "prompt": "Tu habites à Douala avec ta famille.",
+     "instruction": "Construis la phrase avec nous.",
+     "tiles": [
+      "Douala",
+      "Nous",
+      "à",
+      "habitons"
+     ],
+     "answer": "Nous habitons à Douala",
+     "hint": {
+      "fr": "Nous + verbe + lieu.",
+      "en": "Use nous + verb + place."
+     },
+     "explanation": {
+      "fr": "Habiter avec nous devient habitons. À introduit la ville.",
+      "en": "With nous, habiter becomes habitons. À introduces the city."
+     }
+    },
+    {
+     "id": "game-listen-3",
+     "lessonId": "present-er",
+     "level": "A1",
+     "skill": "conjugaison",
+     "type": "listen",
+     "prompt": "Qui parle français ?",
+     "instruction": "Écoute, puis choisis ce que tu entends.",
+     "speech": "Nous parlons français.",
+     "choices": [
+      "Nous parlons français.",
+      "Vous parlez français.",
+      "Ils parlent français."
+     ],
+     "answer": "Nous parlons français.",
+     "hint": {
+      "fr": "Écoute surtout le premier mot.",
+      "en": "Pay close attention to the first word."
+     },
+     "explanation": {
+      "fr": "Nous parlons : le verbe parler prend la terminaison -ons.",
+      "en": "With nous, parler takes the ending -ons: nous parlons."
+     }
+    }
+   ]
+  },
+  {
+   "id": "phrase-negative",
+   "level": "A1",
+   "skill": "syntaxe",
+   "title": {
+    "fr": "Construire et nier",
+    "en": "Sentences and negation"
+   },
+   "rule": {
+    "fr": "Une phrase simple suit souvent sujet + verbe + complément. À l’écrit, la négation encadre le verbe : ne … pas.",
+    "en": "Basic order is subject + verb + complement. Written negation puts ne before the verb and pas after it."
+   },
+   "order": 5,
+   "exercises": [
+    {
+     "id": "phrase-negative-1",
+     "lessonId": "phrase-negative",
+     "level": "A1",
+     "skill": "syntaxe",
+     "type": "order",
+     "prompt": "Remets les mots dans l’ordre.",
+     "tiles": [
+      "français",
+      "parle",
+      "Je"
+     ],
+     "instruction": "Touche les mots pour construire la phrase.",
+     "answer": "Je parle français",
+     "choices": null,
+     "hint": {
+      "fr": "Sujet, puis verbe, puis complément.",
+      "en": "Subject, then verb, then complement."
+     },
+     "explanation": {
+      "fr": "Le sujet Je précède le verbe parle.",
+      "en": "The subject Je comes before the verb parle."
+     }
+    },
+    {
+     "id": "phrase-negative-2",
+     "lessonId": "phrase-negative",
+     "level": "A1",
+     "skill": "syntaxe",
+     "type": "fill",
+     "prompt": "Complète : Je ne parle ___ anglais.",
+     "answer": "pas",
+     "choices": null,
+     "hint": {
+      "fr": "La négation encadre le verbe : ne … ?",
+      "en": "Negation surrounds the verb: ne … ?"
+     },
+     "explanation": {
+      "fr": "La négation s’écrit ne … pas.",
+      "en": "Written negation uses ne … pas."
+     }
+    },
+    {
+     "id": "phrase-negative-3",
+     "lessonId": "phrase-negative",
+     "level": "A1",
+     "skill": "syntaxe",
+     "type": "fill",
+     "prompt": "Complète : Elle ___ aime pas le café.",
+     "answer": "n’",
+     "choices": null,
+     "hint": {
+      "fr": "Devant une voyelle, ne devient n’.",
+      "en": "Before a vowel, ne becomes n’."
+     },
+     "explanation": {
+      "fr": "Ne devient n’ devant une voyelle.",
+      "en": "Ne becomes n’ before a vowel."
+     }
+    },
+    {
+     "id": "game-order-1",
+     "lessonId": "phrase-negative",
+     "level": "A1",
+     "skill": "syntaxe",
+     "type": "order",
+     "prompt": "Présente-toi à ton nouveau voisin.",
+     "instruction": "Touche les mots pour construire la phrase.",
+     "tiles": [
+      "français",
+      "Je",
+      "parle"
+     ],
+     "answer": "Je parle français",
+     "hint": {
+      "fr": "Commence par le sujet, puis le verbe.",
+      "en": "Start with the subject, then the verb."
+     },
+     "explanation": {
+      "fr": "Je est le sujet, parle est le verbe et français est le complément.",
+      "en": "Je is the subject, parle is the verb, and français completes the sentence."
+     }
+    }
+   ]
+  },
+  {
+   "id": "adjectifs",
+   "level": "A2",
+   "skill": "accords",
+   "title": {
+    "fr": "Accorder les adjectifs",
+    "en": "Adjective agreement"
+   },
+   "rule": {
+    "fr": "L’adjectif s’accorde avec le nom : un petit jardin, une petite maison, des petites maisons.",
+    "en": "Adjectives agree in gender and number. They do not stay unchanged as in English."
+   },
+   "order": 6,
+   "exercises": [
+    {
+     "id": "adjectifs-1",
+     "lessonId": "adjectifs",
+     "level": "A2",
+     "skill": "accords",
+     "type": "fill",
+     "prompt": "Une robe ___ (bleu)",
+     "answer": "bleue",
+     "choices": null,
+     "hint": {
+      "fr": "Robe est féminin : ajoute un -e.",
+      "en": "Robe is feminine: add -e."
+     },
+     "explanation": {
+      "fr": "Bleu prend un e au féminin.",
+      "en": "Add e for the feminine form of bleu."
+     }
+    },
+    {
+     "id": "adjectifs-2",
+     "lessonId": "adjectifs",
+     "level": "A2",
+     "skill": "accords",
+     "type": "fill",
+     "prompt": "Des maisons ___ (petit)",
+     "answer": "petites",
+     "choices": null,
+     "hint": {
+      "fr": "Maisons est féminin pluriel : -e et -s.",
+      "en": "Maisons is feminine plural: add -e and -s."
+     },
+     "explanation": {
+      "fr": "Maisons est féminin pluriel : petites.",
+      "en": "Maisons is feminine plural: petites."
+     }
+    },
+    {
+     "id": "adjectifs-3",
+     "lessonId": "adjectifs",
+     "level": "A2",
+     "skill": "accords",
+     "type": "fill",
+     "prompt": "Des garçons ___ (heureux)",
+     "answer": "heureux",
+     "choices": null,
+     "hint": {
+      "fr": "Un adjectif en -x ne change pas au masculin pluriel.",
+      "en": "An adjective ending in -x does not change in the masculine plural."
+     },
+     "explanation": {
+      "fr": "Heureux se termine déjà par x au singulier et au pluriel.",
+      "en": "Heureux has the same masculine singular and plural spelling."
+     }
+    },
+    {
+     "id": "game-repair-2",
+     "lessonId": "adjectifs",
+     "level": "A2",
+     "skill": "accords",
+     "type": "repair",
+     "prompt": "Les petites maisons sont bleu.",
+     "instruction": "Répare le mot qui ne s’accorde pas.",
+     "words": [
+      "Les",
+      "petites",
+      "maisons",
+      "sont",
+      "bleu."
+     ],
+     "replacements": [
+      "bleues.",
+      "bleue.",
+      "bleus."
+     ],
+     "answer": "4:bleues.",
+     "hint": {
+      "fr": "L’adjectif accompagne maisons : féminin pluriel.",
+      "en": "The adjective describes maisons: feminine plural."
+     },
+     "explanation": {
+      "fr": "Maisons est féminin pluriel, donc bleu devient bleues.",
+      "en": "Maisons is feminine plural, so bleu becomes bleues."
+     }
+    }
+   ]
+  },
+  {
+   "id": "passe-compose",
+   "level": "A2",
+   "skill": "conjugaison",
+   "title": {
+    "fr": "Raconter au passé",
+    "en": "Talking about the past"
+   },
+   "rule": {
+    "fr": "Le passé composé combine un auxiliaire au présent et un participe passé : j’ai mangé, elle est partie. Avec être, le participe s’accorde avec le sujet.",
+    "en": "Use a present-tense auxiliary plus past participle. With être, agree the participle with the subject."
+   },
+   "order": 7,
+   "exercises": [
+    {
+     "id": "passe-compose-1",
+     "lessonId": "passe-compose",
+     "level": "A2",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Hier, j’ai ___ une pomme. (manger)",
+     "answer": "mangé",
+     "choices": null,
+     "hint": {
+      "fr": "Participe passé des verbes en -er : -é.",
+      "en": "Past participle of -er verbs: -é."
+     },
+     "explanation": {
+      "fr": "Manger donne le participe passé mangé.",
+      "en": "The past participle of manger is mangé."
+     }
+    },
+    {
+     "id": "passe-compose-2",
+     "lessonId": "passe-compose",
+     "level": "A2",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Elles sont ___ tôt. (partir)",
+     "answer": "parties",
+     "choices": null,
+     "hint": {
+      "fr": "Avec être, le participe s'accorde avec elles (féminin pluriel).",
+      "en": "With être, the participle agrees with elles (feminine plural)."
+     },
+     "explanation": {
+      "fr": "Avec être, parties s’accorde avec elles.",
+      "en": "With être, parties agrees with elles."
+     }
+    },
+    {
+     "id": "passe-compose-3",
+     "lessonId": "passe-compose",
+     "level": "A2",
+     "skill": "conjugaison",
+     "type": "choice",
+     "prompt": "Nous ___ fini le travail.",
+     "answer": "avons",
+     "choices": [
+      "sommes",
+      "avons",
+      "ont"
+     ],
+     "hint": {
+      "fr": "Finir se conjugue avec avoir au passé composé.",
+      "en": "Finir takes avoir in the passé composé."
+     },
+     "explanation": {
+      "fr": "Finir se conjugue ici avec avoir.",
+      "en": "Finir takes avoir here."
+     }
+    },
+    {
+     "id": "game-repair-4",
+     "lessonId": "passe-compose",
+     "level": "A2",
+     "skill": "conjugaison",
+     "type": "repair",
+     "prompt": "Elles sont parti ce matin.",
+     "instruction": "Trouve le participe passé à accorder.",
+     "words": [
+      "Elles",
+      "sont",
+      "parti",
+      "ce",
+      "matin."
+     ],
+     "replacements": [
+      "parties",
+      "partie",
+      "partis"
+     ],
+     "answer": "2:parties",
+     "hint": {
+      "fr": "Avec être, le participe s’accorde avec le sujet.",
+      "en": "With être, the past participle agrees with the subject."
+     },
+     "explanation": {
+      "fr": "Elles est féminin pluriel : elles sont parties.",
+      "en": "Elles is feminine plural: elles sont parties."
+     }
+    },
+    {
+     "id": "game-listen-4",
+     "lessonId": "passe-compose",
+     "level": "A2",
+     "skill": "conjugaison",
+     "type": "listen",
+     "prompt": "Une histoire d’hier…",
+     "instruction": "Écoute et retrouve la phrase au passé.",
+     "speech": "Hier, j’ai mangé une pomme.",
+     "choices": [
+      "Hier, j’ai mangé une pomme.",
+      "Demain, je mangerai une pomme.",
+      "Aujourd’hui, je mange une pomme."
+     ],
+     "answer": "Hier, j’ai mangé une pomme.",
+     "hint": {
+      "fr": "Hier annonce une action passée.",
+      "en": "Hier means yesterday and signals a past action."
+     },
+     "explanation": {
+      "fr": "J’ai mangé est au passé composé : avoir + participe passé.",
+      "en": "J’ai mangé is the passé composé: avoir + past participle."
+     }
+    }
+   ]
+  },
+  {
+   "id": "homophones",
+   "level": "A2",
+   "skill": "orthographe",
+   "title": {
+    "fr": "Éviter les confusions",
+    "en": "Common spelling traps"
+   },
+   "rule": {
+    "fr": "A est le verbe avoir ; à est une préposition. Son indique la possession ; sont est le verbe être.",
+    "en": "A and à sound alike but serve different functions. Son means his/her; sont means are."
+   },
+   "order": 8,
+   "exercises": [
+    {
+     "id": "homophones-1",
+     "lessonId": "homophones",
+     "level": "A2",
+     "skill": "orthographe",
+     "type": "choice",
+     "prompt": "Elle va ___ Montréal.",
+     "answer": "à",
+     "choices": [
+      "a",
+      "à"
+     ],
+     "hint": {
+      "fr": "Devant une ville, on met la préposition avec un accent.",
+      "en": "Before a city, use the preposition with an accent."
+     },
+     "explanation": {
+      "fr": "À introduit ici une destination.",
+      "en": "À introduces a destination."
+     }
+    },
+    {
+     "id": "homophones-2",
+     "lessonId": "homophones",
+     "level": "A2",
+     "skill": "orthographe",
+     "type": "choice",
+     "prompt": "Ils ___ prêts.",
+     "answer": "sont",
+     "choices": [
+      "son",
+      "sont"
+     ],
+     "hint": {
+      "fr": "Remplace par « étaient » : si ça marche, c'est le verbe être.",
+      "en": "Try « étaient »: if it works, it is the verb être."
+     },
+     "explanation": {
+      "fr": "On peut remplacer sont par étaient.",
+      "en": "Sont is the plural form of être."
+     }
+    },
+    {
+     "id": "homophones-3",
+     "lessonId": "homophones",
+     "level": "A2",
+     "skill": "orthographe",
+     "type": "choice",
+     "prompt": "Il ___ un billet.",
+     "answer": "a",
+     "choices": [
+      "a",
+      "à"
+     ],
+     "hint": {
+      "fr": "Remplace par « avait » : si ça marche, c'est le verbe avoir.",
+      "en": "Try « avait »: if it works, it is the verb avoir."
+     },
+     "explanation": {
+      "fr": "A peut être remplacé par avait.",
+      "en": "A is a form of avoir; it can be replaced by avait."
+     }
+    },
+    {
+     "id": "game-repair-3",
+     "lessonId": "homophones",
+     "level": "A2",
+     "skill": "orthographe",
+     "type": "repair",
+     "prompt": "Elle va a Montréal.",
+     "instruction": "Un accent peut tout changer. Trouve l’erreur.",
+     "words": [
+      "Elle",
+      "va",
+      "a",
+      "Montréal."
+     ],
+     "replacements": [
+      "à",
+      "as",
+      "ont"
+     ],
+     "answer": "2:à",
+     "hint": {
+      "fr": "Ce mot introduit une destination.",
+      "en": "This word introduces a destination."
+     },
+     "explanation": {
+      "fr": "À est une préposition de lieu. A est le verbe avoir.",
+      "en": "À is a place preposition. A is the verb avoir."
+     }
+    },
+    {
+     "id": "game-listen-2",
+     "lessonId": "homophones",
+     "level": "A2",
+     "skill": "orthographe",
+     "type": "listen",
+     "prompt": "Quel petit mot manque ?",
+     "instruction": "Écoute la phrase puis complète : « Elle va ___ Montréal. »",
+     "speech": "Elle va à Montréal.",
+     "choices": [
+      "à",
+      "a",
+      "as"
+     ],
+     "answer": "à",
+     "hint": {
+      "fr": "L’écoute ne suffit pas : réfléchis au sens de la phrase.",
+      "en": "Sound alone is not enough: think about the meaning."
+     },
+     "explanation": {
+      "fr": "Les homophones se ressemblent à l’oral. Ici, à introduit la destination.",
+      "en": "Homophones sound alike. Here, à introduces the destination."
+     }
+    }
+   ]
+  },
+  {
+   "id": "imparfait",
+   "level": "B1",
+   "skill": "conjugaison",
+   "title": {
+    "fr": "Habitudes dans le passé",
+    "en": "Past habits"
+   },
+   "rule": {
+    "fr": "L’imparfait décrit notamment une habitude passée : quand j’étais enfant, je jouais dehors. Terminaisons : -ais, -ais, -ait, -ions, -iez, -aient.",
+    "en": "Use the imparfait for past habits or background descriptions."
+   },
+   "order": 9,
+   "exercises": [
+    {
+     "id": "imparfait-1",
+     "lessonId": "imparfait",
+     "level": "B1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Chaque été, nous ___ chez nos cousins. (aller)",
+     "answer": "allions",
+     "choices": null,
+     "hint": {
+      "fr": "Imparfait avec nous : radical de « nous allons » + -ions.",
+      "en": "Imperfect with nous: stem of « nous allons » + -ions."
+     },
+     "explanation": {
+      "fr": "Nous à l’imparfait prend -ions.",
+      "en": "The nous ending in the imparfait is -ions."
+     }
+    },
+    {
+     "id": "imparfait-2",
+     "lessonId": "imparfait",
+     "level": "B1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Quand j’étais enfant, je ___ dehors. (jouer)",
+     "answer": "jouais",
+     "choices": null,
+     "hint": {
+      "fr": "Imparfait avec je : -ais.",
+      "en": "Imperfect with je: -ais."
+     },
+     "explanation": {
+      "fr": "Je à l’imparfait prend -ais.",
+      "en": "The je ending is -ais."
+     }
+    },
+    {
+     "id": "imparfait-3",
+     "lessonId": "imparfait",
+     "level": "B1",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Avant, elles ___ à Yaoundé. (habiter)",
+     "answer": "habitaient",
+     "choices": null,
+     "hint": {
+      "fr": "Imparfait avec elles : -aient.",
+      "en": "Imperfect with elles: -aient."
+     },
+     "explanation": {
+      "fr": "Elles à l’imparfait prend -aient.",
+      "en": "The elles ending is -aient."
+     }
+    }
+   ]
+  },
+  {
+   "id": "connecteurs",
+   "level": "B1",
+   "skill": "syntaxe",
+   "title": {
+    "fr": "Relier ses idées",
+    "en": "Connecting ideas"
+   },
+   "rule": {
+    "fr": "Parce que exprime la cause ; cependant marque une opposition ; donc indique une conséquence.",
+    "en": "Parce que means because; cependant means however; donc means therefore."
+   },
+   "order": 10,
+   "exercises": [
+    {
+     "id": "connecteurs-1",
+     "lessonId": "connecteurs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "choice",
+     "prompt": "Je reste chez moi ___ je suis malade.",
+     "answer": "parce que",
+     "choices": [
+      "cependant",
+      "parce que",
+      "donc"
+     ],
+     "hint": {
+      "fr": "On donne une cause : pourquoi je reste ?",
+      "en": "We give a cause: why do I stay?"
+     },
+     "explanation": {
+      "fr": "La maladie est la cause.",
+      "en": "Illness is the cause."
+     }
+    },
+    {
+     "id": "connecteurs-2",
+     "lessonId": "connecteurs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "choice",
+     "prompt": "Il pleut ; ___, nous sortons.",
+     "answer": "cependant",
+     "choices": [
+      "cependant",
+      "parce que",
+      "car"
+     ],
+     "hint": {
+      "fr": "Il pleut mais on sort quand même : une opposition.",
+      "en": "It rains but we go out anyway: a contrast."
+     },
+     "explanation": {
+      "fr": "Cependant introduit une opposition.",
+      "en": "Cependant introduces contrast."
+     }
+    },
+    {
+     "id": "connecteurs-3",
+     "lessonId": "connecteurs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "choice",
+     "prompt": "J’ai bien révisé ; je suis ___ mieux préparé.",
+     "answer": "donc",
+     "choices": [
+      "parce que",
+      "donc",
+      "mais"
+     ],
+     "hint": {
+      "fr": "On donne une conséquence : j'ai révisé, alors…",
+      "en": "We give a consequence: I studied, so…"
+     },
+     "explanation": {
+      "fr": "Donc introduit une conséquence.",
+      "en": "Donc introduces a consequence."
+     }
+    },
+    {
+     "id": "game-order-4",
+     "lessonId": "connecteurs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "order",
+     "prompt": "Explique pourquoi tu apprends le français.",
+     "instruction": "Relie la cause et l’action.",
+     "tiles": [
+      "voyager",
+      "pour",
+      "J’apprends",
+      "français",
+      "le"
+     ],
+     "answer": "J’apprends le français pour voyager",
+     "hint": {
+      "fr": "Pour + infinitif indique ici un objectif.",
+      "en": "Pour + infinitive expresses a purpose here."
+     },
+     "explanation": {
+      "fr": "J’apprends le français est l’action ; pour voyager est l’objectif.",
+      "en": "J’apprends le français is the action; pour voyager is the purpose."
+     }
+    },
+    {
+     "id": "game-pairs-4",
+     "lessonId": "connecteurs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "pairs",
+     "prompt": "Donne du sens à tes idées.",
+     "instruction": "Associe les connecteurs et leur rôle.",
+     "left": [
+      "Parce que",
+      "Cependant",
+      "Donc",
+      "Pour"
+     ],
+     "right": [
+      "Conséquence",
+      "Objectif",
+      "Cause",
+      "Opposition"
+     ],
+     "answer": "Parce que=Cause|Cependant=Opposition|Donc=Conséquence|Pour=Objectif",
+     "hint": {
+      "fr": "Parce que répond à la question pourquoi.",
+      "en": "Parce que answers the question why."
+     },
+     "explanation": {
+      "fr": "Parce que : cause ; cependant : opposition ; donc : conséquence ; pour : objectif.",
+      "en": "Parce que = because; cependant = however; donc = therefore; pour = in order to."
+     }
+    }
+   ]
+  },
+  {
+   "id": "relatifs",
+   "level": "B1",
+   "skill": "syntaxe",
+   "title": {
+    "fr": "Qui ou que ?",
+    "en": "Relative pronouns"
+   },
+   "rule": {
+    "fr": "Qui est sujet du verbe qui suit. Que est complément d’objet direct : la personne qui parle ; le livre que je lis.",
+    "en": "Qui is the subject of the following verb; que is its direct object."
+   },
+   "order": 11,
+   "exercises": [
+    {
+     "id": "relatifs-1",
+     "lessonId": "relatifs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "fill",
+     "prompt": "La personne ___ parle est ma sœur.",
+     "answer": "qui",
+     "choices": null,
+     "hint": {
+      "fr": "Le mot manquant est le sujet du verbe « parle ».",
+      "en": "The missing word is the subject of « parle »."
+     },
+     "explanation": {
+      "fr": "Qui est sujet de parle.",
+      "en": "Qui is the subject of parle."
+     }
+    },
+    {
+     "id": "relatifs-2",
+     "lessonId": "relatifs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "fill",
+     "prompt": "Le livre ___ je lis est intéressant.",
+     "answer": "que",
+     "choices": null,
+     "hint": {
+      "fr": "Le sujet de « lis » est déjà « je » : il faut le complément.",
+      "en": "« lis » already has the subject « je »: you need the object."
+     },
+     "explanation": {
+      "fr": "Je est le sujet ; que représente le livre, objet de lis.",
+      "en": "Je is the subject; que stands for the object of lis."
+     }
+    },
+    {
+     "id": "relatifs-3",
+     "lessonId": "relatifs",
+     "level": "B1",
+     "skill": "syntaxe",
+     "type": "fill",
+     "prompt": "Les élèves ___ travaillent progressent.",
+     "answer": "qui",
+     "choices": null,
+     "hint": {
+      "fr": "Qui fait l'action de travailler ? Le mot est sujet.",
+      "en": "Who does the working? The word is the subject."
+     },
+     "explanation": {
+      "fr": "Qui est sujet de travaillent.",
+      "en": "Qui is the subject of travaillent."
+     }
+    }
+   ]
+  },
+  {
+   "id": "subjonctif",
+   "level": "B2",
+   "skill": "conjugaison",
+   "title": {
+    "fr": "Exprimer une nécessité",
+    "en": "Expressing necessity"
+   },
+   "rule": {
+    "fr": "Après il faut que, on emploie le subjonctif : il faut que tu sois prêt, que nous fassions attention.",
+    "en": "Il faut que takes the subjunctive to express necessity."
+   },
+   "order": 12,
+   "exercises": [
+    {
+     "id": "subjonctif-1",
+     "lessonId": "subjonctif",
+     "level": "B2",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Il faut que tu ___ prêt. (être)",
+     "answer": "sois",
+     "choices": null,
+     "hint": {
+      "fr": "Être au subjonctif : que je sois, que tu…",
+      "en": "Être in the subjunctive: que je sois, que tu…"
+     },
+     "explanation": {
+      "fr": "Être au subjonctif avec tu : sois.",
+      "en": "The tu subjunctive of être is sois."
+     }
+    },
+    {
+     "id": "subjonctif-2",
+     "lessonId": "subjonctif",
+     "level": "B2",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Il faut que nous ___ attention. (faire)",
+     "answer": "fassions",
+     "choices": null,
+     "hint": {
+      "fr": "Faire au subjonctif : que je fasse, que nous…",
+      "en": "Faire in the subjunctive: que je fasse, que nous…"
+     },
+     "explanation": {
+      "fr": "Faire au subjonctif avec nous : fassions.",
+      "en": "The nous subjunctive of faire is fassions."
+     }
+    },
+    {
+     "id": "subjonctif-3",
+     "lessonId": "subjonctif",
+     "level": "B2",
+     "skill": "conjugaison",
+     "type": "fill",
+     "prompt": "Il faut qu’elle ___ à l’heure. (venir)",
+     "answer": "vienne",
+     "choices": null,
+     "hint": {
+      "fr": "Venir au subjonctif : qu'il vienne, qu'elle…",
+      "en": "Venir in the subjunctive: qu'il vienne, qu'elle…"
+     },
+     "explanation": {
+      "fr": "Venir au subjonctif avec elle : vienne.",
+      "en": "The elle subjunctive of venir is vienne."
+     }
+    }
+   ]
+  }
+ ]
+}
