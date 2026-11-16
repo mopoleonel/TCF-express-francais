@@ -29,7 +29,8 @@ const esc = (s) =>
   );
 // Le français est la langue par défaut ; l'anglais reste une aide que l'apprenant active lui-même.
 let token = localStorage.getItem("quest-token"),
-  locale = localStorage.getItem("quest-locale") || "fr",
+  // Aide en anglais par défaut si le site TCF Express est en anglais.
+  locale = localStorage.getItem("quest-locale") || (localStorage.getItem("tcf_lang") === "en" ? "en" : "fr"),
   catalog = [],
   progress = {},
   page = "home",
@@ -444,6 +445,9 @@ function render() {
     quiz: "À toi de jouer !",
   }[page];
   $("#language").innerHTML = locale === "en" ? "🇬🇧<em> Aide</em> EN" : "🇫🇷<em> Aide</em> FR";
+  const dark = document.documentElement.classList.contains("atelier-dark");
+  $("#theme").innerHTML = dark ? "☀️<em> Clair</em>" : "🌙<em> Sombre</em>";
+  $("#theme").setAttribute("aria-label", dark ? "Passer en thème clair" : "Passer en thème sombre");
   $("#sound").innerHTML = sound ? "🔊<em> Son</em>" : "🔇<em> Son</em>";
   $("#sound").setAttribute("aria-label", sound ? "Couper le son" : "Activer le son");
   $("#sound").setAttribute("aria-pressed", String(sound));
@@ -1194,6 +1198,15 @@ document.addEventListener("click", async (ev) => {
         locale === "en" ? "Léo ajoute maintenant une aide en anglais." : "Léo t’aide maintenant en français.",
       );
     }
+    if (b.id === "theme") {
+      // Même réglage que tout le site TCF Express (clé « theme »).
+      const dark = !document.documentElement.classList.contains("atelier-dark");
+      setTheme(dark);
+      try {
+        localStorage.setItem("theme", dark ? "dark" : "light");
+      } catch {}
+      render();
+    }
     if (b.id === "sound") {
       if (page === "oral") cleanupOral();
       sound = !sound;
@@ -1248,16 +1261,49 @@ async function linkAnonymousProgress() {
   }
 }
 // Encadré du bas de la barre latérale : prénom du compte TCF Express, ou « sans compte ».
+// Thème clair/sombre partagé avec tcf-express.com.
+function setTheme(dark) {
+  document.documentElement.classList.toggle("atelier-dark", dark);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#0f172a" : "#002395");
+}
+window.addEventListener("storage", (e) => {
+  if (e.key === "theme" && e.newValue) {
+    setTheme(e.newValue === "dark");
+    render();
+  }
+});
+setTheme(document.documentElement.classList.contains("atelier-dark"));
+// Compte TCF Express : nom, lien de retour vers le tableau de bord.
+function tcfUser() {
+  try {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  } catch {
+    return null;
+  }
+}
 function showAccount() {
   if (!OFFICIAL) return;
+  const connected = !!accountToken();
+  const back = $("#back-tcf");
+  if (back) {
+    back.hidden = false;
+    back.href = connected ? "/dashboard" : "/";
+    back.title = connected ? "Retour à mon tableau de bord TCF Express" : "Retour au site TCF Express";
+    back.querySelector("span").textContent = connected ? "Mon tableau de bord" : "TCF Express";
+  }
+  $(".brand")?.setAttribute("href", connected ? "/dashboard" : "/");
   const box = $(".profile");
   if (!box) return;
-  const set = (initial, name, sub) =>
-    (box.innerHTML = `<div class="avatar">${esc(initial)}</div><div>${esc(name)}<small>${esc(sub)}</small></div>`);
-  if (!accountToken()) return set("?", "Sans compte", "Progression sur ce téléphone");
-  api("/v1/me/account")
-    .then((a) => set((a.firstName || "T")[0].toUpperCase(), a.firstName || "Mon compte", "Compte TCF Express"))
-    .catch(() => {});
+  const set = (name, sub) =>
+    (box.innerHTML = `<div class="avatar">${esc((name || "?")[0].toUpperCase())}</div><div>${esc(name)}<small>${esc(sub)}</small></div>`);
+  if (!connected) return set("Sans compte", "Progression sur ce téléphone");
+  const u = tcfUser();
+  const sub = u?.academy_name ? `Compte TCF Express · ${u.academy_name}` : "Compte TCF Express";
+  set(u?.username || "Mon compte", sub);
+  if (!u?.username)
+    api("/v1/me/account")
+      .then((a) => a.firstName && set(a.firstName, sub))
+      .catch(() => {});
 }
 async function registerAnonymous() {
   const r = await fetch(API_BASE + "demo/register", { method: "POST" }).catch(() => null);
