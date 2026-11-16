@@ -413,6 +413,7 @@ function progressPage() {
       "Tes efforts font leur chemin.",
       "Pas besoin d’être parfait. Chaque découverte compte.",
     ) +
+    accountCard() +
     stats() +
     `<div class="progress-layout"><section class="panel"><h2>Ton carnet de compétences</h2>${Object.entries(
       progress.skills || {},
@@ -1198,7 +1199,7 @@ document.addEventListener("click", async (ev) => {
         locale === "en" ? "Léo ajoute maintenant une aide en anglais." : "Léo t’aide maintenant en français.",
       );
     }
-    if (b.id === "theme") {
+    if (b.id === "theme" || b.classList.contains("theme-toggle")) {
       // Même réglage que tout le site TCF Express (clé « theme »).
       const dark = !document.documentElement.classList.contains("atelier-dark");
       setTheme(dark);
@@ -1280,6 +1281,49 @@ function tcfUser() {
   } catch {
     return null;
   }
+}
+// Fiche « Mon compte TCF Express » de la page Profil (tcf-express.com uniquement).
+const TCF_API_ROOT = "https://api.tcf-express.com/api/";
+const ACCOUNT_TYPES = {
+  utilisateur_libre: "Candidat libre",
+  apprenant: "Apprenant",
+  formateur: "Formateur",
+  enseignant: "Enseignant",
+  admin: "Administrateur",
+};
+let tcfAccount = null;
+async function loadTcfAccount() {
+  const jwt = accountToken(),
+    u = tcfUser();
+  if (!jwt || tcfAccount) return;
+  tcfAccount = { loading: true };
+  const get = (path) =>
+    fetch(TCF_API_ROOT + path, { headers: { Authorization: `Bearer ${jwt}` } })
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null);
+  const [profile, subs] = await Promise.all([u?.id ? get(`profiles/${u.id}/`) : null, get("subscriptions/current_subscriptions/")]);
+  tcfAccount = { profile, sub: Array.isArray(subs) ? subs[0] || null : null, subKnown: Array.isArray(subs) };
+  const box = $("#account-card");
+  if (box) box.outerHTML = accountCard();
+}
+function accountCard() {
+  if (!OFFICIAL) return "";
+  const dark = document.documentElement.classList.contains("atelier-dark");
+  const settings = `<div class="account-actions"><button class="quiet theme-toggle">${dark ? "☀️ Thème clair" : "🌙 Thème sombre"}</button><button class="quiet lang-toggle">${locale === "en" ? "🇬🇧 Aide en anglais : oui" : "🇫🇷 Aide en anglais : non"}</button></div>`;
+  if (!accountToken())
+    return `<section class="panel account-card" id="account-card"><div class="account-head"><div class="avatar big">?</div><div><h2>Sans compte</h2><p>Ta progression est enregistrée sur ce téléphone seulement.</p></div></div><div class="account-actions"><a class="primary" href="/login">Se connecter</a><a class="quiet" href="/register">Créer un compte</a><a class="quiet" href="/">← Site TCF Express</a></div>${settings}</section>`;
+  const u = tcfUser() || {};
+  if (!tcfAccount) loadTcfAccount();
+  const p = tcfAccount?.profile,
+    sub = tcfAccount?.sub;
+  const row = (label, value) => (value ? `<div class="account-row"><span>${label}</span><b>${esc(String(value))}</b></div>` : "");
+  const date = (d) => (d ? new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : "");
+  const daysLeft = (d) => Math.max(0, Math.ceil((new Date(d) - Date.now()) / 86400000));
+  let subText = tcfAccount?.loading ? "Chargement…" : "";
+  if (sub) subText = `${sub.plan_name || sub.plan_details?.name || "Abonnement"} · ${sub.is_active ? `actif, encore ${daysLeft(sub.end_date)} jour${daysLeft(sub.end_date) > 1 ? "s" : ""} (jusqu’au ${date(sub.end_date)})` : "expiré"}`;
+  else if (tcfAccount?.subKnown) subText = "Aucun abonnement actif";
+  const exam = p?.date_examen ? `${date(p.date_examen)}${new Date(p.date_examen) > Date.now() ? ` (dans ${daysLeft(p.date_examen)} jours)` : ""}` : "";
+  return `<section class="panel account-card" id="account-card"><div class="account-head"><div class="avatar big">${esc((u.username || "T")[0].toUpperCase())}</div><div><h2>${esc(u.username || "Mon compte")}</h2><p>Compte TCF Express${u.academy_name ? ` · ${esc(u.academy_name)}` : ""}</p></div></div><div class="account-grid">${row("E-mail", u.email)}${row("Type de compte", ACCOUNT_TYPES[u.user_type] || u.user_type)}${row("Centre", u.academy_name)}${row("Abonnement", subText)}${row("Niveau estimé", p?.niveau_estime)}${row("Objectif", p?.objectif_niveau)}${row("Date de l’examen", exam)}${row("Membre depuis", date(p?.created_at))}</div><div class="account-actions"><a class="primary" href="/dashboard">← Mon tableau de bord</a><a class="quiet" href="/dashboard/profile">Modifier mon profil</a></div>${settings}</section>`;
 }
 function showAccount() {
   if (!OFFICIAL) return;
