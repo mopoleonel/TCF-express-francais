@@ -270,6 +270,16 @@ html.atelier-dark .oral-item { background: #11192d; border-color: #2f3e54; }
 }
 html.atelier-dark .back-tcf { border: 1px solid #38425a; background: #131925; color: #88a4ff; }
 html.atelier-dark .back-tcf:hover { background: #141d34; }
+@media (max-width: 760px) {
+html.atelier-dark .back-tcf { background: #002395; border-color: #002395; color: #ffffff; }
+}
+html.atelier-dark .account-head p { color: #b1b8ca; }
+html.atelier-dark .avatar.big { background: #002395; color: #ffffff; }
+html.atelier-dark .account-row { border: 1px solid #3a4351; background: #11192d; }
+html.atelier-dark .account-row span { color: #b1b8ca; }
+html.atelier-dark .account-row b { color: #afc4e7; }
+html.atelier-dark .account-actions a, html.atelier-dark .account-actions button { border: 1px solid #38425a; background: #131925; color: #88a4ff; }
+html.atelier-dark .account-actions a.primary { background: #002395; border-color: #002395; color: #ffffff; }
 /* ── theme.css ── */
 html.atelier-dark .journey-stage { background: #131925; border: 1px solid #3a4351; border-left: 3px solid #002395; }
 html.atelier-dark .journey-stage > div > span { color: #8d9fbc; }
