@@ -1,0 +1,753 @@
+/* Généré par scripts/build-dark.py — ne pas modifier à la main. */
+html.atelier-dark { color-scheme: dark; }
+/* ── style.css ── */
+html.atelier-dark body { background: #11192d; color: #b0c1e1; }
+html.atelier-dark button:focus-visible, html.atelier-dark a:focus-visible, html.atelier-dark input:focus-visible, html.atelier-dark summary:focus-visible { outline: 3px solid #415288; }
+html.atelier-dark .sidebar { background: #131925; border-right: 2px solid #36404f; }
+html.atelier-dark .brand span { color: #88a4ff; }
+html.atelier-dark .brand i { color: #ef5b67; }
+html.atelier-dark .brand-sub { color: #91a0b3; }
+html.atelier-dark .workspace { border-block: 1px solid #36404f; }
+html.atelier-dark .workspace-icon { background: #141d34; }
+html.atelier-dark .workspace small { color: #758399; }
+html.atelier-dark .nav-label { color: #9aa7b8; }
+html.atelier-dark nav button { color: #8190a3; }
+html.atelier-dark nav button.active { background: #141f34; color: #88a4ff; border-color: #2b395a; box-shadow: 0 3px 0 #0b0f19; }
+html.atelier-dark nav button:hover { background: #181e2c; }
+html.atelier-dark nav b { background: #1f252c; }
+html.atelier-dark .sidebar-card { background: #372c15; border: 1px solid #655531; }
+html.atelier-dark .sidebar-card > span { color: #b58e46; }
+html.atelier-dark .sidebar-card p { color: #a08b67; }
+html.atelier-dark .profile { border-top: 1px solid #36404f; }
+html.atelier-dark .profile small { color: #758399; }
+html.atelier-dark .profile > span { color: #a6b0bf; }
+html.atelier-dark .avatar { background: #47391b; color: #c68827; }
+html.atelier-dark header { background: #131925; border-bottom: 1px solid #36404f; }
+html.atelier-dark .breadcrumb { color: #9aa5b6; }
+html.atelier-dark .breadcrumb > span { color: #ccd2dc; }
+html.atelier-dark .breadcrumb strong { color: #b0c1e1; }
+html.atelier-dark .top-actions button { background: #131925; border: 1px solid #36404f; color: #738096; }
+html.atelier-dark .demo-label { color: #adb5c2; }
+html.atelier-dark .eyebrow { color: #7089b6; }
+html.atelier-dark .subtitle { color: #758399; }
+html.atelier-dark button.primary { background: #002395; border: 1px solid #002395; color: #ffffff; box-shadow: 0 5px 0 #00186c; }
+html.atelier-dark button.primary:hover { background: #103aad; }
+html.atelier-dark button.primary:disabled { box-shadow: 0 4px 0 #15171a; background: #2b323d; border-color: #3c4654; color: #94a0b2; }
+html.atelier-dark button.sunny { background: #8d7036; color: #eed2a0; border-color: #ffc651; box-shadow: 0 5px 0 #dca741; }
+html.atelier-dark button.sunny:hover { background: #7c622f; }
+html.atelier-dark .quiet { background: #131925; border: 2px solid #374151; box-shadow: 0 3px 0 #0f1115; }
+html.atelier-dark .text-button { color: #88a4ff; }
+html.atelier-dark .pill { background: #141f35; color: #88a4ff; }
+html.atelier-dark .adventure-hero { border: 1px solid #2c3f5c; background: #152136; background-image: radial-gradient(#263b6133 1px, transparent 1px); }
+html.atelier-dark .hero-copy .pill { background: #131925; color: #6682b7; }
+html.atelier-dark .hero-copy h2 { color: #9ebbeb; }
+html.atelier-dark .hero-copy h2 em { color: #88a4ff; }
+html.atelier-dark .hero-copy h2 em:after { background: #896c34; }
+html.atelier-dark .hero-copy p { color: #6f89ad; }
+html.atelier-dark .hero-note { color: #8395b0; }
+html.atelier-dark .hero-note i { color: #c3cddd; }
+html.atelier-dark .ground { background: #394a3b; }
+html.atelier-dark .ground:after { background: #4b5e4e; }
+html.atelier-dark .bubble { border: 2px solid #2a3446; background: #131925; box-shadow: 0 5px 0 #0f1218; color: #6a84ac; }
+html.atelier-dark .bubble b { color: #9db8e4; }
+html.atelier-dark .scene-flower { color: #ef9e80; }
+html.atelier-dark .scene-star { color: #f3c45a; }
+html.atelier-dark .scene-word { color: #769b87; }
+html.atelier-dark .spark { color: #9eb9e9; }
+html.atelier-dark .stat { background: #131925; border: 1px solid #36404f; border-bottom: 3px solid #36404f; }
+html.atelier-dark .stat em { color: #a2afc1; }
+html.atelier-dark .stat small { color: #8492a6; }
+html.atelier-dark .game-card { --accent: #5b86de; --tint: #131f33; --border: #2c3f5c; background: #131925; }
+html.atelier-dark .blue { --accent: #5b86de; --tint: #131f33; --border: #2c3f5c; }
+html.atelier-dark .coral { --accent: #dd8b7c; --tint: #341d14; --border: #5c3b31; }
+html.atelier-dark .purple { --accent: #a58acb; --tint: #221731; --border: #413158; }
+html.atelier-dark .green { --accent: #66ac8e; --tint: #1c2f24; --border: #3b5746; }
+html.atelier-dark .game-copy > span { color: #8c99aa; }
+html.atelier-dark .play-circle { background: #131925; }
+html.atelier-dark .quest-card { background: #362c14; border: 2px solid #635734; }
+html.atelier-dark .quest-card > .eyebrow { color: #bda268; }
+html.atelier-dark .quest-card p { color: #ad9977; }
+html.atelier-dark .goal-row b { color: #cdbb99; }
+html.atelier-dark .goal-row span { color: #c3ad80; }
+html.atelier-dark .quest-card .bar { background: #463d27; }
+html.atelier-dark .quest-card .bar > span { background: #a98643; }
+html.atelier-dark .quest-card > small { color: #c0ae8c; }
+html.atelier-dark .leo-tip { background: #131925; border: 1px solid #36404f; }
+html.atelier-dark .leo-tip p { color: #758399; }
+html.atelier-dark .world-preview { background: #1e2e20; border: 2px solid #3d513f; }
+html.atelier-dark .world-preview small { color: #8ba891; }
+html.atelier-dark .world-preview p { color: #8aa68f; }
+html.atelier-dark .world-preview .text-button { color: #a4cbb0; }
+html.atelier-dark .world-trail { color: #ccdfca; }
+html.atelier-dark .bar { background: #1f2630; }
+html.atelier-dark .bar > span { background: #364c7f; }
+html.atelier-dark .world-title p { color: #8b9aad; }
+html.atelier-dark .path-node { border: 5px solid #2a3446; }
+html.atelier-dark .path-node small { background: #131925; }
+html.atelier-dark .path-node.done { background: #3eaf82; color: #ffffff; }
+html.atelier-dark .path-stop > small { color: #9ba8b8; }
+html.atelier-dark .node-stars { color: #d2dce8; }
+html.atelier-dark .node-stars .lit { color: #eab74c; }
+html.atelier-dark .arcade-intro { background: #372c15; border: 2px solid #655533; }
+html.atelier-dark .arcade-intro p { color: #a9956d; }
+html.atelier-dark .arcade-intro b { color: #d4c29e; }
+html.atelier-dark .howto { background: #131925; border: 1px solid #36404f; }
+html.atelier-dark .howto small { color: #758399; }
+html.atelier-dark .panel { background: #131925; border: 2px solid #36404f; }
+html.atelier-dark .skill-row small { color: #758399; }
+html.atelier-dark .trophy { border: 2px solid #373e4a; }
+html.atelier-dark .trophy.unlocked { background: #322813; border-color: #645430; }
+html.atelier-dark .trophy small { color: #758399; }
+html.atelier-dark .trophy b { color: #d5a54a; }
+html.atelier-dark .help-note { color: #758399; }
+html.atelier-dark .review-scene { background: #1e2e22; border: 2px solid #3b5442; }
+html.atelier-dark .review-scene p { color: #83a18f; }
+html.atelier-dark .quiz-progress .bar { background: #202936; }
+html.atelier-dark .quiz-progress .bar span { background: #669a83; }
+html.atelier-dark .quiz-progress small { color: #8797ad; }
+html.atelier-dark .combo { color: #a4afbe; border: 1px solid #36404f; }
+html.atelier-dark .combo.hot { color: #c98730; background: #413519; border-color: #735f37; }
+html.atelier-dark .coach-row > div { border: 2px solid #354052; background: #131925; color: #8493a9; }
+html.atelier-dark .quiz-card { background: #131925; }
+html.atelier-dark .quiz-tag > span:last-child { border: 1px solid #36404f; color: #a5afbe; }
+html.atelier-dark .question-instruction { color: #8998ad; }
+html.atelier-dark .choice { border: 2px solid #37404f; box-shadow: 0 3px 0 #101215; background: #131925; }
+html.atelier-dark .choice > span { border: 1px solid #3b434f; color: #aab4c3; }
+html.atelier-dark .choice i { color: #d4dce8; }
+html.atelier-dark .choice.selected { border-color: #7095ed; background: #131e32; box-shadow: 0 3px 0 #7095ed; color: #95abdd; }
+html.atelier-dark .choice.selected i { color: #7095ed; }
+html.atelier-dark .quiz-actions { border-top: 1px solid #36404f; }
+html.atelier-dark .no-pressure { color: #a7b3c4; }
+html.atelier-dark .input-label { color: #758399; }
+html.atelier-dark .answer-input { border: 2px solid #364457; color: #b0c1e1; background: #10172b; box-shadow: 0 3px 0 #0e1116; }
+html.atelier-dark .accent-keys button { border: 1px solid #3a4452; background: #131925; color: #8b9bb1; }
+html.atelier-dark .word-instruction { color: #9aabc0; }
+html.atelier-dark .sentence-slots { border: 2px dashed #364457; background: #111c2c; }
+html.atelier-dark .empty-slots { color: #b1bdce; }
+html.atelier-dark .sentence-slots button, html.atelier-dark .tile-bank button { border: 2px solid #2d3e5e; background: #131925; color: #a0b2ce; }
+html.atelier-dark .sentence-slots button { background: #131f33; border-color: #304263; }
+html.atelier-dark .game-helper { color: #95a4b9; }
+html.atelier-dark .pair-tile { background: #131925; border: 2px solid #3f3b4f; }
+html.atelier-dark .pair-tile.selected { background: #1b1333; border-color: #5d4c77; color: #8561ac; }
+html.atelier-dark .pair-tile.paired { background: #211930; border-color: #4c3c63; color: #8a6bb3; }
+html.atelier-dark .pair-tile b { background: #56456d; color: #ffffff; }
+html.atelier-dark .repair-sentence { background: #2d1a11; border: 2px dashed #5a4037; }
+html.atelier-dark .repair-sentence button { background: #131925; border: 2px solid #57433c; }
+html.atelier-dark .repair-sentence .selected { border-color: #815344; background: #382115; color: #b76f56; }
+html.atelier-dark .repair-options button { background: #131925; border: 2px solid #57433c; }
+html.atelier-dark .repair-options .selected { background: #382115; border-color: #825445; color: #b76f56; }
+html.atelier-dark .listen-stage { background: #1b2d22; border: 1px solid #3d5146; }
+html.atelier-dark .listen-button { background: #365746; border: 2px solid #4b6f5c; color: #b1d5c1; }
+html.atelier-dark .listen-stage p { color: #8aa997; }
+html.atelier-dark .listen-stage .text-button { color: #a3c6b3; }
+html.atelier-dark .transcript { color: #8fa295; }
+html.atelier-dark .transcript p { color: #abc7b5; }
+html.atelier-dark .hint-box { background: #372e15; border: 1px solid #6b5e34; color: #ac8c49; }
+html.atelier-dark .feedback { background: #1c3225; border: 2px solid #3d5b48; color: #a3cbb7; }
+html.atelier-dark .feedback.wrong { background: #342814; border-color: #655434; color: #b28d4b; }
+html.atelier-dark .feedback strong { color: #aad2bb; }
+html.atelier-dark .feedback.wrong strong { color: #ae8640; }
+html.atelier-dark .feedback em { background: #131925; }
+html.atelier-dark .green-button { background: #45a17b !important; border-color: #45a17b !important; box-shadow: 0 5px 0 #2e795a !important; }
+html.atelier-dark .summary-stars { color: #e7b54d; }
+html.atelier-dark .summary > p { color: #99a6b9; }
+html.atelier-dark .summary-numbers > div { border: 2px solid #373e4a; }
+html.atelier-dark .summary-numbers small { color: #a0adbe; }
+html.atelier-dark .empty p { color: #758399; }
+html.atelier-dark dialog { border: 2px solid #364153; color: #b0c1e1; box-shadow: 0 20px 80px #172f5c22; }
+html.atelier-dark dialog::backdrop { background: #162a4e66; }
+html.atelier-dark .rule-box { border: 2px solid #2b3c5a; background: #121b2f; }
+html.atelier-dark .rule-box p, html.atelier-dark .english-help p { color: #7b8eab; }
+html.atelier-dark .english-help { background: #342814; color: #c8bb9d; }
+html.atelier-dark .english-help p { color: #aa9978; }
+html.atelier-dark .lesson-promise { color: #a2b0c3; }
+html.atelier-dark footer { color: #acb7c7; border-top: 1px solid #36404f; }
+html.atelier-dark #toast { background: #203355; color: #ffffff; box-shadow: 0 5px 15px #152b5533; }
+@media (max-width: 550px) {
+html.atelier-dark .sidebar { border-bottom: 2px solid #36404f; }
+}
+html.atelier-dark body { background: #191f29; }
+html.atelier-dark .brand span { color: #e63246; }
+html.atelier-dark .brand i { color: #e63246; }
+html.atelier-dark .sidebar-card { background: #151e2f; border-color: #343f53; }
+html.atelier-dark .sidebar-card > span { color: #8194b6; }
+html.atelier-dark .sidebar-card p { color: #91a0b5; }
+html.atelier-dark .profile .avatar, html.atelier-dark .top-actions .avatar { background: #172134; color: #4a66a1; }
+html.atelier-dark .primary { box-shadow: 0 3px 0 #001b70 !important; }
+html.atelier-dark .quiet { box-shadow: 0 2px 0 #0f1115; }
+html.atelier-dark .quest-card { background: #131925; border-color: #364152; }
+html.atelier-dark .quest-card .eyebrow { color: #8193b1; }
+html.atelier-dark .quest-card p { color: #96a2b5; }
+html.atelier-dark .quest-card .bar { background: #1f2630; }
+html.atelier-dark .quest-card .bar span { background: #496299; }
+html.atelier-dark .quest-card .goal-row b { color: #4b689e; }
+html.atelier-dark .quest-card .goal-row span { color: #93a2b8; }
+html.atelier-dark .quest-card > small { color: #9aa6b8; }
+html.atelier-dark .leo-avatar { background: #192130; border: 1px solid #344055; }
+html.atelier-dark .leo-speaking .leo-avatar { border-color: #6486d5; box-shadow: 0 0 0 4px #5479d515; }
+html.atelier-dark .leo-voice-bars { background: #002395; border: 2px solid #2a3446; }
+html.atelier-dark .leo-voice-bars i { background: #131925; }
+html.atelier-dark .leo-dock-toggle { background: #131925; border: 1px solid #324059; box-shadow: 0 5px 22px #17346b20; }
+html.atelier-dark .leo-dock-dot { background: #3fa77c; border: 2px solid #2a3446; }
+html.atelier-dark .leo-dock-content { border: 1px solid #364154; background: #131925; box-shadow: 0 8px 35px #17346b18; }
+html.atelier-dark .leo-dock-content > div > span { color: #8b9bb4; }
+html.atelier-dark .leo-dock-content > div > button { color: #9eabc0; }
+html.atelier-dark .leo-dock-content p { color: #8393ad; }
+html.atelier-dark .learning-hero { background: #131925; border: 1px solid #344055; }
+html.atelier-dark .learning-hero:before { background: linear-gradient(#002395 0 68%, #e63246 68% 100%); }
+html.atelier-dark .learning-hero em { color: #88a4ff; }
+html.atelier-dark .learning-hero p { color: #8999b1; }
+html.atelier-dark .learning-loop { background: #151e2f; border: 1px solid #2d3c55; }
+html.atelier-dark .learning-loop-caption { color: #93a4bd; }
+html.atelier-dark .learning-loop > div { border-top: 1px solid #343f53; }
+html.atelier-dark .learning-loop > div > b { background: #131925; border: 1px solid #323e55; color: #728bc0; }
+html.atelier-dark .learning-loop small { color: #9baac0; }
+html.atelier-dark .learning-loop i { color: #91a8d3; }
+html.atelier-dark .learning-doors > button { border: 1px solid #333f55; background: #131925; }
+html.atelier-dark .learning-doors > button:hover { background: #131d32; border-color: #3c4c6b; }
+html.atelier-dark .learning-doors > button > span { background: #141d34; color: #5c7bb8; }
+html.atelier-dark .learning-doors small { color: #8b9fbe; }
+html.atelier-dark .learning-doors p { color: #9ba8bc; }
+html.atelier-dark .learning-doors b { color: #819aca; }
+html.atelier-dark .oral-counter { background: #131925; border: 1px solid #323e55; }
+html.atelier-dark .oral-counter b { color: #9bb4de; }
+html.atelier-dark .oral-counter span { color: #95a5bd; }
+html.atelier-dark .oral-library { background: #131925; border: 1px solid #384152; }
+html.atelier-dark .oral-library-title { border-bottom: 1px solid #353f4b; }
+html.atelier-dark .oral-library-title > span { color: #9eabc0; }
+html.atelier-dark .oral-item { background: #131925; }
+html.atelier-dark .oral-item:hover { background: #181e2b; }
+html.atelier-dark .oral-item.active { background: #141f34; border-color: #2d3d5d; }
+html.atelier-dark .oral-item-num { color: #92a3bd; background: #1a202a; }
+html.atelier-dark .oral-item.active .oral-item-num { background: #002395; color: #ffffff; }
+html.atelier-dark .oral-item strong { color: #6c809f; }
+html.atelier-dark .oral-item small { color: #9aa9bf; }
+html.atelier-dark .oral-item em { color: #9bacc4; }
+html.atelier-dark .oral-local-note { color: #a8b4c6; }
+html.atelier-dark .voice-settings { color: #94a4bd; }
+html.atelier-dark .voice-settings > div { border: 1px solid #313f57; background: #131925; box-shadow: 0 7px 30px #16377915; }
+html.atelier-dark .voice-settings label { color: #7a8cab; }
+html.atelier-dark .voice-settings select { border: 1px solid #333f55; background: #111a2d; color: #6b7f9d; }
+html.atelier-dark .voice-settings small { color: #9aa9c0; }
+html.atelier-dark .oral-card { background: #131925; border: 1px solid #364153; }
+html.atelier-dark .oral-step-label { color: #5875a7; }
+html.atelier-dark .oral-step-label > span { background: #141f34; color: #6b86b6; }
+html.atelier-dark .oral-model-avatar > span:last-child { color: #96a4b8; }
+html.atelier-dark .spoken-sentence { color: #a9bfe1; }
+html.atelier-dark .spoken-word:hover, html.atelier-dark .spoken-word.word-active { background: #141d34; color: #88a4ff; box-shadow: 0 2px 0 #13181f; }
+html.atelier-dark .oral-translation { color: #9cabc0; }
+html.atelier-dark .oral-model-text > small { color: #acb8cb; }
+html.atelier-dark .speech-inline-status { color: #91a1ba; }
+html.atelier-dark .chunk-practice { border-top: 1px solid #343d4c; }
+html.atelier-dark .chunk-practice h3 { color: #7f91ac; }
+html.atelier-dark .chunk-practice button { background: #121a2e; border: 1px solid #303d59; color: #6881ab; }
+html.atelier-dark .chunk-practice small { background: #131925; border: 1px solid #313e55; }
+html.atelier-dark .chunk-practice button > span { color: #98aed1; }
+html.atelier-dark .pronunciation-tip { background: #151c2d; }
+html.atelier-dark .pronunciation-tip b { color: #7489ac; }
+html.atelier-dark .pronunciation-tip p { color: #97a6be; }
+html.atelier-dark .oral-description { color: #96a5bb; }
+html.atelier-dark .record-button { background: #311315; border: 1px solid #5b383e; color: #c85a68; }
+html.atelier-dark .is-recording .record-button { background: #b64856; color: #ffffff; border-color: #e83a50; }
+html.atelier-dark .record-status { color: #92a3be; }
+html.atelier-dark .record-privacy { color: #a7b3c6; border-top: 1px solid #343d4c; }
+html.atelier-dark .compare-checklist { color: #889ab4; }
+html.atelier-dark .dialogue-question { background: #121b2f; border: 1px solid #2f3c53; }
+html.atelier-dark .dialogue-question small { color: #95a8c8; }
+html.atelier-dark .dialogue-question p { color: #6b82a7; }
+html.atelier-dark .reply-example { color: #91a1b9; border-top: 1px solid #343d4c; }
+html.atelier-dark .reply-example p { color: #7f94b6; }
+html.atelier-dark .oral-selfcheck { background: #141f34; border: 1px solid #2c3d5c; }
+html.atelier-dark .oral-selfcheck h3 { color: #5878ab; }
+html.atelier-dark .oral-selfcheck p { color: #96aac9; }
+html.atelier-dark .oral-selfcheck .selected { outline: 2px solid #7898d5; }
+html.atelier-dark .oral-bottom-nav > span { color: #9baac0; }
+html.atelier-dark .review-scene { background: #151e32; border-color: #303e58; }
+html.atelier-dark .review-scene p { color: #8e9fba; }
+html.atelier-dark .reply-example summary:focus-visible, html.atelier-dark .voice-settings summary:focus-visible { outline: 2px solid #7f9ad0; }
+@media (max-width: 760px) {
+html.atelier-dark .oral-item { background: #11192d; border-color: #2f3e54; }
+}
+html.atelier-dark .back-tcf { border: 1px solid #38425a; background: #131925; color: #88a4ff; }
+html.atelier-dark .back-tcf:hover { background: #141d34; }
+@media (max-width: 760px) {
+html.atelier-dark .back-tcf { background: #002395; border-color: #002395; color: #ffffff; }
+}
+html.atelier-dark .account-head p { color: #b1b8ca; }
+html.atelier-dark .avatar.big { background: #002395; color: #ffffff; }
+html.atelier-dark .account-row { border: 1px solid #3a4351; background: #11192d; }
+html.atelier-dark .account-row span { color: #b1b8ca; }
+html.atelier-dark .account-row b { color: #afc4e7; }
+html.atelier-dark .account-actions a, html.atelier-dark .account-actions button { border: 1px solid #38425a; background: #131925; color: #88a4ff; }
+html.atelier-dark .account-actions a.primary { background: #002395; border-color: #002395; color: #ffffff; }
+/* ── theme.css ── */
+html.atelier-dark .journey-stage { background: #131925; border: 1px solid #3a4351; border-left: 3px solid #002395; }
+html.atelier-dark .journey-stage > div > span { color: #8d9fbc; }
+html.atelier-dark .journey-stage strong { color: #a6bde2; }
+html.atelier-dark .journey-stage strong small { border: 1px solid #324059; color: #8a9dbd; }
+html.atelier-dark .journey-rule { color: #8b9dbb; }
+html.atelier-dark .journey-rule p { color: #7a8fac; }
+html.atelier-dark .journey-checkpoint { background: #131925; border: 1px solid #3a4351; box-shadow: 0 8px 30px #081b3e04; }
+html.atelier-dark .journey-checkpoint > .eyebrow { color: #88a4ff; }
+html.atelier-dark .journey-checkpoint h1 { color: #abc1e5; }
+html.atelier-dark .journey-checkpoint > p { color: #8a99b0; }
+html.atelier-dark .next-lesson-card { background: linear-gradient(115deg, #081b3e, #0e326f); }
+html.atelier-dark .next-lesson-card > span { background: #1319250b; border: 1px solid #2a344622; color: #e8eefb; }
+html.atelier-dark .next-lesson-card small { color: #91abd7; }
+html.atelier-dark .next-lesson-card h2 { color: #ffffff; }
+html.atelier-dark .next-lesson-card p { color: #a0b3d5; }
+html.atelier-dark .journey-checkpoint > .journey-countdown { color: #8095b5; }
+html.atelier-dark .journey-checkpoint-actions { border-top: 1px solid #343d4c; }
+html.atelier-dark .archive-chooser { color: #8699b7; }
+html.atelier-dark .archive-chooser select { border: 1px solid #324059; background: #11192d; color: #617ba5; }
+html.atelier-dark body { background: #181e2b; color: #afc4e7; }
+html.atelier-dark button:focus-visible, html.atelier-dark a:focus-visible, html.atelier-dark input:focus-visible, html.atelier-dark summary:focus-visible { outline: 3px solid #3f5382; }
+html.atelier-dark h1, html.atelier-dark h2, html.atelier-dark h3, html.atelier-dark h4 { color: #afc4e7; }
+html.atelier-dark .subtitle { color: #abb4c2; }
+html.atelier-dark .eyebrow { color: #88a4ff; }
+html.atelier-dark .brand { color: #88a4ff; }
+html.atelier-dark .brand span, html.atelier-dark .brand i { color: #ed2939; }
+html.atelier-dark .sidebar { border-right: 1px solid #3a4351; }
+html.atelier-dark .workspace-icon { color: #88a4ff; background: #141d34; }
+html.atelier-dark nav button { color: #a8b1c0; }
+html.atelier-dark nav button.active { background: #141d34; border-color: #2c3b5c; color: #88a4ff; }
+html.atelier-dark nav b { color: #88a4ff; background: #151e36; }
+html.atelier-dark .nav-label { color: #9aa6b7; }
+html.atelier-dark .sidebar-card { background: #081b3e; }
+html.atelier-dark .sidebar-card > span { color: #a0b5d8; }
+html.atelier-dark .sidebar-card h3 { color: #ffffff; }
+html.atelier-dark .sidebar-card p { color: #9cadc9; }
+html.atelier-dark .top-actions .avatar { color: #88a4ff; }
+html.atelier-dark .primary, html.atelier-dark button.primary { background: #ed2939 !important; border-color: #ed2939 !important; color: #ffffff !important; }
+html.atelier-dark .primary:hover, html.atelier-dark button.primary:hover { background: #d52232 !important; border-color: #d52232 !important; }
+html.atelier-dark .primary:disabled, html.atelier-dark button.primary:disabled { background: #2a303b !important; border-color: #3c4552 !important; color: #8d9bb0 !important; }
+html.atelier-dark .quiet { border: 1px solid #3a4351; background: #131925; color: #a9b4c4; }
+html.atelier-dark .quiet:hover { border-color: #42547a; background: #12182f; }
+html.atelier-dark .text-button { color: #88a4ff; }
+html.atelier-dark .pill { background: #141d34; color: #88a4ff; }
+html.atelier-dark .bar { background: #1f2734; }
+html.atelier-dark .bar > span { background: #002395; }
+html.atelier-dark .panel, html.atelier-dark .quiz-card, html.atelier-dark .oral-card, html.atelier-dark .howto, html.atelier-dark .world, html.atelier-dark .game-card, html.atelier-dark .quest-card, html.atelier-dark .leo-tip { background: #131925; border: 1px solid #3a4351; }
+html.atelier-dark .learning-hero, html.atelier-dark .report-hero { background: linear-gradient(115deg, #081b3e, #0e326f); }
+html.atelier-dark .learning-hero:before { background: #ed2939; }
+html.atelier-dark .learning-hero .pill { color: #cbd9f4; background: #1319250d; border: 1px solid #2a344620; }
+html.atelier-dark .learning-hero h2 { color: #ffffff; }
+html.atelier-dark .learning-hero h2 em { color: #ff5966; }
+html.atelier-dark .learning-hero p { color: #b4c3df; }
+html.atelier-dark .learning-hero .quiet { background: #13192509; border: 1px solid #2a344635; color: #e5ebf7; }
+html.atelier-dark .learning-loop { background: #13192508; border: 1px solid #2a34461c; }
+html.atelier-dark .learning-loop-caption { color: #97afd7; }
+html.atelier-dark .learning-loop > div { border-top-color: #2a344614; }
+html.atelier-dark .learning-loop > div > b { background: #1319250c; border-color: #2a34461c; color: #d6e1f6; }
+html.atelier-dark .learning-loop > div > span { color: #edf2fc; }
+html.atelier-dark .learning-loop small { color: #91a9ce; }
+html.atelier-dark .learning-loop i { color: #b6c8e8; }
+html.atelier-dark .learning-doors > button { border: 1px solid #3a4351; background: #131925; }
+html.atelier-dark .learning-doors > button:hover { border-color: #435272; background: #11192d; }
+html.atelier-dark .learning-doors > button > span { color: #88a4ff; background: #141d34; }
+html.atelier-dark .learning-doors small { color: #8094b5; }
+html.atelier-dark .learning-doors strong { color: #a9c1e7; }
+html.atelier-dark .learning-doors p { color: #8a98ad; }
+html.atelier-dark .stat { border: 1px solid #3a4351; background: #131925; }
+html.atelier-dark .stat strong { color: #88a4ff; }
+html.atelier-dark .stat small { color: #8390a5; }
+html.atelier-dark .stat > span { color: #88a4ff; }
+html.atelier-dark .game-card, html.atelier-dark .world, html.atelier-dark .quiz-card { --tint: #151c31; }
+html.atelier-dark .game-card { border: 1px solid #3a4351; border-left: 3px solid #002395; }
+html.atelier-dark .game-card:hover { border-color: #475877; background: #11162c; }
+html.atelier-dark .game-art { background: #141d34; color: #88a4ff; }
+html.atelier-dark .game-copy small { color: #8a9cba; }
+html.atelier-dark .game-copy strong { color: #a9bfe3; }
+html.atelier-dark .game-copy > span { color: #8996ac; }
+html.atelier-dark .play-circle { border-color: #2f3e5b; background: #131925; color: #88a4ff; }
+html.atelier-dark .arcade .game-art { background: #141d34; }
+html.atelier-dark .arcade .game-copy > span { color: #8a98af; }
+html.atelier-dark .arcade-intro { background: #081b3e; color: #ffffff; }
+html.atelier-dark .arcade-intro b { color: #ffffff; }
+html.atelier-dark .arcade-intro p { color: #acbddb; }
+html.atelier-dark .arcade-intro .quiet { background: #13192508; border-color: #2a344625; color: #dfe8f8; }
+html.atelier-dark .howto > div > span { color: #88a4ff; }
+html.atelier-dark .howto small { color: #8796ad; }
+html.atelier-dark .quest-card { border-top: 3px solid #ed2939; }
+html.atelier-dark .quest-card p { color: #8a98ad; }
+html.atelier-dark .quest-card .eyebrow { color: #8497b8; }
+html.atelier-dark .quest-card .bar { background: #1e2531; }
+html.atelier-dark .quest-card .bar > span { background: #002395; }
+html.atelier-dark .quest-card .goal-row b { color: #88a4ff; }
+html.atelier-dark .quest-card .goal-row span { color: #8e9bb0; }
+html.atelier-dark .quest-card > small { color: #9ba6b7; }
+html.atelier-dark .leo-tip h4 { color: #a8bbdb; }
+html.atelier-dark .leo-tip p { color: #8c9ab0; }
+html.atelier-dark .world { border-left: 3px solid #002395; }
+html.atelier-dark .world-title > span { background: #141d34; color: #88a4ff; }
+html.atelier-dark .world-title small { color: #8da1c1; }
+html.atelier-dark .world-title h2 { color: #aac1e6; }
+html.atelier-dark .world-title p { color: #8b99af; }
+html.atelier-dark .path-nodes:before { border-color: #324059; }
+html.atelier-dark .path-node, html.atelier-dark .path-node.done { background: #131925; color: #88a4ff; border: 2px solid #313f5a; }
+html.atelier-dark .path-node.done { background: #002395; color: #ffffff; border-color: #002395; }
+html.atelier-dark .path-node small { color: #88a4ff; border-color: #313f5a; }
+html.atelier-dark .path-node:hover { border-color: #002395; }
+html.atelier-dark .path-stop > strong { color: #b0c0d8; }
+html.atelier-dark .path-stop > small { color: #96a2b5; }
+html.atelier-dark .node-stars { color: #dbe3f0; }
+html.atelier-dark .node-stars .lit { color: #88a4ff; }
+html.atelier-dark .review-scene { background: #131925; border: 1px solid #3a4351; border-left: 4px solid #002395; }
+html.atelier-dark .review-scene h2 { color: #abc1e5; }
+html.atelier-dark .review-scene p { color: #8a98ae; }
+html.atelier-dark .review-scene .pill { background: #141d34; color: #88a4ff; }
+html.atelier-dark .skill-row strong { color: #aebbd0; }
+html.atelier-dark .skill-row small { color: #9aa6b9; }
+html.atelier-dark .skill-row .bar > span { background: #002395; }
+html.atelier-dark .trophy { background: #1a202a; border: 1px solid #37404f; }
+html.atelier-dark .trophy.unlocked { background: #131b32; border-color: #2f4062; }
+html.atelier-dark .trophy strong { color: #a4b3cd; }
+html.atelier-dark .trophy small { color: #9bacc4; }
+html.atelier-dark .trophy b { color: #88a4ff; }
+html.atelier-dark .quiz-top { background: #081b3e; color: #ffffff; }
+html.atelier-dark .quiz-top .quiet { background: #13192508; border-color: #2a344625; color: #c1cfe8; }
+html.atelier-dark .quiz-progress .bar { background: #1319251a; }
+html.atelier-dark .quiz-progress .bar > span { background: #ed2939; }
+html.atelier-dark .quiz-progress small { color: #a4b8d8; }
+html.atelier-dark .combo { color: #b7c7e0; border-color: #2a344620; background: #13192506; }
+html.atelier-dark .coach-row > div { background: #131925; border-color: #3a4351; color: #8092ae; }
+html.atelier-dark .quiz-card { border: 1px solid #3a4351; }
+html.atelier-dark .quiz-card h2 { color: #a8bfe2; }
+html.atelier-dark .quiz-tag > .pill { background: #141d34; color: #88a4ff; }
+html.atelier-dark .question-instruction { color: #8a98b0; }
+html.atelier-dark .quiz-actions { border-top-color: #3a4351; }
+html.atelier-dark .choice { border: 1px solid #364155; background: #131925; color: #a4b1c6; }
+html.atelier-dark .choice > span { border: 1px solid #344158; color: #91a2bd; }
+html.atelier-dark .choice.selected { background: #141f34; border: 1px solid #002395; color: #88a4ff; }
+html.atelier-dark .choice.selected i { color: #88a4ff; }
+html.atelier-dark .answer-input { background: #10172b; border: 1px solid #324059; }
+html.atelier-dark .accent-keys button { color: #647da6; background: #131925; }
+html.atelier-dark .sentence-slots { background: #121a2e; border: 1px dashed #3a495f; }
+html.atelier-dark .sentence-slots button, html.atelier-dark .tile-bank button { border: 1px solid #36455f; color: #88a4ff; background: #131925; }
+html.atelier-dark .sentence-slots button { background: #141d34; }
+html.atelier-dark .word-instruction { color: #8c9bb2; }
+html.atelier-dark .pair-tile { background: #131925; border: 1px solid #344158; color: #657d9f; }
+html.atelier-dark .pair-tile.selected, html.atelier-dark .pair-tile.paired { background: #141f34; border-color: #475977; color: #88a4ff; }
+html.atelier-dark .pair-tile b { background: #002395; color: #ffffff; }
+html.atelier-dark .repair-sentence { background: #161d2b; border: 1px dashed #37475f; }
+html.atelier-dark .repair-sentence button, html.atelier-dark .repair-options button { border: 1px solid #324059; background: #131925; color: #6a7e9f; }
+html.atelier-dark .repair-sentence .selected, html.atelier-dark .repair-options .selected { border-color: #002395; background: #141f34; color: #88a4ff; }
+html.atelier-dark .listen-stage { background: #151d30; border: 1px solid #303e58; }
+html.atelier-dark .listen-button { background: #002395; color: #ffffff; }
+html.atelier-dark .listen-stage b { color: #a1b2cc; }
+html.atelier-dark .listen-stage p { color: #8b9ebc; }
+html.atelier-dark .listen-stage .text-button, html.atelier-dark .transcript { color: #6a82aa; }
+html.atelier-dark .hint-box { background: #131c32; border: 1px solid #2d3d5d; border-left: 3px solid #002395; color: #6482ae; }
+html.atelier-dark .hint-box b { color: #a1b9db; }
+html.atelier-dark .retry-notice { border: 1px solid #543f47; border-left: 3px solid #ed2939; background: #2d1115; }
+html.atelier-dark .retry-notice b { color: #ce9ba4; }
+html.atelier-dark .retry-notice p { color: #ab8590; }
+html.atelier-dark .round-notice { border: 1px solid #44554a; background: #1c2922; }
+html.atelier-dark .round-notice b { color: #afcdbe; }
+html.atelier-dark .round-notice span { color: #8b9d95; }
+html.atelier-dark .round-notice.miss { border-color: #504449; background: #261c1f; }
+html.atelier-dark .round-notice.miss b { color: #9a7180; }
+html.atelier-dark .round-notice.miss span { color: #a3919a; }
+html.atelier-dark .no-pressure { color: #98a5b9; }
+html.atelier-dark .oral-description { color: #8898b0; }
+html.atelier-dark .oral-step-label { color: #9fb1cd; }
+html.atelier-dark .oral-counter b { color: #88a4ff; }
+html.atelier-dark .oral-item.active { background: #141d34; border-color: #303f5d; }
+html.atelier-dark .oral-item.active .oral-item-num { background: #002395; }
+html.atelier-dark .speech-inline-status { color: #8394af; }
+html.atelier-dark .chunk-practice button { color: #6380ac; }
+html.atelier-dark .pronunciation-tip p { color: #8598b8; }
+html.atelier-dark .record-button { background: #301215; color: #ba5766; border: 1px solid #5a3a40; }
+html.atelier-dark .record-status { color: #8b9db9; }
+html.atelier-dark .dialogue-question { background: #151c2d; }
+html.atelier-dark .oral-selfcheck { background: #141d34; border-color: #2e3f5e; }
+html.atelier-dark .oral-selfcheck h3 { color: #9fb1cd; }
+html.atelier-dark .help-note { color: #98a5b9; }
+html.atelier-dark .rule-box { background: #151e2f; border: 1px solid #324059; border-left: 3px solid #002395; }
+html.atelier-dark .rule-box b { color: #9fb1cd; }
+html.atelier-dark .rule-box p { color: #7086a9; }
+html.atelier-dark .english-help { background: #161d2b; border: 1px solid #323e53; color: #7188ae; }
+html.atelier-dark .english-help p { color: #92a3be; }
+html.atelier-dark .dialog-actions .primary { background: #ed2939 !important; color: #ffffff !important; }
+html.atelier-dark dialog { border: 1px solid #3a4351; box-shadow: 0 20px 80px #081b3e22; }
+html.atelier-dark .report-hero .eyebrow { color: #a9bcdf; }
+html.atelier-dark .report-hero h1 { color: #ffffff; }
+html.atelier-dark .report-hero > p { color: #a4b8da; }
+html.atelier-dark .report-stats > div { border: 1px solid #2a34461f; }
+html.atelier-dark .report-stats b { color: #ffffff; }
+html.atelier-dark .report-stats span { color: #a0b3d4; }
+html.atelier-dark .report-actions .quiet { background: #13192508; color: #c5d3eb; border-color: #2a344625; }
+html.atelier-dark .report-xp { color: #91a0b6; }
+html.atelier-dark .correction-card { border: 1px solid #3a4351; background: #131925; }
+html.atelier-dark .correction-heading > span { background: #141d34; color: #88a4ff; }
+html.atelier-dark .correction-heading small { color: #92a4c0; }
+html.atelier-dark .correction-heading h3 { color: #a7bcdb; }
+html.atelier-dark .result-tag { border: 1px solid #344058; color: #7b92b9; }
+html.atelier-dark .result-tag.incorrect { background: #301215; color: #b57581; border-color: #553940; }
+html.atelier-dark .result-tag.correct { background: #131c32; color: #6c88b7; }
+html.atelier-dark .answer-history > div { border: 1px solid #333e50; background: #13192a; }
+html.atelier-dark .answer-history small { color: #9ba9bd; }
+html.atelier-dark .answer-history > div > span { color: #6b82a4; }
+html.atelier-dark .answer-history > div > b { color: #9aaac1; }
+html.atelier-dark .correction-answer { border: 1px solid #2e3e5c; border-left: 3px solid #002395; background: #12192f; }
+html.atelier-dark .correction-answer > small { color: #8198bc; }
+html.atelier-dark .correction-answer > p { color: #a2b6d7; }
+html.atelier-dark .correction-rule > b { color: #6f84a5; }
+html.atelier-dark .correction-rule p { color: #8598b6; }
+html.atelier-dark .correction-rule .french-correction { color: #a0aec3; }
+html.atelier-dark .leo-dock-content { border-color: #324059; }
+html.atelier-dark .leo-dock-toggle { border-color: #324059; }
+html.atelier-dark .leo-dock-dot { background: #002395; }
+html.atelier-dark footer { color: #9da9bc; }
+@media (max-width: 550px) {
+html.atelier-dark .path-stop > strong, html.atelier-dark .path-stop > small, html.atelier-dark .node-stars { background: #131925; }
+}
+/* ── quest.css ── */
+html.atelier-dark .hud-chip { border: 2px solid #384051; background: #131925; color: #abc5f4; }
+html.atelier-dark .hud-chip.streak.lit { border-color: #745938; color: #ffb671; }
+html.atelier-dark .q-close { color: #8a94a8; }
+html.atelier-dark .q-close:hover { background: #151e2f; }
+html.atelier-dark .q-progress { background: #252a36; }
+html.atelier-dark .q-progress span { background: linear-gradient(180deg, #70ac51, #58cc02); box-shadow: inset 0 -4px 0 #00000011,
+    inset 0 3px 0 #0d0d0d55; }
+html.atelier-dark .q-hearts { color: #ed2939; }
+html.atelier-dark .q-meta { color: #a8aebf; }
+html.atelier-dark .q-rule summary { color: #88a4ff; }
+html.atelier-dark .q-rule p { background: #151e2f; color: #abc5f4; }
+html.atelier-dark .q-card { background: #131925; border: 2px solid #384051; }
+html.atelier-dark .q-card h2 { color: #abc5f4; }
+html.atelier-dark .q-type { color: #7a4fe0; }
+html.atelier-dark .q-card .question-instruction { color: #a8aebf; }
+html.atelier-dark .q-card .choice, html.atelier-dark .q-card .tile-bank button, html.atelier-dark .q-card .sentence-slots button, html.atelier-dark .q-card .pair-tile, html.atelier-dark .q-card .repair-sentence button, html.atelier-dark .q-card .repair-options button, html.atelier-dark .q-card .accent-keys button { border: 2px solid #384051 !important; background: #131925 !important; color: #abc5f4 !important; }
+html.atelier-dark .q-card .choice > span { border: 2px solid #384051; color: #8a94a8; }
+html.atelier-dark .q-card .choice.selected, html.atelier-dark .q-card .pair-tile.selected, html.atelier-dark .q-card .repair-sentence button.selected, html.atelier-dark .q-card .repair-options button.selected { border-color: #3c697e !important; background: #18323f !important; color: #8ac6f2 !important; }
+html.atelier-dark .q-card .choice.selected > span { border-color: #3c697e; color: #8ac6f2; }
+html.atelier-dark .q-card .bad, html.atelier-dark .q-card .choice.bad, html.atelier-dark .q-card .repair-sentence button.bad, html.atelier-dark .q-card .repair-options button.bad { border-color: #6a3338 !important; background: #381518 !important; color: #f2878e !important; }
+html.atelier-dark .q-card .good, html.atelier-dark .q-card .choice.good, html.atelier-dark .q-card .pair-tile.good, html.atelier-dark .q-card .sentence-slots button.good { border-color: #a5ed6e !important; background: #2c431d !important; color: #b2f697 !important; }
+html.atelier-dark .q-card .sentence-slots { border-bottom: 2px solid #384051 !important; background: repeating-linear-gradient(
+    transparent,
+    transparent 62px,
+    #252b38 62px,
+    #252b38 64px
+  ) !important; color: #9aa3b8; }
+html.atelier-dark .q-card .tile-bank button.used { background: #222833 !important; border-color: #353e4e !important; }
+html.atelier-dark .q-card .pair-tile.paired.c0 { border-color: #323e68 !important; background: #141b34 !important; }
+html.atelier-dark .q-card .pair-tile.paired.c1 { border-color: #745938 !important; background: #3a2b16 !important; }
+html.atelier-dark .q-card .pair-tile.paired.c2 { border-color: #523268 !important; background: #261434 !important; }
+html.atelier-dark .q-card .pair-tile.paired.c3 { border-color: #447775 !important; background: #193937 !important; }
+html.atelier-dark .q-card .pair-tile.good, html.atelier-dark .q-card .pair-tile.paired.good { border-color: #a5ed6e !important; background: #2c431d !important; color: #b2f697 !important; }
+html.atelier-dark .q-card .answer-input { border: 2px solid #384051; background: #151e2f; }
+html.atelier-dark .q-card .answer-input:focus { border-color: #3c697e; background: #131925; }
+html.atelier-dark .q-card .answer-input.bad { border-color: #6a3338 !important; }
+html.atelier-dark .q-card .listen-button { background: #1cb0f6 !important; color: #ffffff; box-shadow: 0 5px 0 #1899d6; }
+html.atelier-dark .q-card .listen-button:active { box-shadow: 0 1px 0 #1899d6; }
+html.atelier-dark .q-card .transcript { color: #a8aebf; }
+html.atelier-dark .q-card .hint-box { background: #3c3417; border: 2px solid #7b6a3b; }
+html.atelier-dark .q-card .hint-box b { color: #ffda87; }
+html.atelier-dark .q-card .hint-box p { color: #abc5f4; }
+html.atelier-dark .q-card .game-helper { color: #a8aebf; }
+html.atelier-dark .q-footer { background: #131925; border-top: 2px solid #384051; }
+html.atelier-dark .q-footer .primary.big, html.atelier-dark .primary.big { box-shadow: 0 4px 0 #00000033; }
+html.atelier-dark .q-footer .primary.big:disabled { background: #252a36 !important; color: #9aa3b8 !important; box-shadow: 0 4px 0 #15161a; }
+html.atelier-dark .q-band.wrong b { color: #f58189; }
+html.atelier-dark .q-band.warn b { color: #ffda87; }
+html.atelier-dark .q-band span { color: #b8bed0; }
+html.atelier-dark .q-footer.is-retry { background: #2f1215; border-top-color: #5f2e33; }
+html.atelier-dark .q-footer.is-correct { background: #2c431d; border-top-color: #5b803e; }
+html.atelier-dark .q-footer.is-wrong { background: #381518; border-top-color: #653136; }
+html.atelier-dark .is-correct .q-verdict b { color: #b2f697; }
+html.atelier-dark .is-wrong .q-verdict b { color: #f58189; }
+html.atelier-dark .q-verdict-icon { color: #ffffff; }
+html.atelier-dark .is-correct .q-verdict-icon { background: #58cc02; }
+html.atelier-dark .is-wrong .q-verdict-icon { background: #ed2939; }
+html.atelier-dark .q-expected { color: #f69098; }
+html.atelier-dark .q-expl { color: #dea9ae; }
+html.atelier-dark .q-xp { background: #4f451e; color: #ffd78c; }
+html.atelier-dark .q-combo { background: #4f371e; color: #ffb47f; }
+html.atelier-dark .is-correct .primary.big { background: #58cc02 !important; box-shadow: 0 4px 0 #46a302; }
+html.atelier-dark .is-wrong .primary.big { background: #ed2939 !important; box-shadow: 0 4px 0 #b9101b; }
+html.atelier-dark .q-xp-fly { color: #e6a100; text-shadow: 0 2px 0 #0d0d0d; }
+html.atelier-dark .victory h1 { color: #ffb800; text-shadow: 0 3px 0 #e49b00; }
+html.atelier-dark .victory.finale h1 { color: #88a4ff; }
+html.atelier-dark .victory > p { color: #b8bed0; }
+html.atelier-dark .vc { border: 2px solid #ffb800; background: #131925; }
+html.atelier-dark .vc:nth-child(2) { border-color: #58cc02; }
+html.atelier-dark .vc:nth-child(3) { border-color: #1cb0f6; }
+html.atelier-dark .vc small { color: #ffffff; background: #ffb800; }
+html.atelier-dark .vc:nth-child(2) small { background: #58cc02; }
+html.atelier-dark .vc:nth-child(3) small { background: #1cb0f6; }
+html.atelier-dark .vc b { color: #abc5f4; }
+html.atelier-dark .victory-extra { color: #ffb47f; }
+html.atelier-dark .streak-up { background: linear-gradient(90deg, #ff9600, #ff6a00); color: #ffffff; }
+html.atelier-dark .new-badge { background: #1f1434; border: 2px solid #402f62; }
+html.atelier-dark .new-badge small { color: #7a4fe0; }
+html.atelier-dark .new-badge b { color: #abc5f4; }
+html.atelier-dark .victory-goal { border: 2px solid #384051; background: #131925; }
+html.atelier-dark .victory-goal small { color: #a8aebf; }
+html.atelier-dark .certificate { border: 2px dashed #323e68; }
+html.atelier-dark .certificate input, html.atelier-dark .save-code input { border: 2px solid #384051; }
+html.atelier-dark .home-hero-q { background: linear-gradient(135deg, #081b3e, #002395); color: #ffffff; }
+html.atelier-dark .home-hero-q h1 { color: #ffffff; }
+html.atelier-dark .home-hero-q .eyebrow { color: #9fb6ff; }
+html.atelier-dark .home-hero-q p { color: #d5defa; }
+html.atelier-dark .next-up { background: #131925; color: #abc5f4; }
+html.atelier-dark .next-up small { color: #a8aebf; }
+html.atelier-dark .next-up .primary.big { background: #ed2939; box-shadow: 0 4px 0 #b9101b; }
+html.atelier-dark .goal-ring { background: conic-gradient(#ffb800 calc(var(--p) * 1%), #20252f 0); }
+html.atelier-dark .goal-ring span { background: #131925; color: #abc5f4; }
+html.atelier-dark .goal-ring small { color: #8a94a8; }
+html.atelier-dark .goal-choices button { border: 2px solid #384051; background: #131925; color: #abc5f4; }
+html.atelier-dark .goal-choices button small { color: #8a94a8; }
+html.atelier-dark .goal-choices button.selected { border-color: #ffb800; background: #3c3417; }
+html.atelier-dark .primary.sunny { background: #ffb800 !important; color: #ffe09f !important; box-shadow: 0 4px 0 #d19700; }
+html.atelier-dark .oral-challenge-banner { background: #3c3417; border: 2px solid #7b6a3b; }
+html.atelier-dark .path-stop.locked .path-node { background: #252a36 !important; color: #9aa3b8 !important; border-color: #424957 !important; box-shadow: 0 5px 0 #17191c !important; }
+html.atelier-dark .path-stop.current .path-node { box-shadow: 0 0 0 6px #ed293933,
+    0 5px 0 #b9101b !important; background: #ed2939 !important; color: #ffffff !important; border-color: #ed2939 !important; }
+html.atelier-dark .start-bubble { background: #131925; border: 2px solid #384051; color: #ed2939; }
+html.atelier-dark .review-counts div { background: #151e2f; }
+html.atelier-dark .review-counts b { color: #abc5f4; }
+html.atelier-dark .review-counts span { color: #a8aebf; }
+html.atelier-dark .badge { border: 2px solid #384051; background: #131925; }
+html.atelier-dark .badge strong { color: #9aa3b8; }
+html.atelier-dark .badge small { color: #9aa3b8; }
+html.atelier-dark .badge.unlocked { border-color: #ffb800; background: #322813; }
+html.atelier-dark .badge.unlocked strong { color: #abc5f4; }
+html.atelier-dark .trophy-panel h2 small { color: #8a94a8; }
+html.atelier-dark .save-code code { background: #151e2f; }
+@media (max-width: 760px), (max-height: 520px) and (orientation: landscape) {
+html.atelier-dark .sidebar { background: #131925 !important; border-top: 2px solid #384051 !important; }
+html.atelier-dark .sidebar nav button { color: #a8aebf !important; }
+html.atelier-dark .sidebar nav button.active { color: #88a4ff !important; background: #141b34 !important; }
+html.atelier-dark header { background: #131925; }
+}
+html.atelier-dark .chest-done { color: #ffd78c; }
+html.atelier-dark .q-card .repair-sentence button.bad { background: #202229 !important; color: #8a94a8 !important; border-color: #484f5c !important; }
+/* ── voyage.css ── */
+html.atelier-dark body { background: linear-gradient(180deg, #152337 0, #121b2f 420px) fixed; color: #a6bff3; }
+html.atelier-dark .primary, html.atelier-dark .v-btn { background: #002395 !important; color: #ffffff !important; box-shadow: 0 5px 0 #00166a !important; }
+html.atelier-dark .primary:active:not(:disabled), html.atelier-dark .v-btn:active { box-shadow: 0 1px 0 #00166a !important; }
+html.atelier-dark .v-btn.v-red, html.atelier-dark .next-up .primary.big { background: #ed2939 !important; box-shadow: 0 5px 0 #b8101e !important; }
+html.atelier-dark .v-btn.v-red:active { box-shadow: 0 1px 0 #b8101e !important; }
+html.atelier-dark .primary.sunny { background: #ffb703 !important; color: #ffdd9f !important; box-shadow: 0 5px 0 #d48c00 !important; }
+html.atelier-dark .quiet { border: 2px solid #32425d !important; background: #131925 !important; color: #a6bff3 !important; }
+html.atelier-dark :focus-visible { outline: 3px solid #1cb0f6 !important; }
+html.atelier-dark .v-hello h1 { color: #a6bff3; }
+html.atelier-dark .v-hello p { color: #b2bbd4; }
+html.atelier-dark .v-flame { background: #131925; border: 2px solid #6f5535; box-shadow: 0 4px 0 #241b0f; }
+html.atelier-dark .v-flame b { color: #ffb671; }
+html.atelier-dark .v-flame small { color: #e3ba94; }
+html.atelier-dark .boarding-pass { background: #131925; box-shadow: 0 6px 0 #11161d,
+    0 18px 40px -18px #0a1f4d55; }
+html.atelier-dark .bp-main { background: radial-gradient(circle at 92% 12%, #13192522 0 60px, transparent 61px),
+    linear-gradient(135deg, #002395 0%, #1747c9 100%); color: #ffffff; }
+html.atelier-dark .bp-route small, html.atelier-dark .bp-lesson small, html.atelier-dark .bp-meta small { color: #b9cbff; }
+html.atelier-dark .bp-plane { color: #ffffff; }
+html.atelier-dark .bp-plane::before { border-top: 2px dashed #2a344666; }
+html.atelier-dark .bp-stub { border-left: 3px dashed #32425d; }
+html.atelier-dark .bp-stub::before, html.atelier-dark .bp-stub::after { background: #141f34; }
+html.atelier-dark .bp-trip i { background: #1d283a; }
+html.atelier-dark .bp-trip i.done { background: #ffb703; }
+html.atelier-dark .bp-trip i.now { background: #ed2939; }
+html.atelier-dark .game-card { box-shadow: 0 6px 0 var(--gc-shadow, #13161c) !important; background: var(--gc-bg, #131925) !important; }
+html.atelier-dark .game-card.blue { --gc-bg: #162139; --gc-shadow: #121620; --gc-ink: #809ff1; }
+html.atelier-dark .game-card.coral { --gc-bg: #361614; --gc-shadow: #1f0e0d; --gc-ink: #d62034; }
+html.atelier-dark .game-card.purple { --gc-bg: #211536; --gc-shadow: #130d1e; --gc-ink: #6c3bd9; }
+html.atelier-dark .game-card.green { --gc-bg: #283e1e; --gc-shadow: #1b2517; --gc-ink: #a7f390; }
+html.atelier-dark .game-card .game-art { background: #131925 !important; }
+html.atelier-dark .game-card strong { color: #a6bff3; }
+html.atelier-dark .game-card .play-circle { color: #ffffff !important; }
+html.atelier-dark .v-sky { background: radial-gradient(ellipse at 20% 0%, #131925aa 0, transparent 50%),
+    linear-gradient(180deg, #203954 0%, #182940 35%, #122030 100%); }
+html.atelier-dark .v-sky-head h1 { color: #a6bff3; }
+html.atelier-dark .v-sky-head p { color: #a7b5d6; }
+html.atelier-dark .v-clouds i { background: #131925; }
+html.atelier-dark .v-clouds i::before, html.atelier-dark .v-clouds i::after { background: #131925; }
+html.atelier-dark .v-trail path { stroke: #ffffff; }
+html.atelier-dark .v-trail path.flown { stroke: #ffb703; }
+html.atelier-dark .v-stopover { background: #0a1f4d; color: #ffffff; box-shadow: 0 5px 0 #000c2e; }
+html.atelier-dark .v-stopover small { color: #9fb6ff; }
+html.atelier-dark .v-stopover span:not(.v-flag) { color: #cfdaff; }
+html.atelier-dark .v-node { background: #002395; color: #ffffff; box-shadow: 0 7px 0 #00166a,
+    0 12px 18px -6px #0a1f4d55; }
+html.atelier-dark .v-node:active { box-shadow: 0 2px 0 #00166a; }
+html.atelier-dark .v-stop.done .v-node { background: #ffb703; color: #ffffff; text-shadow: 0 2px 0 #c77f00; box-shadow: 0 7px 0 #d48c00,
+    0 12px 18px -6px #a0660055; }
+html.atelier-dark .v-stop.locked .v-node { background: #262e3b; color: #9aa6bd; box-shadow: 0 7px 0 #191b1f; }
+html.atelier-dark .v-stop.current .v-node { background: #ed2939; box-shadow: 0 7px 0 #b8101e,
+    0 0 0 8px #ed293933,
+    0 0 0 16px #ed293914; }
+html.atelier-dark .v-label { background: #131925d9; }
+html.atelier-dark .v-label b { color: #a6bff3; }
+html.atelier-dark .v-stars i { color: #d3dbe8; }
+html.atelier-dark .v-stars i.lit { color: #ffb703; }
+html.atelier-dark .v-bubble { background: #131925; color: #ed2939; border: 2px solid #5e2d32; }
+html.atelier-dark .v-bubble::after { border-top-color: #2a3446; }
+html.atelier-dark .v-plane { filter: drop-shadow(0 6px 6px #0a1f4d40); }
+html.atelier-dark .v-arrival { background: #131925; border: 3px dashed #ffcf66; }
+html.atelier-dark .v-arrival small { color: #a8aebf; }
+html.atelier-dark .v-arrival.reached { background: #3c3417; }
+html.atelier-dark .v-coach-say { border: 2px solid #32425d; background: #131925; color: #a6bff3; }
+html.atelier-dark .v-coach-say::before { background: #131925; border-left: 2px solid #32425d; border-bottom: 2px solid #32425d; }
+html.atelier-dark .v-coach.happy .v-coach-say { border-color: #a5ed6e; background: #233916; color: #b7f29d; }
+html.atelier-dark .v-coach.happy .v-coach-say::before { border-color: #a5ed6e; background: #233916; }
+html.atelier-dark .v-coach.sad .v-coach-say { border-color: #653136; background: #301215; color: #f18e97; }
+html.atelier-dark .v-coach.sad .v-coach-say::before { border-color: #653136; background: #301215; }
+html.atelier-dark .q-progress span::after { background: linear-gradient(100deg, transparent 30%, #13192588 50%, transparent 70%); }
+html.atelier-dark .v-stars-big span { color: #dbe3f0; }
+html.atelier-dark .v-stars-big span.lit { color: #ffb703; text-shadow: 0 0 18px #312915; }
+html.atelier-dark .victory h1 { color: #ffb703; text-shadow: 0 4px 0 #d48c00; }
+html.atelier-dark .v-stamp { border: 3px double #ed2939; color: #ed2939; background: #131925; }
+html.atelier-dark .new-badge { background: #2f1212 !important; border: 2px dashed #6b3338 !important; }
+html.atelier-dark .new-badge small { color: #ed2939 !important; }
+html.atelier-dark .streak-up { background: linear-gradient(90deg, #ff9600, #ff5e00) !important; box-shadow: 0 5px 0 #c94a00; }
+html.atelier-dark .v-passport { background: #131925; box-shadow: 0 6px 0 #11161d; }
+html.atelier-dark .v-passport-head { background: linear-gradient(135deg, #0e2f7a, #002395); color: #ffffff; }
+html.atelier-dark .v-passport h2 { color: #ffd56a; }
+html.atelier-dark .v-passport-head p { color: #c9d6ff; }
+html.atelier-dark .v-stamps { background: repeating-linear-gradient(0deg, #10172b 0 26px, #192332 26px 27px); }
+html.atelier-dark .v-stamp-cell .v-stamp { border-color: #444d5d; text-shadow: 0 0 0 #16181c; }
+html.atelier-dark .v-stamp-cell.got .v-stamp { border-color: #ed2939; background: #131925; box-shadow: inset 0 0 0 3px #0d0d0d,
+    inset 0 0 0 5px #ed293933; }
+html.atelier-dark .v-stamp-cell:nth-child(3n + 2).got .v-stamp { border-color: #002395; box-shadow: inset 0 0 0 3px #0d0d0d,
+    inset 0 0 0 5px #00239533; }
+html.atelier-dark .v-stamp-cell:nth-child(3n).got .v-stamp { border-color: #2f9410; box-shadow: inset 0 0 0 3px #0d0d0d,
+    inset 0 0 0 5px #2f941033; }
+html.atelier-dark .v-stamp-cell b { color: #9aa6bd; }
+html.atelier-dark .v-stamp-cell.got b { color: #a6bff3; }
+html.atelier-dark .v-stamp-cell small { color: #9aa6bd; }
+@media (max-width: 760px), (max-height: 520px) and (orientation: landscape) {
+html.atelier-dark .bp-stub { border-top: 3px dashed #32425d; }
+}
+html.atelier-dark main small, html.atelier-dark main .help-note, html.atelier-dark main .game-helper, html.atelier-dark main .question-instruction, html.atelier-dark .goal-choices small, html.atelier-dark .stat small, html.atelier-dark .skill-row small, html.atelier-dark .v-stamp-cell small, html.atelier-dark .game-card small { color: #b1b8ca; }
+html.atelier-dark .stat strong em, html.atelier-dark .goal-ring small { color: #b1b8ca !important; }
+html.atelier-dark .game-card .game-copy > span:last-child { color: #b8c0d2 !important; }
+html.atelier-dark .game-card.blue small { color: #87a3f0 !important; }
+html.atelier-dark .game-card.coral small { color: #f08794 !important; }
+html.atelier-dark .game-card.purple small { color: #5a2fc0 !important; }
+html.atelier-dark .game-card.green small { color: #aef598 !important; }
+html.atelier-dark #sound, html.atelier-dark #language, html.atelier-dark .text-button { color: #aebadb !important; }
+html.atelier-dark .v-btn.v-red, html.atelier-dark .next-up .primary.big, html.atelier-dark .q-footer.is-wrong .primary.big { background: #d41e2e !important; }
+html.atelier-dark .v-stars i { color: #b8c3d6; }
+html.atelier-dark .v-stop.locked .v-label b { color: #bcc4d8; }
+html.atelier-dark footer, html.atelier-dark footer span { color: #b1b8ca !important; }
+html.atelier-dark .v-coach .lang-toggle { border: 2px solid #32425d; background: #131925; color: #aebadb; }
+html.atelier-dark .v-coach .lang-toggle[aria-pressed="true"] { border-color: #3c697e; background: #18323f; }
+html.atelier-dark .net-wait { background: #3d3217; border: 2px solid #826b3e; color: #ffdb95; }
+html.atelier-dark .offline-bar { background: #3b2a00; color: #ffe9b0; }
+html.atelier-dark .boot { color: #b1b8ca; }
+html.atelier-dark .done-pass .bp-main { background: radial-gradient(circle at 90% 10%, #13192533 0 60px, transparent 61px),
+    linear-gradient(135deg, #b77a00 0%, #ffb703 100%); }
+html.atelier-dark .done-pass .bp-route small, html.atelier-dark .done-pass .bp-lesson small, html.atelier-dark .done-pass .bp-meta small { color: #fff3cf; }
+html.atelier-dark .bp-next { color: #bcc4d8; }
+html.atelier-dark .oral-item-num, html.atelier-dark .oral-item span, html.atelier-dark .oral-item em, html.atelier-dark .oral-description, html.atelier-dark .oral-counter span, html.atelier-dark .oral-model-avatar span, html.atelier-dark .oral-model-text small, html.atelier-dark .speech-inline-status, html.atelier-dark .chunk-practice button, html.atelier-dark .pronunciation-tip p, html.atelier-dark .record-status, html.atelier-dark .record-privacy, html.atelier-dark .dialogue-question small, html.atelier-dark .dialogue-question p, html.atelier-dark .reply-example summary, html.atelier-dark .oral-selfcheck p, html.atelier-dark .quest-card .eyebrow, html.atelier-dark .quest-card > p, html.atelier-dark .leo-tip p, html.atelier-dark .review-scene p, html.atelier-dark .review-counts span, html.atelier-dark .goal-choices small, html.atelier-dark .goal-choices .selected small { color: #b5bdd0 !important; }
+html.atelier-dark .chunk-practice h3, html.atelier-dark .pronunciation-tip b, html.atelier-dark .oral-selfcheck h3 { color: #aebadb !important; }
+html.atelier-dark .quest-card .primary, html.atelier-dark .oral-bottom-nav .primary, html.atelier-dark .oral-play-actions .primary, html.atelier-dark .review-scene .primary { background: #d41e2e !important; box-shadow: 0 5px 0 #9c0f1c !important; }
+html.atelier-dark .v-bubble { color: #f2818f; }
+html.atelier-dark #record-start { color: #eb909e !important; }
+html.atelier-dark .oral-item strong { color: #b7c2d9 !important; }
+html.atelier-dark .oral-item small { color: #b5bdd0 !important; }
+html.atelier-dark .oral-item.active .oral-item-num { color: #ffffff !important; }
+html.atelier-dark #add-reminder, html.atelier-dark [data-oral-rate="easy"] { background: #d41e2e !important; box-shadow: 0 5px 0 #9c0f1c !important; }
+html.atelier-dark body.leo-speaking .leo-avatar { border-color: #1cb0f6; box-shadow: 0 0 0 calc(3px + var(--leo-level, 0) * 7px) #1cb0f633; }
+html.atelier-dark .v-hello .v-appname { color: #88a4ff; }

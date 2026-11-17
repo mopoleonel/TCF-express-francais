@@ -4671,3 +4671,143 @@ div[hidden] {
     animation: none !important;
   }
 }
+
+/* Retour vers TCF Express (affiché seulement sur tcf-express.com) */
+.back-tcf {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 14px;
+  padding: 7px 12px;
+  border: 1px solid #d6def0;
+  border-radius: 999px;
+  background: #fff;
+  color: #002395;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.back-tcf:hover {
+  background: #edf2ff;
+}
+.back-tcf[hidden] {
+  display: none;
+}
+@media (max-width: 760px) {
+  /* Sur téléphone : flèche seule, l'en-tête garde la place pour la série, les XP et les cœurs */
+  .back-tcf {
+    flex: none;
+    margin-right: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    background: #002395;
+    border-color: #002395;
+    color: #fff;
+  }
+  .back-tcf span {
+    display: none;
+  }
+  .back-tcf::after {
+    content: "Retour";
+  }
+  /* Le thème se change depuis la page Profil sur téléphone */
+  #theme {
+    display: none !important;
+  }
+}
+@media (max-width: 430px) {
+  header .top-actions {
+    gap: 4px !important;
+  }
+  .hud-chip {
+    padding: 5px 7px !important;
+  }
+  #sound,
+  #language,
+  #theme {
+    min-width: 34px !important;
+    padding: 6px 5px !important;
+  }
+}
+
+/* Fiche « Mon compte TCF Express » (page Profil) */
+.account-card {
+  margin-bottom: 22px;
+}
+.account-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.account-head h2 {
+  margin: 0;
+}
+.account-head p {
+  margin: 2px 0 0;
+  color: #56627e;
+  font-size: 14px;
+}
+.avatar.big {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: #002395;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+}
+.account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+.account-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 14px;
+  border: 1px solid #e1e7f0;
+  border-radius: 14px;
+  background: #f8faff;
+}
+.account-row span {
+  color: #56627e;
+  font-size: 12px;
+  font-weight: 600;
+}
+.account-row b {
+  color: #172b4d;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.account-actions a,
+.account-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #d6def0;
+  background: #fff;
+  color: #002395;
+}
+.account-actions a.primary {
+  background: #002395;
+  border-color: #002395;
+  color: #fff;
+}
